@@ -1,0 +1,18 @@
+{
+  "title": "Villa Moderne avec Piscine",
+  "city": "marrakech",
+  "neighborhood": "Palmeraie",
+  "type": "villa",
+  "transaction": "sale",
+  "price": 5500000,
+  "price_label": "5,500,000 MAD",
+  "surface": 500,
+  "bedrooms": 5,
+  "bathrooms": 4,
+  "image_url": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600",
+  "description": "Magnifique villa avec piscine et jardin",
+  "is_new": true,
+  "is_luxury": true,
+  "lat": 31.6814,
+  "lng": -7.9988
+}

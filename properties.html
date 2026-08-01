@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse verified properties in Morocco. Villas, apartments, riads for sale and rent with transparent pricing.">
+    <title>Properties | Kenzia Estates</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
+                </a>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="properties.html" class="nav-link active">Properties</a></li>
+                        <li><a href="services.html" class="nav-link">Services</a></li>
+                        <li><a href="about.html" class="nav-link">About</a></li>
+                        <li><a href="contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-hero">
+        <div class="container">
+            <h1 class="page-title">Our Properties</h1>
+            <p class="page-subtitle">Verified properties with transparent pricing across Morocco</p>
+        </div>
+    </section>
+
+    <!-- Properties Main Section -->
+    <section class="section properties-section">
+        <div class="container">
+
+            <!-- Toolbar : Résultats + Vue + Trier -->
+            <div class="properties-toolbar">
+                <p class="results-count"><span id="resultsCount">12</span> properties found</p>
+                <div class="toolbar-actions">
+                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" id="mapViewBtn" onclick="setView('map')">
+                        <i class="fas fa-map"></i>
+                    </button>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="newest">Newest First</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="surface">Largest Surface</option>
+                      </select>
+                </div>
+            </div>
+
+            <!-- Map Container (caché par défaut) -->
+            <div class="map-container" id="mapContainer" style="display: none;">
+                <div id="propertiesMap"></div>
+            </div>
+
+            <!-- Layout : Sidebar + Grid -->
+            <div class="properties-layout">
+
+                <!-- Sidebar Filtres -->
+                <aside class="filters-sidebar" id="filtersSidebar">
+                    <div class="filters-header">
+                        <h3><i class="fas fa-sliders"></i> Filters</h3>
+                        <button class="filters-reset" onclick="resetFilters()">Reset All</button>
+                    </div>
+
+                    <!-- Transaction -->
+                    <div class="filter-group">
+                        <h4>Transaction</h4>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-transaction="all">All</button>
+                            <button class="filter-tab" data-transaction="sale">For Sale</button>
+                            <button class="filter-tab" data-transaction="rent">For Rent</button>
+                        </div>
+                    </div>
+
+                    <!-- City -->
+                    <div class="filter-group">
+                        <h4>City</h4>
+                        <select class="form-control" id="filterCity">
+                            <option value="">All Cities</option>
+                            <option value="casablanca">Casablanca</option>
+                            <option value="marrakech">Marrakech</option>
+                            <option value="rabat">Rabat</option>
+                            <option value="tanger">Tanger</option>
+                            <option value="agadir">Agadir</option>
+                            <option value="fes">Fès</option>
+                        </select>
+                    </div>
+
+                    <!-- Property Type -->
+                    <div class="filter-group">
+                        <h4>Property Type</h4>
+                        <select class="form-control" id="filterType">
+                            <option value="">All Types</option>
+                            <option value="villa">Villa</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="riad">Riad</option>
+                            <option value="penthouse">Penthouse</option>
+                            <option value="land">Land</option>
+                        </select>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group">
+                        <h4>Price Range (MAD)</h4>
+                        <div class="price-inputs">
+                            <input type="number" class="form-control" id="minPrice" placeholder="Min">
+                            <span class="price-separator">—</span>
+                            <input type="number" class="form-control" id="maxPrice" placeholder="Max">
+                        </div>
+                    </div>
+
+                    <!-- Bedrooms -->
+                    <div class="filter-group">
+                        <h4>Bedrooms</h4>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-beds="any">Any</button>
+                            <button class="filter-tab" data-beds="1">1+</button>
+                            <button class="filter-tab" data-beds="2">2+</button>
+                            <button class="filter-tab" data-beds="3">3+</button>
+                            <button class="filter-tab" data-beds="4">4+</button>
+                        </div>
+                    </div>
+
+                    <!-- Surface -->
+                    <div class="filter-group">
+                        <h4>Surface (m²)</h4>
+                        <div class="price-inputs">
+                            <input type="number" class="form-control" id="minSurface" placeholder="Min">
+                            <span class="price-separator">—</span>
+                            <input type="number" class="form-control" id="maxSurface" placeholder="Max">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-apply" onclick="applyFilters()">
+                        <i class="fas fa-search"></i> Apply Filters
+                    </button>
+
+                    <!-- Mobile Toggle -->
+                    <button class="filters-mobile-toggle" id="filtersToggle" onclick="toggleFilters()">
+                        <i class="fas fa-sliders"></i> Filters
+                    </button>
+                </aside>
+
+                <!-- Grid des propriétés -->
+                <main class="properties-main">
+                    <div class="properties-grid" id="featuredPropertiesGrid">
+                        <!-- Les propriétés seront chargées par JavaScript -->
+                    </div>
+
+                    <!-- Bouton "Load More" -->
+                    <div class="load-more-wrapper" id="loadMoreWrapper">
+                        <button class="btn btn-outline btn-large" id="loadMoreBtn" onclick="loadMoreProperties()">
+                            Load More Properties
+                        </button>
+                    </div>
+                </main>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section">
+        <div class="container">
+            <div class="cta-wrapper">
+                <h2>Can't find what you're looking for?</h2>
+                <p>Tell us your criteria and we'll find the perfect property for you.</p>
+                <a href="contact.html" class="btn btn-primary btn-large">Contact Us <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <img src="images/logo-footer.png" alt="Kenzia Estates" class="logo-footer-img">
+                    </a>
+                    <p class="footer-description">Premium real estate agency in Morocco, offering transparent and professional services for buying, selling, and renting properties.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Buy Property</a></li>
+                        <li><a href="#">Sell Property</a></li>
+                        <li><a href="#">Long-term Rental</a></li>
+                        <li><a href="#">Property Estimation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Cities</h4>
+                    <ul>
+                        <li><a href="#">Casablanca</a></li>
+                        <li><a href="#">Marrakech</a></li>
+                        <li><a href="#">Rabat</a></li>
+                        <li><a href="#">Tanger</a></li>
+                        <li><a href="#">Agadir</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-location-dot"></i><span>Bd. Zerktouni, Casablanca, Morocco</span></li>
+                        <li><i class="fas fa-phone"></i><span>+212 5XX-XXXXXX</span></li>
+                        <li><i class="fas fa-envelope"></i><span>contact@kenziaestates.ma</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kenzia Estates. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/212771531415" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+            <script src="js/config.js"></script>
+         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        const API_URL = CONFIG.API_URL;
+        let allProperties = [];
+        let currentFilteredProperties = []; // Stocke le résultat du filtrage
+        
+        // Variables de pagination
+        let displayedCount = 0;
+        const ITEMS_PER_PAGE = 3; // Nombre de propriétés à charger par clic
+
+        let currentFilters = {
+            transaction: '', city: '', type: '', minPrice: '', maxPrice: '', minSurface: '', maxSurface: '', bedrooms: ''
+        };
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('✅ Page Properties chargée');
+            await loadAllProperties();
+            readURLParams();
+            setupFilterListeners();
+            applyFilters(); // Déclenche le premier affichage
+        });
+
+        // ============================================
+        // CHARGER TOUTES LES PROPRIÉTÉS
+        // ============================================
+        async function loadAllProperties() {
+            try {
+                const res = await fetch(`${API_URL}/properties`);
+                if (!res.ok) throw new Error('Erreur API');
+                allProperties = await res.json();
+                console.log('✅ Propriétés chargées en mémoire:', allProperties.length);
+            } catch (err) {
+                console.error('❌ Erreur chargement:', err);
+            }
+        }
+
+        // ============================================
+        // LIRE LES PARAMÈTRES D'URL
+        // ============================================
+        function readURLParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            const city = urlParams.get('city');
+            const type = urlParams.get('type');
+            const budget = urlParams.get('budget');
+            const transaction = urlParams.get('transaction');
+            
+            if (city) {
+                currentFilters.city = city;
+                const el = document.getElementById('filterCity');
+                if (el) el.value = city;
+            }
+            if (type) {
+                currentFilters.type = type;
+                const el = document.getElementById('filterType');
+                if (el) el.value = type;
+            }
+            if (transaction && transaction !== 'all') {
+                currentFilters.transaction = transaction;
+                document.querySelectorAll('.filter-tab[data-transaction]').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.transaction === transaction) btn.classList.add('active');
+                });
+            }
+            if (budget) {
+                if (budget.includes('+')) {
+                    currentFilters.minPrice = parseInt(budget.replace('+', ''), 10);
+                } else if (budget.includes('-')) {
+                    const [min, max] = budget.split('-').map(Number);
+                    currentFilters.minPrice = min;
+                    currentFilters.maxPrice = max;
+                }
+                const minEl = document.getElementById('minPrice');
+                const maxEl = document.getElementById('maxPrice');
+                if (minEl && currentFilters.minPrice) minEl.value = currentFilters.minPrice;
+                if (maxEl && currentFilters.maxPrice) maxEl.value = currentFilters.maxPrice;
+            }
+        }
+
+        // ============================================
+        // CONFIGURER LES ÉCOUTEURS DE FILTRES
+        // ============================================
+        function setupFilterListeners() {
+            document.querySelectorAll('.filter-tab[data-transaction]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.filter-tab[data-transaction]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilters.transaction = btn.dataset.transaction === 'all' ? '' : btn.dataset.transaction;
+                    applyFilters();
+                });
+            });
+            
+            document.querySelectorAll('.filter-tab[data-beds]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.filter-tab[data-beds]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilters.bedrooms = btn.dataset.beds === 'any' ? '' : btn.dataset.beds;
+                    applyFilters();
+                });
+            });
+            
+            const citySelect = document.getElementById('filterCity');
+            if (citySelect) citySelect.addEventListener('change', (e) => { currentFilters.city = e.target.value; applyFilters(); });
+            
+            const typeSelect = document.getElementById('filterType');
+            if (typeSelect) typeSelect.addEventListener('change', (e) => { currentFilters.type = e.target.value; applyFilters(); });
+            
+            ['minPrice', 'maxPrice', 'minSurface', 'maxSurface'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('input', (e) => { currentFilters[id] = e.target.value; });
+            });
+        }
+
+        // ============================================
+        // APPLIQUER LES FILTRES (et réinitialiser la pagination)
+        // ============================================
+        function applyFilters() {
+            console.log('🔍 Application des filtres:', currentFilters);
+            
+            // 1. Filtrer le tableau complet
+            currentFilteredProperties = allProperties.filter(p => {
+                if (currentFilters.transaction && p.transaction !== currentFilters.transaction) return false;
+                if (currentFilters.city && p.city.toLowerCase() !== currentFilters.city.toLowerCase()) return false;
+                if (currentFilters.type && p.type !== currentFilters.type) return false;
+                if (currentFilters.minPrice && p.price < parseInt(currentFilters.minPrice, 10)) return false;
+                if (currentFilters.maxPrice && p.price > parseInt(currentFilters.maxPrice, 10)) return false;
+                if (currentFilters.minSurface && p.surface < parseInt(currentFilters.minSurface, 10)) return false;
+                if (currentFilters.maxSurface && p.surface > parseInt(currentFilters.maxSurface, 10)) return false;
+                if (currentFilters.bedrooms && p.bedrooms < parseInt(currentFilters.bedrooms, 10)) return false;
+                return true;
+            });
+
+            // 2. Réinitialiser le compteur d'affichage à 0
+            displayedCount = 0;
+            
+            // 3. Afficher le premier lot
+            loadMoreProperties();
+        }
+
+        // ============================================
+        // CHARGER LE LOT SUIVANT (PAGINATION)
+        // ============================================
+        function loadMoreProperties() {
+            const grid = document.getElementById('featuredPropertiesGrid');
+            const countEl = document.getElementById('resultsCount');
+            const loadMoreWrapper = document.getElementById('loadMoreWrapper');
+
+            if (!grid) return;
+
+            // Calculer combien de propriétés afficher au total après ce chargement
+            const targetCount = Math.min(displayedCount + ITEMS_PER_PAGE, currentFilteredProperties.length);
+            const propertiesToShow = currentFilteredProperties.slice(0, targetCount);
+
+            // Mettre à jour le compteur
+            displayedCount = targetCount;
+            if (countEl) {
+                countEl.textContent = `${displayedCount} sur ${currentFilteredProperties.length}`;
+            }
+
+            // Afficher les propriétés
+            if (propertiesToShow.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; grid-column: 1/-1;">
+                        <i class="fas fa-search" style="font-size: 4rem; color: var(--border-light); margin-bottom: 20px;"></i>
+                        <h3>No Properties Found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                `;
+                if (loadMoreWrapper) loadMoreWrapper.style.display = 'none';
+                return;
+            }
+
+            grid.innerHTML = propertiesToShow.map(prop => `
+                <div class="property-card">
+                    <div class="property-image">
+                        <img src="${prop.image_url || 'https://via.placeholder.com/600x400'}" alt="${prop.title}" loading="lazy">
+                        <div class="property-badges">
+                            <span class="property-badge">${prop.transaction === 'sale' ? 'FOR SALE' : 'FOR RENT'}</span>
+                            ${prop.is_luxury ? '<span class="property-badge luxury">LUXURY</span>' : ''}
+                            ${prop.is_new ? '<span class="property-badge new">NEW</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="property-content">
+                        <div class="property-location">
+                            <i class="fas fa-location-dot"></i>
+                            ${prop.neighborhood}, ${prop.city}
+                        </div>
+                        <h3 class="property-title">${prop.title}</h3>
+                        <div class="property-features">
+                            <div class="property-feature"><i class="fas fa-bed"></i> ${prop.bedrooms} Beds</div>
+                            <div class="property-feature"><i class="fas fa-bath"></i> ${prop.bathrooms} Baths</div>
+                            <div class="property-feature"><i class="fas fa-ruler-combined"></i> ${prop.surface} m²</div>
+                        </div>
+                        <div class="property-price">${prop.price_label}</div>
+                        <a href="property-detail.html?id=${prop.id}" class="btn btn-outline" style="margin-top: 15px; width: 100%; text-align: center; display: block;">
+                            View Details <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            // Gérer la visibilité du bouton "Load More"
+            if (loadMoreWrapper) {
+                if (displayedCount >= currentFilteredProperties.length) {
+                    loadMoreWrapper.style.display = 'none'; // Tout est affiché, on cache le bouton
+                } else {
+                    loadMoreWrapper.style.display = 'block'; // Il en reste, on affiche le bouton
+                }
+            }
+        }
+
+        // ============================================
+        // RÉINITIALISER LES FILTRES
+        // ============================================
+        function resetFilters() {
+            currentFilters = { transaction: '', city: '', type: '', minPrice: '', maxPrice: '', minSurface: '', maxSurface: '', bedrooms: '' };
+            
+            document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-tab[data-transaction="all"]')?.classList.add('active');
+            document.querySelector('.filter-tab[data-beds="any"]')?.classList.add('active');
+            
+            ['filterCity', 'filterType', 'minPrice', 'maxPrice', 'minSurface', 'maxSurface'].forEach(id => { 
+                const el = document.getElementById(id); 
+                if (el) el.value = ''; 
+            });
+            
+            applyFilters();
+        }
+
+        // ============================================
+        // TOGGLE FILTRES MOBILE
+        // ============================================
+        function toggleFilters() {
+            const sidebar = document.getElementById('filtersSidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kenzia Estates - Premium Real Estate Agency in Morocco. Clarity in every key.">
+    <title>Kenzia Estates | Premium Real Estate Morocco - Clarity in every key</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Styles pour Featured Properties -->
+    <style>
+        /* ============================================
+           FEATURED PROPERTIES SECTION
+           ============================================ */
+        .featured-properties {
+            background: var(--off-white);
+        }
+        
+        .featured-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+        
+        .featured-header .section-header {
+            text-align: left;
+            margin-bottom: 0;
+        }
+        
+        .view-all-btn {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 12px 30px;
+            border: 2px solid var(--matte-brass);
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .view-all-btn:hover {
+            background: transparent;
+            color: var(--matte-brass);
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .featured-card {
+            background: var(--white);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(184, 153, 112, 0.1);
+            transition: var(--transition-fast);
+        }
+        
+        .featured-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .featured-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+        
+        .featured-card:hover .featured-image img {
+            transform: scale(1.08);
+        }
+        
+        .featured-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 2;
+        }
+        
+        .featured-badge {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .featured-badge.luxury {
+            background: var(--bleu-nuit);
+            color: var(--matte-brass);
+        }
+        
+        .featured-badge.new {
+            background: var(--success);
+            color: var(--white);
+        }
+        
+        .featured-price {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: var(--bleu-nuit);
+            color: var(--white);
+            padding: 8px 16px;
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .featured-content {
+            padding: 25px;
+        }
+        
+        .featured-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+        
+        .featured-location i {
+            color: var(--matte-brass);
+        }
+        
+        .featured-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--bleu-nuit);
+            line-height: 1.3;
+        }
+        
+        .featured-features {
+            display: flex;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+        }
+        
+        .featured-feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .featured-feature i {
+            color: var(--matte-brass);
+        }
+        
+        .featured-link {
+            display: block;
+            margin-top: 20px;
+            color: var(--matte-brass);
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: var(--transition-fast);
+        }
+        
+        .featured-link:hover {
+            color: var(--bleu-nuit);
+        }
+        
+        .featured-link i {
+            margin-left: 5px;
+            transition: var(--transition-fast);
+        }
+        
+        .featured-link:hover i {
+            transform: translateX(5px);
+        }
+        
+        .featured-loading {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .featured-loading i {
+            font-size: 3rem;
+            color: var(--matte-brass);
+            margin-bottom: 20px;
+        }
+        
+        .featured-loading p {
+            color: var(--text-muted);
+        }
+        
+        .featured-empty {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .featured-empty i {
+            font-size: 4rem;
+            color: var(--border-light);
+            margin-bottom: 20px;
+        }
+        
+        .featured-empty h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--bleu-nuit);
+        }
+        
+        .featured-empty p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .featured-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .featured-header .section-header {
+                text-align: center;
+                width: 100%;
+            }
+            
+            .view-all-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <!-- Logo Compact -->
+                <a href="index.html" class="logo">
+                    <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
+                </a>
+                
+                <!-- Navigation Menu -->
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link active">Home</a></li>
+                        <li><a href="properties.html" class="nav-link">Properties</a></li>
+                        <li><a href="services.html" class="nav-link">Services</a></li>
+                        <li><a href="about.html" class="nav-link">About</a></li>
+                        <li><a href="contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Hamburger Menu -->
+                <button class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-slider" id="heroSlider">
+            <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920');">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920');">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920');">
+                <div class="hero-overlay"></div>
+            </div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">Find Your Perfect Property in Morocco</h1>
+                <p class="hero-slogan">Clarity in every key.</p>
+                
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <form class="search-form" id="searchForm">
+                        <div class="search-field">
+                            <i class="fas fa-location-dot"></i>
+                            <select id="citySelect">
+                                <option value="">All Cities</option>
+                                <option value="casablanca">Casablanca</option>
+                                <option value="marrakech">Marrakech</option>
+                                <option value="rabat">Rabat</option>
+                                <option value="tanger">Tanger</option>
+                                <option value="agadir">Agadir</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-field">
+                            <i class="fas fa-home"></i>
+                            <select id="propertyType">
+                                <option value="">Property Type</option>
+                                <option value="villa">Villa</option>
+                                <option value="apartment">Apartment</option>
+                                <option value="riad">Riad</option>
+                                <option value="penthouse">Penthouse</option>
+                                <option value="land">Land</option>
+                            </select>
+                        </div>
+                        
+                        <div class="search-field">
+                            <i class="fas fa-tag"></i>
+                            <select id="budget">
+                                <option value="">Budget</option>
+                                <option value="0-1000000">Under 1M MAD</option>
+                                <option value="1000000-3000000">1M - 3M MAD</option>
+                                <option value="3000000-5000000">3M - 5M MAD</option>
+                                <option value="5000000+">Above 5M MAD</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-search">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="hero-cta">
+                    <a href="contact.html" class="btn btn-primary btn-large">Sell Your Property</a>
+                    <a href="#" class="btn btn-outline-white btn-large" onclick="openEstimationModal()">Free Estimation</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+    </section>
+
+    <!-- Why Kenzia Section -->
+    <section class="section why-kenzia">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Kenzia Estates?</h2>
+                <p class="section-subtitle">Experience real estate with complete transparency</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-dollar"></i>
+                    </div>
+                    <h3>Transparent Pricing</h3>
+                    <p>No hidden fees. No surprises. Every property listed with clear pricing and complete documentation.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Verified Properties</h3>
+                    <p>Every property is personally visited and verified by our team. What you see is what you get.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Market Insights</h3>
+                    <p>Access exclusive market reports, price trends, and neighborhood guides to make informed decisions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FEATURED PROPERTIES SECTION (NOUVEAU)
+         ============================================ -->
+    <section class="section featured-properties">
+        <div class="container">
+            <div class="featured-header">
+                <div class="section-header">
+                    <h2 class="section-title">Featured Properties</h2>
+                    <p class="section-subtitle">Handpicked properties for you</p>
+                </div>
+                <a href="properties.html" class="btn view-all-btn">
+                    View All Properties <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="featured-grid" id="featuredGrid">
+                <!-- Loading state -->
+                <div class="featured-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading featured properties...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <img src="images/logo-footer.png" alt="Kenzia Estates - Clarity in every key." class="logo-footer-img">
+                    </a>
+                    <p class="footer-description">Premium real estate agency in Morocco, offering transparent and professional services for buying, selling, and renting properties.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Buy Property</a></li>
+                        <li><a href="#">Sell Property</a></li>
+                        <li><a href="#">Long-term Rental</a></li>
+                        <li><a href="#">Property Estimation</a></li>
+                        <li><a href="#">Investment Consulting</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Cities</h4>
+                    <ul>
+                        <li><a href="#">Casablanca</a></li>
+                        <li><a href="#">Marrakech</a></li>
+                        <li><a href="#">Rabat</a></li>
+                        <li><a href="#">Tanger</a></li>
+                        <li><a href="#">Agadir</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-location-dot"></i>
+                            <span>Bd. Zerktouni, Casablanca, Morocco</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+212 5XX-XXXXXX</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@kenziaestates.ma</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kenzia Estates. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/212771531415" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- Featured Properties Script -->
+    <script>
+        // ============================================
+        // CONFIGURATION API
+        // ============================================
+        const API_URL = CONFIG.API_URL;
+        
+        // ============================================
+        // CHARGER LES PROPRIÉTÉS FEATURED
+        // ============================================
+        async function loadFeaturedProperties() {
+            const grid = document.getElementById('featuredGrid');
+            
+            try {
+                const response = await fetch(`${API_URL}/properties`);
+                
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement');
+                }
+                
+                const properties = await response.json();
+                
+                // Prendre les 6 premières propriétés (les plus récentes)
+                const featuredProps = properties.slice(0, 6);
+                
+                if (featuredProps.length === 0) {
+                    grid.innerHTML = `
+                        <div class="featured-empty">
+                            <i class="fas fa-home"></i>
+                            <h3>No Properties Available</h3>
+                            <p>Check back soon for new listings!</p>
+                            <a href="properties.html" class="btn btn-primary">
+                                Browse All Properties
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = featuredProps.map(property => {
+                    // Construire les badges
+                    let badgesHTML = '';
+                    if (property.transaction === 'sale') {
+                        badgesHTML += '<span class="featured-badge">FOR SALE</span>';
+                    } else {
+                        badgesHTML += '<span class="featured-badge">FOR RENT</span>';
+                    }
+                    if (property.is_luxury) {
+                        badgesHTML += '<span class="featured-badge luxury">LUXURY</span>';
+                    }
+                    if (property.is_new) {
+                        badgesHTML += '<span class="featured-badge new">NEW</span>';
+                    }
+                    
+                    return `
+                        <a href="property-detail.html?id=${property.id}" class="featured-card" style="text-decoration: none; color: inherit;">
+                            <div class="featured-image">
+                                <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" 
+                                     alt="${property.title}" 
+                                     loading="lazy">
+                                <div class="featured-badges">${badgesHTML}</div>
+                                <div class="featured-price">${property.price_label}</div>
+                            </div>
+                            <div class="featured-content">
+                                <div class="featured-location">
+                                    <i class="fas fa-location-dot"></i>
+                                    ${property.neighborhood}, ${property.city.charAt(0).toUpperCase() + property.city.slice(1)}
+                                </div>
+                                <h3 class="featured-title">${property.title}</h3>
+                                <div class="featured-features">
+                                    <div class="featured-feature">
+                                        <i class="fas fa-bed"></i> ${property.bedrooms} Beds
+                                    </div>
+                                    <div class="featured-feature">
+                                        <i class="fas fa-bath"></i> ${property.bathrooms} Baths
+                                    </div>
+                                    <div class="featured-feature">
+                                        <i class="fas fa-ruler-combined"></i> ${property.surface} m²
+                                    </div>
+                                </div>
+                                <span class="featured-link">
+                                    View Details <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Erreur chargement propriétés:', error);
+                grid.innerHTML = `
+                    <div class="featured-empty">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading Properties</h3>
+                        <p>Please try again later.</p>
+                        <button onclick="loadFeaturedProperties()" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Charger au démarrage
+        document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
+        // Gestion de la recherche
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const city = document.getElementById('citySelect').value;
+    const type = document.getElementById('propertyType').value;
+    const budget = document.getElementById('budget').value;
+    
+    // Construire l'URL avec les paramètres
+    let url = 'properties.html?';
+    const params = [];
+    
+    if (city) params.push(`city=${city}`);
+    if (type) params.push(`type=${type}`);
+    if (budget) params.push(`budget=${encodeURIComponent(budget)}`);
+    
+    url += params.join('&');
+    
+    // Redirection
+    window.location.href = url;
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Kenzia Estates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bleu-nuit) 0%, #2d2d44 100%);
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--white);
+            padding: 50px;
+            border-radius: 5px;
+            box-shadow: var(--shadow-xl);
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo img {
+            height: 50px;
+            margin: 0 auto 15px;
+        }
+
+        .auth-logo h2 {
+            font-size: 1.8rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 10px;
+        }
+
+        .auth-logo p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .auth-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--bleu-nuit);
+            font-size: 0.9rem;
+        }
+
+        .auth-form .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border-light);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            transition: var(--transition-fast);
+            border-radius: 3px;
+        }
+
+        .auth-form .form-control:focus {
+            outline: none;
+            border-color: var(--matte-brass);
+            background: var(--white);
+        }
+
+        .auth-form .btn-primary {
+            width: 100%;
+            padding: 16px;
+            font-size: 1rem;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth-form .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .auth-footer p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .auth-footer a {
+            color: var(--matte-brass);
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            border-left: 4px solid var(--error);
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        .success-message {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+            border-left: 4px solid var(--success);
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .toggle-password:hover {
+            color: var(--matte-brass);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <img src="images/logo.png" alt="Kenzia Estates">
+                <h2>Welcome Back</h2>
+                <p>Sign in to access your dashboard</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i> Login successful! Redirecting...
+            </div>
+
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span id="btnText">Sign In</span>
+                    <i class="fas fa-arrow-right" id="btnIcon"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+                <p><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION API
+        // ============================================
+        const API_URL = 'http://localhost:3000/api';
+
+        // ============================================
+        // ÉLÉMENTS DU DOM
+        // ============================================
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const errorDiv = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const successDiv = document.getElementById('successMessage');
+        const togglePassword = document.getElementById('togglePassword');
+
+        // ============================================
+        // VÉRIFICATION : DÉJÀ CONNECTÉ ?
+        // ============================================
+ // Vérification au chargement - REDIRECTION SEULEMENT SI DÉJÀ CONNECTÉ
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+    // Si déjà connecté, rediriger immédiatement SANS vérification API
+    if (token && user) {
+        if (user.role === 'admin') {
+            window.location.href = 'dashboard.html';
+        } else {
+            window.location.href = 'index.html';
+                }
+                         }
+        });
+
+        // ============================================
+        // TOGGLE PASSWORD VISIBILITY
+        // ============================================
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            togglePassword.innerHTML = type === 'password' 
+                ? '<i class="far fa-eye"></i>' 
+                : '<i class="far fa-eye-slash"></i>';
+        });
+
+        // ============================================
+        // GESTION DU FORMULAIRE DE CONNEXION
+        // ============================================
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Cacher les messages précédents
+            hideMessages();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Validation basique
+            if (!email || !password) {
+                showError('Veuillez remplir tous les champs');
+                return;
+            }
+
+            // Afficher l'état de chargement
+            setLoading(true);
+
+            try {
+                const response = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // ✅ Connexion réussie
+                    showSuccess();
+
+                    // Stocker le token et les infos utilisateur
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Redirection après 1 seconde
+                    setTimeout(() => {
+                        if (data.user.role === 'admin') {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                    }, 1000);
+
+                } else {
+                    // ❌ Erreur de connexion
+                    showError(data.error || 'Erreur de connexion');
+                    setLoading(false);
+                }
+
+            } catch (err) {
+                // ❌ Erreur réseau
+                console.error('Erreur:', err);
+                showError('Impossible de se connecter au serveur. Vérifiez que le backend est démarré.');
+                setLoading(false);
+            }
+        });
+
+        // ============================================
+        // FONCTIONS UTILITAIRES
+        // ============================================
+        function showError(message) {
+            errorText.textContent = message;
+            errorDiv.classList.add('show');
+            successDiv.classList.remove('show');
+        }
+
+        function showSuccess() {
+            successDiv.classList.add('show');
+            errorDiv.classList.remove('show');
+        }
+
+        function hideMessages() {
+            errorDiv.classList.remove('show');
+            successDiv.classList.remove('show');
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                btnText.textContent = 'Signing in...';
+                btnIcon.className = 'fas fa-spinner fa-spin';
+            } else {
+                submitBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnIcon.className = 'fas fa-arrow-right';
+            }
+        }
+    </script>
+</body>
+</html>

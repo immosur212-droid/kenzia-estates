@@ -10,7 +10,7 @@ const rateLimit = require('express-rate-limit'); // ← Assurez-vous que cette l
 const fs = require('fs');                // ← IMPORTANT !
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 
 // Middleware
@@ -500,6 +500,11 @@ app.delete('/api/users/favorites/:propertyId', verifyToken, async (req, res) => 
 });
 
 // Servir index.html pour toutes les autres routes
+app.get('/api/*', (req, res) => {
+    // Gérer les routes API
+});
+
+// OU pour servir le frontend
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -510,6 +515,7 @@ app.get('*', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
 // ============================================

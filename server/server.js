@@ -98,6 +98,7 @@ pool.connect((err, client, release) => {
 
 // Import des middlewares d'authentification (assurez-vous que ce fichier existe)
 let verifyToken, verifyAdmin;
+
 try {
     const auth = require('./middlewares/auth');
     verifyToken = auth.verifyToken;

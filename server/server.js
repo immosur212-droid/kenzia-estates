@@ -350,4 +350,4 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
-Fix: Remove all wildcard routes and use app.use()
+

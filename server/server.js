@@ -324,9 +324,15 @@ app.delete('/api/users/favorites/:propertyId', verifyToken, async (req, res) => 
 // ============================================
 // 5. ROUTE CATCH-ALL (FRONTEND) - DOIT ÊTRE À LA FIN !
 // ============================================
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// IMPORTANT: Utiliser app.use() SANS chemin pour éviter le bug path-to-regexp
+app.use((req, res, next) => {
+    // Ne servir index.html que si ce n'est pas une route API
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+        return next();
+    }
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
+
 
 // ============================================
 // 6. DÉMARRAGE DU SERVEUR

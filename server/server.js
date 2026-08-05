@@ -31,6 +31,10 @@ app.use(express.urlencoded({ extended: true }));
 // Servir les fichiers statiques
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use((req, res, next) => {
+    console.log(`📥 Requête: ${req.method} ${req.path}`);
+    next();
+});
 
 // Rate Limiter
 const loginLimiter = rateLimit({

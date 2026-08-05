@@ -13,6 +13,14 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // ============================================
+// 1. CHEMINS HARMONISÉS (RACINE DU PROJET)
+// ============================================
+// __dirname pointe vers /server. On ajoute '..' pour pointer vers la racine du projet.
+const rootDir = path.join(__dirname, '..');
+const publicDir = path.join(rootDir, 'public');
+const uploadDir = path.join(rootDir, 'uploads', 'properties');
+
+// ============================================
 // 1. MIDDLEWARES
 // ============================================
 app.use(cors({

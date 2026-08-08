@@ -142,16 +142,79 @@ app.post('/api/users/login', loginLimiter, async (req, res) => {
     } catch (err) { res.status(500).json({ error: 'Erreur serveur' }); }
 });
 // ============================================
-// ROUTE TEMPORAIRE : RÉINITIALISER MOT DE PASSE ADMIN
+// ROUTE TEMPORAIRE : CRÉER LES TABLES + ADMIN
 // ============================================
-// À SUPPRIMER après utilisation !
+// ⚠️ À SUPPRIMER après utilisation !
 app.get('/api/reset-admin-password', async (req, res) => {
     try {
-        const newPassword = 'Admin123!';
-        const bcrypt = require('bcryptjs');
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // 1. Créer la table users si elle n'existe pas
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                full_name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                phone VARCHAR(20),
+                password_hash VARCHAR(255) NOT NULL,
+                role VARCHAR(20) DEFAULT 'user',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
         
-        // Mettre à jour OU créer un admin
+        // 2. Créer la table properties si elle n'existe pas
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS properties (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                city VARCHAR(50) NOT NULL,
+                neighborhood VARCHAR(100),
+                type VARCHAR(50) NOT NULL,
+                transaction VARCHAR(20) NOT NULL,
+                price INTEGER,
+                price_label VARCHAR(50),
+                surface INTEGER,
+                bedrooms INTEGER,
+                bathrooms INTEGER,
+                image_url TEXT,
+                images TEXT,
+                description TEXT,
+                is_new BOOLEAN DEFAULT false,
+                is_luxury BOOLEAN DEFAULT false,
+                lat DECIMAL(10, 8),
+                lng DECIMAL(11, 8),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        
+        // 3. Créer la table contact_messages si elle n'existe pas
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS contact_messages (
+                id SERIAL PRIMARY KEY,
+                full_name VARCHAR(100),
+                email VARCHAR(100),
+                phone VARCHAR(20),
+                subject VARCHAR(100),
+                message TEXT,
+                is_read BOOLEAN DEFAULT false,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        
+        // 4. Créer la table favorites si elle n'existe pas
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS favorites (
+                id SERIAL PRIMARY KEY,
+                user_id INT REFERENCES users(id) ON DELETE CASCADE,
+                property_id INT REFERENCES properties(id) ON DELETE CASCADE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id, property_id)
+            );
+        `);
+        
+        // 5. Créer ou mettre à jour le compte admin
+        const bcrypt = require('bcryptjs');
+        const hashedPassword = await bcrypt.hash('Admin123!', 10);
+        
         const result = await pool.query(
             `INSERT INTO users (full_name, email, password_hash, role)
              VALUES ('Admin Kenzia', 'admin@kenziaestates.ma', $1, 'admin')
@@ -162,13 +225,17 @@ app.get('/api/reset-admin-password', async (req, res) => {
         );
         
         res.json({
-            message: 'Mot de passe admin réinitialisé avec succès !',
-            email: result.rows[0].email,
-            newPassword: newPassword,
-            warning: 'SUPPRIMEZ CETTE ROUTE IMMÉDIATEMENT APRÈS USAGE !'
+            message: '✅ Tables créées et admin initialisé !',
+            tables: ['users', 'properties', 'contact_messages', 'favorites'],
+            admin: {
+                email: result.rows[0].email,
+                password: 'Admin123!',
+                role: result.rows[0].role
+            },
+            warning: '⚠️ SUPPRIMEZ CETTE ROUTE IMMÉDIATEMENT APRÈS USAGE !'
         });
     } catch (err) {
-        console.error('Erreur reset password:', err);
+        console.error('Erreur:', err);
         res.status(500).json({ error: 'Erreur serveur: ' + err.message });
     }
 });

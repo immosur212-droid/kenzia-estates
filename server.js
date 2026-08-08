@@ -141,7 +141,37 @@ app.post('/api/users/login', loginLimiter, async (req, res) => {
         res.json({ message: 'Connexion réussie', token, user: { id: user.id, full_name: user.full_name, email: user.email, role: user.role } });
     } catch (err) { res.status(500).json({ error: 'Erreur serveur' }); }
 });
-
+// ============================================
+// ROUTE TEMPORAIRE : RÉINITIALISER MOT DE PASSE ADMIN
+// ============================================
+// À SUPPRIMER après utilisation !
+app.get('/api/reset-admin-password', async (req, res) => {
+    try {
+        const newPassword = 'Admin123!';
+        const bcrypt = require('bcryptjs');
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        
+        // Mettre à jour OU créer un admin
+        const result = await pool.query(
+            `INSERT INTO users (full_name, email, password_hash, role)
+             VALUES ('Admin Kenzia', 'admin@kenziaestates.ma', $1, 'admin')
+             ON CONFLICT (email) 
+             DO UPDATE SET password_hash = $1
+             RETURNING email, role`,
+            [hashedPassword]
+        );
+        
+        res.json({
+            message: 'Mot de passe admin réinitialisé avec succès !',
+            email: result.rows[0].email,
+            newPassword: newPassword,
+            warning: 'SUPPRIMEZ CETTE ROUTE IMMÉDIATEMENT APRÈS USAGE !'
+        });
+    } catch (err) {
+        console.error('Erreur reset password:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
 // ============================================
 // 5. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN
 // ============================================

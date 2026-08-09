@@ -662,40 +662,70 @@
             updateImagePreview();
         }
 
-        async function editProperty(id) {
-            try {
-                if (!id) {
-                console.error('Property ID is missing');
-                return;
-                }
-                const res = await fetch(`${CONFIG.API_URL}/properties/${id}`);
-                if (!res.ok) throw new Error('Erreur');
-                const property = await res.json();
-                editingPropertyId = id;
-                existingImages = property.images ? JSON.parse(property.images) : [property.image_url].filter(Boolean);
-                selectedFiles = [];
-                
-                document.getElementById('modalTitle').textContent = 'Edit Property';
-                document.getElementById('propTitle').value = property.title || '';
-                document.getElementById('propCity').value = property.city || '';
-                document.getElementById('propNeighborhood').value = property.neighborhood || '';
-                document.getElementById('propType').value = property.type || '';
-                document.getElementById('propTransaction').value = property.transaction || '';
-                document.getElementById('propPrice').value = property.price || '';
-                document.getElementById('propSurface').value = property.surface || '';
-                document.getElementById('propBedrooms').value = property.bedrooms || '';
-                document.getElementById('propBathrooms').value = property.bathrooms || '';
-                document.getElementById('propDescription').value = property.description || '';
-                document.getElementById('propIsNew').checked = property.is_new || false;
-                document.getElementById('propIsLuxury').checked = property.is_luxury || false;
-                document.getElementById('propLat').value = property.lat || '';
-                document.getElementById('propLng').value = property.lng || '';
-                
-                updateImagePreview();
-                document.getElementById('propertyModal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } catch (error) { alert('Error loading property details'); }
+       async function editProperty(id) {
+    try {
+        if (!id) {
+            console.error('❌ Property ID is missing');
+            alert('ID du bien manquant');
+            return;
         }
+
+        // Fallback de sécurité au cas où CONFIG ne serait pas chargé
+        const apiUrl = typeof CONFIG !== 'undefined' ? CONFIG.API_URL : window.location.origin + '/api';
+        console.log('🔍 Tentative de chargement du bien ID:', id, 'via:', `${apiUrl}/properties/${id}`);
+
+        const res = await fetch(`${apiUrl}/properties/${id}`);
+        console.log('📡 Réponse du serveur:', res.status, res.statusText);
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            throw new Error(errorData.error || `Erreur HTTP: ${res.status}`);
+        }
+
+        const property = await res.json();
+        console.log('✅ Bien chargé avec succès:', property);
+
+        editingPropertyId = id;
+        
+        // Gestion sécurisée des images (évite le crash de JSON.parse)
+        existingImages = [];
+        if (property.images) {
+            try {
+                existingImages = JSON.parse(property.images);
+            } catch (e) {
+                existingImages = property.image_url ? [property.image_url] : [];
+            }
+        } else if (property.image_url) {
+            existingImages = [property.image_url];
+        }
+        
+        selectedFiles = [];
+        
+        document.getElementById('modalTitle').textContent = 'Edit Property';
+        document.getElementById('propTitle').value = property.title || '';
+        document.getElementById('propCity').value = property.city || '';
+        document.getElementById('propNeighborhood').value = property.neighborhood || '';
+        document.getElementById('propType').value = property.type || '';
+        document.getElementById('propTransaction').value = property.transaction || '';
+        document.getElementById('propPrice').value = property.price || '';
+        document.getElementById('propSurface').value = property.surface || '';
+        document.getElementById('propBedrooms').value = property.bedrooms || '';
+        document.getElementById('propBathrooms').value = property.bathrooms || '';
+        document.getElementById('propDescription').value = property.description || '';
+        document.getElementById('propIsNew').checked = property.is_new || false;
+        document.getElementById('propIsLuxury').checked = property.is_luxury || false;
+        document.getElementById('propLat').value = property.lat || '';
+        document.getElementById('propLng').value = property.lng || '';
+        
+        updateImagePreview();
+        document.getElementById('propertyModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+    } catch (error) {
+        console.error('❌ Erreur détaillée dans editProperty:', error);
+        alert('Error loading property details: ' + error.message);
+    }
+}
 
         async function deleteProperty(id) {
             if (!confirm('Delete this property?')) return;

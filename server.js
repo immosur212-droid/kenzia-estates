@@ -168,10 +168,30 @@ app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images
 
         const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
         
+        // Upload des images sur Cloudinary
         let image_urls = [];
+        
         if (req.files && req.files.length > 0) {
-            image_urls = req.files.map(file => `/uploads/properties/${file.filename}`);
+            for (const file of req.files) {
+                // Convertir le buffer en base64
+                const b64 = Buffer.from(file.buffer).toString('base64');
+                const dataURI = 'data:' + file.mimetype + ';base64,' + b64;
+                
+                // Upload sur Cloudinary
+                const result = await cloudinary.uploader.upload(dataURI, {
+                    folder: 'kenzia-estates/properties',
+                    transformation: [
+                        { width: 1200, crop: 'limit' }, // Redimensionner
+                        { quality: 'auto:good' } // Optimiser la qualité
+                    ]
+                });
+                
+                image_urls.push(result.secure_url);
+            }
         }
+
+        const image_url = image_urls[0] || null;
+        const images_json = JSON.stringify(image_urls);
 
         const result = await pool.query(
             `INSERT INTO properties 
@@ -180,7 +200,7 @@ app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
             RETURNING *`,
             [title, city, neighborhood, type, transaction, price, price_label,
-             surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls), 
+             surface, bedrooms, bathrooms, image_url, images_json, 
              description, is_new === 'true', is_luxury === 'true', lat, lng]
         );
 

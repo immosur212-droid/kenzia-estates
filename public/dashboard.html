@@ -477,7 +477,7 @@
             const badge = document.getElementById('messagesBadge');
             if (!badge) return;
             try {
-                const res = await fetch(`${API_URL}/admin/messages`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/messages`, { headers: { 'Authorization': 'Bearer ' + token } });
                 if (res.ok) {
                     const messages = await res.json();
                     const unreadCount = messages.filter(m => m.is_read === false).length;
@@ -492,7 +492,7 @@
             const messagesList = document.getElementById('messagesList');
             messagesList.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Chargement...</p></div>`;
             try {
-                const res = await fetch(`${API_URL}/admin/messages`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/messages`, { headers: { 'Authorization': 'Bearer ' + token } });
                 if (!res.ok) throw new Error('Erreur API');
                 const messages = await res.json();
                 await refreshMessagesBadge();
@@ -532,7 +532,7 @@
         async function markAsRead(messageId) {
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`${API_URL}/admin/messages/${messageId}/read`, { method: 'PUT', headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/messages/${messageId}/read`, { method: 'PUT', headers: { 'Authorization': 'Bearer ' + token } });
                 if (res.ok) await loadMessages();
             } catch (error) { console.error(error); }
         }
@@ -541,7 +541,7 @@
             if (!confirm('Supprimer ce message ?')) return;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`${API_URL}/admin/messages/${messageId}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/messages/${messageId}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
                 if (res.ok) await loadMessages();
             } catch (error) { console.error(error); }
         }
@@ -595,7 +595,7 @@
                 submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 
                 try {
-                    const url = editingPropertyId ? `${API_URL}/admin/properties/${editingPropertyId}` : `${API_URL}/admin/properties`;
+                    const url = editingPropertyId ? `${CONFIG.API_URL}/admin/properties/${editingPropertyId}` : `${API_URL}/admin/properties`;
                     const method = editingPropertyId ? 'PUT' : 'POST';
                     const response = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}` }, body: formData });
                     const data = await response.json();
@@ -696,7 +696,7 @@
             if (!confirm('Delete this property?')) return;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`${API_URL}/admin/properties/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/properties/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
                 if (res.ok) { alert('Deleted successfully'); await Promise.all([loadProperties(), loadStats()]); }
                 else { alert('Error: ' + (await res.json()).error); }
             } catch (err) { console.error(err); }
@@ -704,7 +704,7 @@
 
         async function loadStats() {
             try {
-                const res = await fetch(`${API_URL}/properties`);
+                const res = await fetch(`${CONFIG.API_URL}/properties`);
                 const properties = await res.json();
                 let forSale = 0, forRent = 0;
                 properties.forEach(p => { if (p.transaction === 'sale') forSale++; if (p.transaction === 'rent') forRent++; });
@@ -720,7 +720,7 @@
             const table = document.getElementById('propertiesTable');
             const tbody = document.getElementById('propertiesTableBody');
             try {
-                const res = await fetch(`${API_URL}/properties`);
+                const res = await fetch(`${CONFIG.API_URL}/properties`);
                 const properties = await res.json();
                 loading.style.display = 'none';
                 table.style.display = 'table';
@@ -756,7 +756,7 @@
             const token = localStorage.getItem('token');
             const usersContent = document.getElementById('usersContent');
             try {
-                const res = await fetch(`${API_URL}/admin/users`, { headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/users`, { headers: { 'Authorization': 'Bearer ' + token } });
                 if (!res.ok) throw new Error('Erreur');
                 const users = await res.json();
                 if (users.length === 0) {
@@ -785,7 +785,7 @@
             if (!confirm(`Changer le rôle en ${currentRole === 'admin' ? 'user' : 'admin'} ?`)) return;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`${API_URL}/admin/users/${userId}/role`, {
+                const res = await fetch(`${CONFIG.API_URL}/admin/users/${userId}/role`, {
                     method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
                     body: JSON.stringify({ role: currentRole === 'admin' ? 'user' : 'admin' })
                 });
@@ -797,7 +797,7 @@
             if (!confirm('Supprimer cet utilisateur ?')) return;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`${API_URL}/admin/users/${userId}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+                const res = await fetch(`${CONFIG.API_URL}/admin/users/${userId}`, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
                 if (res.ok) await loadUsers();
             } catch (e) { console.error(e); }
         }

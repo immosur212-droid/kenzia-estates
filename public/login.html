@@ -222,9 +222,10 @@
 
     <script>
         // ============================================
-        // CONFIGURATION API
+        // CONFIGURATION API (CORRIGÉ POUR RENDER)
         // ============================================
-        const API_URL = 'http://localhost:3000/api';
+        // Utilise l'origine actuelle (ex: https://votre-site.onrender.com) + /api
+        const API_URL = window.location.origin + '/api';
 
         // ============================================
         // ÉLÉMENTS DU DOM
@@ -243,19 +244,18 @@
         // ============================================
         // VÉRIFICATION : DÉJÀ CONNECTÉ ?
         // ============================================
- // Vérification au chargement - REDIRECTION SEULEMENT SI DÉJÀ CONNECTÉ
-document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-    // Si déjà connecté, rediriger immédiatement SANS vérification API
-    if (token && user) {
-        if (user.role === 'admin') {
-            window.location.href = 'dashboard.html';
-        } else {
-            window.location.href = 'index.html';
+            // Si déjà connecté, rediriger immédiatement
+            if (token && user) {
+                if (user.role === 'admin') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'index.html';
                 }
-                         }
+            }
         });
 
         // ============================================
@@ -320,14 +320,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 } else {
                     // ❌ Erreur de connexion
-                    showError(data.error || 'Erreur de connexion');
+                    showError(data.error || 'Email ou mot de passe incorrect');
                     setLoading(false);
                 }
 
             } catch (err) {
                 // ❌ Erreur réseau
-                console.error('Erreur:', err);
-                showError('Impossible de se connecter au serveur. Vérifiez que le backend est démarré.');
+                console.error('Erreur réseau:', err);
+                showError('Impossible de se connecter au serveur. Vérifiez votre connexion.');
                 setLoading(false);
             }
         });

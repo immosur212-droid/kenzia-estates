@@ -663,7 +663,7 @@
 
         async function editProperty(id) {
             try {
-                const res = await fetch(`${API_URL}/properties/${id}`);
+                const res = await fetch(`${CONFIG.API_URL}/properties/${id}`);
                 if (!res.ok) throw new Error('Erreur');
                 const property = await res.json();
                 editingPropertyId = id;

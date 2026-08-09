@@ -176,7 +176,7 @@ app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images
             `INSERT INTO properties 
             (title, city, neighborhood, type, transaction, price, price_label,
              surface, bedrooms, bathrooms, image_url, images, description, is_new, is_luxury, lat, lng)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
             RETURNING *`,
             [title, city, neighborhood, type, transaction, price, price_label,
              surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls), 

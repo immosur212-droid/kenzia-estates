@@ -141,6 +141,174 @@ app.post('/api/users/login', loginLimiter, async (req, res) => {
         res.json({ message: 'Connexion réussie', token, user: { id: user.id, full_name: user.full_name, email: user.email, role: user.role } });
     } catch (err) { res.status(500).json({ error: 'Erreur serveur' }); }
 });
+// ============================================
+// ROUTES ADMIN - PROPRIÉTÉS
+// ============================================
+
+// Récupérer toutes les propriétés (Admin)
+app.get('/api/admin/properties', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erreur chargement propriétés:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Créer une propriété (Admin)
+app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
+    try {
+        const {
+            title, city, neighborhood, type, transaction,
+            price, surface, bedrooms, bathrooms,
+            description, is_new, is_luxury, lat, lng
+        } = req.body;
+
+        const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
+        
+        let image_urls = [];
+        if (req.files && req.files.length > 0) {
+            image_urls = req.files.map(file => `/uploads/properties/${file.filename}`);
+        }
+
+        const result = await pool.query(
+            `INSERT INTO properties 
+            (title, city, neighborhood, type, transaction, price, price_label,
+             surface, bedrooms, bathrooms, image_url, images, description, is_new, is_luxury, lat, lng)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+            RETURNING *`,
+            [title, city, neighborhood, type, transaction, price, price_label,
+             surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls), 
+             description, is_new === 'true', is_luxury === 'true', lat, lng]
+        );
+
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur création propriété:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
+
+// Modifier une propriété (Admin)
+app.put('/api/admin/properties/:id', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            title, city, neighborhood, type, transaction,
+            price, surface, bedrooms, bathrooms,
+            description, is_new, is_luxury, lat, lng,
+            existing_images
+        } = req.body;
+
+        const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
+        
+        let image_urls = [];
+        if (existing_images) {
+            try {
+                image_urls = JSON.parse(existing_images);
+            } catch (e) {
+                image_urls = [existing_images];
+            }
+        }
+        
+        if (req.files && req.files.length > 0) {
+            const newImages = req.files.map(file => `/uploads/properties/${file.filename}`);
+            image_urls = [...image_urls, ...newImages];
+        }
+
+        const result = await pool.query(
+            `UPDATE properties 
+            SET title=$1, city=$2, neighborhood=$3, type=$4, transaction=$5,
+                price=$6, price_label=$7, surface=$8, bedrooms=$9, bathrooms=$10,
+                image_url=$11, images=$12, description=$13, is_new=$14, is_luxury=$15,
+                lat=$16, lng=$17, updated_at=CURRENT_TIMESTAMP
+            WHERE id=$18
+            RETURNING *`,
+            [title, city, neighborhood, type, transaction, price, price_label,
+             surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls),
+             description, is_new === 'true', is_luxury === 'true', lat, lng, id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Propriété non trouvée' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur modification propriété:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
+
+// Supprimer une propriété (Admin)
+app.delete('/api/admin/properties/:id', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM properties WHERE id = $1 RETURNING *', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Propriété non trouvée' });
+        }
+
+        res.json({ message: 'Propriété supprimée' });
+    } catch (err) {
+        console.error('Erreur suppression propriété:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// ============================================
+// ROUTES ADMIN - MESSAGES
+// ============================================
+
+// Récupérer tous les messages (Admin)
+app.get('/api/admin/messages', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM contact_messages ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erreur chargement messages:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Marquer un message comme lu (Admin)
+app.put('/api/admin/messages/:id/read', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            'UPDATE contact_messages SET is_read = TRUE WHERE id = $1 RETURNING *',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Message non trouvé' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur mise à jour message:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// Supprimer un message (Admin)
+app.delete('/api/admin/messages/:id', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM contact_messages WHERE id = $1 RETURNING *', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Message non trouvé' });
+        }
+
+        res.json({ message: 'Message supprimé' });
+    } catch (err) {
+        console.error('Erreur suppression message:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
 
 // ============================================
 // 5. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN

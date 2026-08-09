@@ -334,17 +334,44 @@ app.delete('/api/admin/messages/:id', verifyToken, verifyAdmin, async (req, res)
 // ============================================
 // 5. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN
 // ============================================
+// Liste des pages frontend valides
+const validPages = [
+    '/', '/index.html',
+    '/properties.html',
+    '/property-detail.html',
+    '/contact.html',
+    '/about.html',
+    '/services.html',
+    '/dashboard.html',
+    '/login.html',
+    '/register.html'
+];
+
 app.use((req, res, next) => {
+    // Laisser passer les routes API et les uploads
     if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
         return next();
     }
-    const indexPath = path.join(publicDir, 'index.html');
-    res.sendFile(indexPath, (err) => {
-        if (err) {
-            console.error('❌ Erreur envoi index.html:', err);
-            res.status(404).send('Fichier non trouvé. Vérifiez le dossier public/');
+    
+    // Si c'est une page frontend valide, servir index.html
+    const pagePath = req.path.split('?')[0]; // Enlever les query params
+    if (validPages.includes(pagePath)) {
+        const pageFile = pagePath === '/' ? 'index.html' : pagePath.substring(1);
+        const indexPath = path.join(publicDir, pageFile);
+        
+        if (fs.existsSync(indexPath)) {
+            return res.sendFile(indexPath);
         }
-    });
+    }
+    
+    // Sinon, 404 réel
+    res.status(404).send(`
+        <div style="text-align:center; padding:50px; font-family:sans-serif;">
+            <h1>404 - Page Not Found</h1>
+            <p>The page you're looking for doesn't exist.</p>
+            <a href="/">Go to Homepage</a>
+        </div>
+    `);
 });
 
 // ============================================

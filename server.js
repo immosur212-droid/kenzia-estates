@@ -122,10 +122,9 @@ app.get('/api/health', (req, res) => {
 });
 
 // Récupérer un bien par ID (Route manquante !)
-app.get('/api/properties/:id', async (req, res) => {
+app.get('/api/properties/', async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await pool.query('SELECT * FROM properties WHERE id = $1', [id]);
         
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Property not found' });

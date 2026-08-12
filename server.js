@@ -122,19 +122,56 @@ app.get('/api/health', (req, res) => {
 });
 
 // Récupérer un bien par ID (Route manquante !)
-app.get('/api/properties/:id', async (req, res) => {
+app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
     try {
-        const { id } = req.params;
-        const result = await pool.query('SELECT * FROM properties WHERE id = $1', [id]);
+        const {
+            title, city, neighborhood, type, transaction,
+            price, surface, bedrooms, bathrooms,
+            description, is_new, is_luxury, lat, lng
+        } = req.body;
+
+        const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
         
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Property not found' });
+        // Upload des images sur Cloudinary
+        let image_urls = [];
+        
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                // Convertir le buffer en base64
+                const b64 = Buffer.from(file.buffer).toString('base64');
+                const dataURI = 'data:' + file.mimetype + ';base64,' + b64;
+                
+                // Upload sur Cloudinary
+                const result = await cloudinary.uploader.upload(dataURI, {
+                    folder: 'kenzia-estates/properties',
+                    transformation: [
+                        { width: 1200, crop: 'limit' }, // Redimensionner
+                        { quality: 'auto:good' } // Optimiser la qualité
+                    ]
+                });
+                
+                image_urls.push(result.secure_url);
+            }
         }
-        
-        res.json(result.rows[0]);
+
+        const image_url = image_urls[0] || null;
+        const images_json = JSON.stringify(image_urls);
+
+        const result = await pool.query(
+            `INSERT INTO properties 
+            (title, city, neighborhood, type, transaction, price, price_label,
+             surface, bedrooms, bathrooms, image_url, images, description, is_new, is_luxury, lat, lng)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+            RETURNING *`,
+            [title, city, neighborhood, type, transaction, price, price_label,
+             surface, bedrooms, bathrooms, image_url, images_json, 
+             description, is_new === 'true', is_luxury === 'true', lat, lng]
+        );
+
+        res.status(201).json(result.rows[0]);
     } catch (err) {
-        console.error('Erreur chargement propriété par ID:', err);
-        res.status(500).json({ error: 'Erreur serveur' });
+        console.error('Erreur création propriété:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
     }
 });
 

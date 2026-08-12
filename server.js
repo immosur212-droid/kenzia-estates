@@ -121,11 +121,21 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'online', environment: process.env.NODE_ENV || 'development' });
 });
 
-app.get('/api/properties', async (req, res) => {
+// Récupérer un bien par ID (Route manquante !)
+app.get('/api/properties/:id', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
-        res.json(result.rows);
-    } catch (err) { res.status(500).json({ error: 'Erreur serveur' }); }
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM properties WHERE id = $1', [id]);
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Property not found' });
+        }
+        
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur chargement propriété par ID:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
 });
 
 // ... (Gardez vos autres routes /api/... ici) ...

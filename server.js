@@ -203,7 +203,18 @@ app.get('/api/admin/properties', verifyToken, verifyAdmin, async (req, res) => {
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });
-
+// Récupérer toutes les propriétés (PUBLIC)
+app.get('/api/properties', async (req, res) => {
+    try {
+        console.log('📥 Requête GET /api/properties');
+        const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
+        console.log('✅ Propriétés trouvées:', result.rows.length);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('❌ Erreur chargement propriétés:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
 // Créer une propriété (Admin)
 app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
     try {

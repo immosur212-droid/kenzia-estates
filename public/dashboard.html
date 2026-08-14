@@ -608,7 +608,11 @@
                 submitBtn.disabled = true; submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 
                 try {
-                    const url = editingPropertyId ? `${CONFIG.API_URL}/admin/properties/${editingPropertyId}` : `${API_URL}/admin/properties`;
+                    const user = JSON.parse(localStorage.getItem('user') || 'null');
+                    const baseEndpoint = user.role === 'admin' ? '/admin/properties' : '/properties';
+                    const url = editingPropertyId 
+                        ? `${CONFIG.API_URL}/properties/${editingPropertyId}`  // PUT toujours sur /properties/:id
+                        : `${CONFIG.API_URL}${baseEndpoint}`;  // POST selon le rôle
                     const method = editingPropertyId ? 'PUT' : 'POST';
                     const response = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}` }, body: formData });
                     const data = await response.json();

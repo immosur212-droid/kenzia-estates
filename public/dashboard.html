@@ -766,30 +766,27 @@
     const loading = document.getElementById('loadingProperties');
     const table = document.getElementById('propertiesTable');
     const tbody = document.getElementById('propertiesTableBody');
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
     
     try {
-        console.log('🔍 Chargement des propriétés via:', `${CONFIG.API_URL}/properties`);
+        // Les admins utilisent /api/admin/properties, les users utilisent /api/properties
+        const endpoint = user.role === 'admin' ? '/api/admin/properties' : '/api/properties';
+        const headers = { 'Authorization': `Bearer ${token}` };
         
-        const res = await fetch(`${CONFIG.API_URL}/properties`);
-        console.log('📡 Réponse:', res.status, res.statusText);
-        
-        // Vérifier si la réponse est du JSON
-        const contentType = res.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const text = await res.text();
-            console.error(' Le serveur a renvoyé du HTML au lieu de JSON:', text.substring(0, 200));
-            throw new Error('Le serveur a renvoyé une réponse invalide (HTML au lieu de JSON)');
-        }
-        
+        const res = await fetch(`${CONFIG.API_URL}${endpoint}`, { headers });
         const properties = await res.json();
-        console.log('✅ Propriétés chargées:', properties.length);
         
         loading.style.display = 'none';
         table.style.display = 'table';
         tbody.innerHTML = '';
         
         if (properties.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">No properties found. <a href="#" onclick="document.getElementById('addPropertyBtn').click(); return false;">Add your first property</a></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px;">
+                No properties found. 
+                <a href="#" onclick="document.getElementById('addPropertyBtn').click(); return false;" 
+                   style="color:var(--matte-brass); font-weight:600;">Add your first property</a>
+            </td></tr>`;
             return;
         }
         
@@ -812,18 +809,12 @@
         });
         
     } catch (err) {
-        console.error('❌ Erreur détaillée loadProperties:', err);
-        loading.innerHTML = `
-            <div style="color:var(--error); padding:40px;">
-                <i class="fas fa-exclamation-triangle" style="font-size:3rem; margin-bottom:15px;"></i>
-                <p><strong>Error loading properties</strong></p>
-                <p style="font-size:0.85rem; margin-top:10px;">${err.message}</p>
-                <button onclick="loadProperties()" style="margin-top:15px; padding:10px 20px; background:var(--matte-brass); color:var(--bleu-nuit); border:none; border-radius:5px; cursor:pointer;">
-                    <i class="fas fa-sync"></i> Retry
-                </button>
-            </div>`;
+        console.error('Erreur:', err);
+        loading.innerHTML = '<p style="color:var(--error);">Error loading properties.</p>';
     }
 }
+        
+    
 
         // --- UTILISATEURS ---
         async function loadUsers() {

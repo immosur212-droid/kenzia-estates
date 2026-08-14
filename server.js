@@ -115,9 +115,29 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'online', environment: process.env.NODE_ENV || 'development' });
 });
 
+// Récupérer les propriétés (filtrées selon le rôle)
 app.get('/api/properties', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
+        let query = 'SELECT * FROM properties';
+        let params = [];
+        
+        // Si l'utilisateur est connecté et n'est PAS admin, ne montrer que ses biens
+        if (req.headers.authorization) {
+            try {
+                const token = req.headers.authorization.split(' ')[1];
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                
+                if (decoded.role !== 'admin') {
+                    query += ' WHERE user_id = $1';
+                    params.push(decoded.id);
+                }
+            } catch (e) {
+                // Token invalide, on ignore et on montre tout (ou rien selon votre choix)
+            }
+        }
+        
+        query += ' ORDER BY created_at DESC';
+        const result = await pool.query(query, params);
         res.json(result.rows);
     } catch (err) {
         console.error('Erreur chargement propriétés:', err);

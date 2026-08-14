@@ -237,10 +237,17 @@ app.get('/api/admin/properties', verifyToken, verifyAdmin, async (req, res) => {
     }
 });
 
-app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
+// Créer une propriété (accessible aux users ET admins)
+app.post('/api/properties', verifyToken, upload.array('images', 5), async (req, res) => {
     try {
         const { title, city, neighborhood, type, transaction, price, surface, bedrooms, bathrooms, description, is_new, is_luxury, lat, lng } = req.body;
-        const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
+        const userId = req.user.id; // Récupéré depuis le token
+        
+        const priceNum = parseFloat(price);
+        if (isNaN(priceNum) || priceNum < 0) {
+            return res.status(400).json({ error: 'Prix invalide' });
+        }
+        const price_label = priceNum.toLocaleString('en-US') + ' MAD';
         
         let image_urls = [];
         if (req.files && req.files.length > 0) {
@@ -259,12 +266,14 @@ app.post('/api/admin/properties', verifyToken, verifyAdmin, upload.array('images
         const images_json = JSON.stringify(image_urls);
 
         const result = await pool.query(
-            `INSERT INTO properties (title, city, neighborhood, type, transaction, price, price_label, surface, bedrooms, bathrooms, image_url, images, description, is_new, is_luxury, lat, lng)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-             RETURNING *`,
-            [title, city, neighborhood, type, transaction, price, price_label, surface, bedrooms, bathrooms, image_url, images_json, description, is_new === 'true', is_luxury === 'true', lat, lng]
+            `INSERT INTO properties 
+            (title, city, neighborhood, type, transaction, price, price_label, surface, bedrooms, bathrooms, image_url, images, description, is_new, is_luxury, lat, lng, user_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+            RETURNING *`,
+            [title, city, neighborhood, type, transaction, priceNum, price_label, surface, bedrooms, bathrooms, image_url, images_json, description, is_new === 'true', is_luxury === 'true', lat, lng, userId]
         );
 
+        console.log('✅ Propriété créée par user ID:', userId);
         res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error('Erreur création propriété:', err);

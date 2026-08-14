@@ -420,7 +420,12 @@
         let editingPropertyId = null;
         let existingImages = [];
         let selectedFiles = [];
-
+        
+        function isUserAdmin() {
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        return user && user.role === 'admin';
+        }
+        
         // Gestion des vues (Navigation propre sans décalage)
         function switchView(viewName) {
             document.getElementById('viewDashboard').style.display = (viewName === 'dashboard') ? 'block' : 'none';

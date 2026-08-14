@@ -227,12 +227,18 @@ app.post('/api/users/login', loginLimiter, async (req, res) => {
 // ============================================
 // 7. ROUTES ADMIN - PROPRIÉTÉS
 // ============================================
+// Admin : voir tous les biens (y compris ceux des users)
 app.get('/api/admin/properties', verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM properties ORDER BY created_at DESC');
+        const result = await pool.query(`
+            SELECT p.*, u.full_name as owner_name 
+            FROM properties p 
+            LEFT JOIN users u ON p.user_id = u.id 
+            ORDER BY p.created_at DESC
+        `);
         res.json(result.rows);
     } catch (err) {
-        console.error('Erreur chargement propriétés admin:', err);
+        console.error('Erreur:', err);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });

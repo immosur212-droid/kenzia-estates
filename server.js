@@ -335,14 +335,27 @@ app.put('/api/properties/:id', verifyToken, upload.array('images', 5), async (re
     }
 });
 
-app.delete('/api/admin/properties/:id', verifyToken, verifyAdmin, async (req, res) => {
+// Supprimer une propriété (user ne peut supprimer que ses biens)
+app.delete('/api/properties/:id', verifyToken, async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+        const isAdmin = req.user.role === 'admin';
+        
+        // Vérifier que le bien appartient à l'utilisateur (ou admin)
+        const checkResult = await pool.query('SELECT user_id FROM properties WHERE id = $1', [id]);
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Propriété non trouvée' });
+        }
+        
+        if (!isAdmin && checkResult.rows[0].user_id !== userId) {
+            return res.status(403).json({ error: 'Vous ne pouvez supprimer que vos propres biens' });
+        }
+        
         const result = await pool.query('DELETE FROM properties WHERE id = $1 RETURNING *', [id]);
-        if (result.rows.length === 0) return res.status(404).json({ error: 'Propriété non trouvée' });
         res.json({ message: 'Propriété supprimée' });
     } catch (err) {
-        console.error('Erreur suppression propriété:', err);
+        console.error('Erreur suppression:', err);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });

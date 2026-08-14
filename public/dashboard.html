@@ -439,21 +439,27 @@
             if(viewName === 'users') document.getElementById('navUsers').classList.add('active');
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
+       document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-           if (!token || !user) {
-            window.location.href = '/login.html';
-            return;
-            }
-            // Les admins ET les users réguliers peuvent accéder au dashboard
+    if (!token || !user) {
+        window.location.href = '/login.html';
+        return;
+    }
 
-            document.getElementById('userName').textContent = user.full_name || 'Admin';
-            document.getElementById('userAvatar').textContent = (user.full_name || 'A').charAt(0).toUpperCase();
+    document.getElementById('userName').textContent = user.full_name || 'Utilisateur';
+    document.getElementById('userAvatar').textContent = (user.full_name || 'U').charAt(0).toUpperCase();
 
-            // Chargement initial
-            await Promise.all([loadStats(), loadProperties(), refreshMessagesBadge()]);
+    // Cacher les sections admin pour les users réguliers
+    if (user.role !== 'admin') {
+        document.getElementById('navUsers').style.display = 'none';
+        document.getElementById('navMessages').style.display = 'none';
+        document.querySelector('.stat-card:nth-child(4)').style.display = 'none'; // Total Users
+    }
+
+    // Chargement initial
+    await Promise.all([loadStats(), loadProperties(), refreshMessagesBadge()]);
             
             // Écouteurs de navigation
             document.getElementById('navDashboard').addEventListener('click', (e) => { e.preventDefault(); switchView('dashboard'); });

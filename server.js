@@ -420,42 +420,6 @@ app.delete('/api/users/favorites/:propertyId', verifyToken, async (req, res) => 
     }
 });
 // ============================================
-// ROUTE TEMPORAIRE : AJOUTER user_id AUX PROPRIÉTÉS
-// ============================================
-// ⚠️ À SUPPRIMER après utilisation !
-app.get('/api/add-user-id-to-properties', async (req, res) => {
-    try {
-        // 1. Ajouter la colonne user_id
-        await pool.query(`
-            ALTER TABLE properties 
-            ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id) ON DELETE SET NULL
-        `);
-        
-        // 2. Attribuer les biens existants au premier admin (id=1)
-        await pool.query(`
-            UPDATE properties SET user_id = 1 WHERE user_id IS NULL
-        `);
-        
-        // 3. Créer un index pour les performances
-        await pool.query(`
-            CREATE INDEX IF NOT EXISTS idx_properties_user_id ON properties(user_id)
-        `);
-        
-        res.json({ 
-            message: '✅ Colonne user_id ajoutée avec succès !',
-            changes: [
-                'Ajout de la colonne user_id à la table properties',
-                'Biens existants attribués à l\'admin principal',
-                'Index créé pour les performances'
-            ]
-        });
-    } catch (err) {
-        console.error('Erreur:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// ============================================
 // 11. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN
 // ============================================
 app.use((req, res, next) => {

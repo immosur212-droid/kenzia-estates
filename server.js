@@ -281,11 +281,26 @@ app.post('/api/properties', verifyToken, upload.array('images', 5), async (req, 
     }
 });
 
-app.put('/api/admin/properties/:id', verifyToken, verifyAdmin, upload.array('images', 5), async (req, res) => {
+// Modifier une propriété (user ne peut modifier que ses biens)
+app.put('/api/properties/:id', verifyToken, upload.array('images', 5), async (req, res) => {
     try {
         const { id } = req.params;
+        const userId = req.user.id;
+        const isAdmin = req.user.role === 'admin';
+        
+        // Vérifier que le bien existe et appartient à l'utilisateur (ou admin)
+        const checkResult = await pool.query('SELECT * FROM properties WHERE id = $1', [id]);
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ error: 'Propriété non trouvée' });
+        }
+        
+        if (!isAdmin && checkResult.rows[0].user_id !== userId) {
+            return res.status(403).json({ error: 'Vous ne pouvez modifier que vos propres biens' });
+        }
+        
         const { title, city, neighborhood, type, transaction, price, surface, bedrooms, bathrooms, description, is_new, is_luxury, lat, lng, existing_images } = req.body;
-        const price_label = parseInt(price).toLocaleString('en-US') + ' MAD';
+        const priceNum = parseFloat(price);
+        const price_label = priceNum.toLocaleString('en-US') + ' MAD';
         
         let image_urls = [];
         if (existing_images) {
@@ -305,14 +320,17 @@ app.put('/api/admin/properties/:id', verifyToken, verifyAdmin, upload.array('ima
         }
 
         const result = await pool.query(
-            `UPDATE properties SET title=$1, city=$2, neighborhood=$3, type=$4, transaction=$5, price=$6, price_label=$7, surface=$8, bedrooms=$9, bathrooms=$10, image_url=$11, images=$12, description=$13, is_new=$14, is_luxury=$15, lat=$16, lng=$17, updated_at=CURRENT_TIMESTAMP WHERE id=$18 RETURNING *`,
-            [title, city, neighborhood, type, transaction, price, price_label, surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls), description, is_new === 'true', is_luxury === 'true', lat, lng, id]
+            `UPDATE properties 
+            SET title=$1, city=$2, neighborhood=$3, type=$4, transaction=$5, price=$6, price_label=$7, 
+                surface=$8, bedrooms=$9, bathrooms=$10, image_url=$11, images=$12, description=$13, 
+                is_new=$14, is_luxury=$15, lat=$16, lng=$17, updated_at=CURRENT_TIMESTAMP 
+            WHERE id=$18 RETURNING *`,
+            [title, city, neighborhood, type, transaction, priceNum, price_label, surface, bedrooms, bathrooms, image_urls[0] || null, JSON.stringify(image_urls), description, is_new === 'true', is_luxury === 'true', lat, lng, id]
         );
 
-        if (result.rows.length === 0) return res.status(404).json({ error: 'Propriété non trouvée' });
         res.json(result.rows[0]);
     } catch (err) {
-        console.error('Erreur modification propriété:', err);
+        console.error('Erreur modification:', err);
         res.status(500).json({ error: 'Erreur serveur: ' + err.message });
     }
 });

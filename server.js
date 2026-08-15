@@ -98,15 +98,44 @@ pool.connect((err, client, release) => {
     }
 });
 
-let verifyToken = (req, res, next) => next();
-let verifyAdmin = (req, res, next) => next();
-try {
-    const auth = require('./middlewares/auth');
-    verifyToken = auth.verifyToken;
-    verifyAdmin = auth.verifyAdmin;
-} catch (e) {
-    console.log('⚠️ Middlewares auth non trouvés, mode dégradé.');
-}
+// ============================================
+// MIDDLEWARES D'AUTHENTIFICATION (Intégrés)
+// ============================================
+const verifyToken = (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Token manquant. Veuillez vous connecter.' });
+        }
+        
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        
+        // ✅ C'EST ICI QUE req.user EST DÉFINI !
+        req.user = {
+            id: decoded.id,
+            email: decoded.email,
+            role: decoded.role,
+            full_name: decoded.full_name
+        };
+        
+        next();
+    } catch (err) {
+        console.error('❌ Erreur verifyToken:', err.message);
+        if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Session expirée. Veuillez vous reconnecter.' });
+        }
+        return res.status(401).json({ error: 'Token invalide.' });
+    }
+};
+
+const verifyAdmin = (req, res, next) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Accès réservé aux administrateurs.' });
+    }
+    next();
+};
 
 // ============================================
 // 5. ROUTES PUBLIQUES

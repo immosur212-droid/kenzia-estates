@@ -20,12 +20,30 @@
     <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR DYNAMIQUE (Auth / User Menu)
+           NAVBAR AMÉLIORÉE
            ============================================ */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
         .nav-wrapper {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            margin-left: -20px; /* Décale le logo à gauche */
+        }
+        
+        .logo-img {
+            height: 50px;
+            width: auto;
         }
         
         .nav-menu {
@@ -33,6 +51,7 @@
             align-items: center;
             flex: 1;
             justify-content: center;
+            margin: 0 40px;
         }
         
         .nav-list {
@@ -40,86 +59,126 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            gap: 25px;
+            gap: 30px;
         }
         
-        .nav-list-auth {
-            display: none; /* Caché par défaut, affiché par JS si connecté */
-        }
-        
-        .auth-buttons {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .btn-auth {
-            padding: 8px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-login {
+        .nav-link {
             color: var(--bleu-nuit);
-            border: 1px solid var(--border-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+            position: relative;
         }
         
-        .btn-login:hover {
-            border-color: var(--matte-brass);
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--matte-brass);
         }
         
-        .btn-register {
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
             background: var(--matte-brass);
-            color: var(--bleu-nuit);
         }
         
-        .btn-register:hover {
+        .nav-link-cta {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .nav-link-cta:hover {
             background: var(--bleu-nuit);
             color: var(--white);
         }
         
-        .user-menu-container {
-            position: relative;
-            margin-left: 15px;
+        .nav-link-cta::after {
+            display: none;
         }
         
-        .user-dropdown-btn {
-            background: none;
+        /* Bouton Se connecter unique */
+        .auth-button {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 10px 25px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
-            border-radius: 4px;
+        }
+        
+        .auth-button:hover {
+            background: var(--bleu-nuit);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        /* Menu utilisateur connecté */
+        .user-menu-container {
+            position: relative;
+            display: none; /* Caché par défaut */
+        }
+        
+        .user-dropdown-btn {
+            background: var(--off-white);
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--bleu-nuit);
             font-weight: 500;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
         }
         
         .user-dropdown-btn:hover {
-            background: var(--off-white);
+            border-color: var(--matte-brass);
+            background: var(--white);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
         }
         
         .dropdown-content {
             position: absolute;
-            top: 100%;
+            top: calc(100% + 10px);
             right: 0;
             background: var(--white);
-            min-width: 200px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 6px;
-            margin-top: 8px;
+            min-width: 220px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border-radius: 8px;
             overflow: hidden;
             z-index: 1000;
             display: none;
-            animation: slideDown 0.2s ease;
+            animation: slideDown 0.3s ease;
+            border: 1px solid var(--border-light);
         }
         
         @keyframes slideDown {
@@ -130,16 +189,28 @@
         .dropdown-content a {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
+            gap: 12px;
+            padding: 14px 20px;
             color: var(--bleu-nuit);
             text-decoration: none;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
             font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
         }
         
         .dropdown-content a:hover {
             background: var(--off-white);
+            color: var(--matte-brass);
+            padding-left: 25px;
+        }
+        
+        .dropdown-content a i {
+            width: 20px;
+            text-align: center;
             color: var(--matte-brass);
         }
         
@@ -148,7 +219,7 @@
             background: var(--border-light);
             margin: 5px 0;
         }
-
+        
         /* ============================================
            FEATURED PROPERTIES SECTION
            ============================================ */
@@ -186,8 +257,8 @@
         .featured-empty p { color: var(--text-muted); margin-bottom: 20px; }
         
         @media (max-width: 992px) {
-            .nav-menu { display: none; } /* Géré par votre main.js pour le mobile */
-            .auth-buttons, .user-menu-container { display: none !important; } /* Simplifié pour mobile, à gérer dans main.js si besoin */
+            .nav-menu { display: none; }
+            .auth-button, .user-menu-container { display: none !important; }
         }
         @media (max-width: 768px) {
             .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
@@ -195,7 +266,6 @@
             .view-all-btn { width: 100%; text-align: center; }
             .featured-grid { grid-template-columns: 1fr; }
         }
-   
     </style>
 </head>
 <body>
@@ -203,7 +273,7 @@
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-wrapper">
-                <!-- Logo Compact -->
+                <!-- Logo décalé à gauche -->
                 <a href="/index.html" class="logo">
                     <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
                 </a>
@@ -217,38 +287,32 @@
                         <li><a href="/about.html" class="nav-link">About</a></li>
                         <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
                     </ul>
-
-                    <!-- Liens Authentifiés (Injectés par JS) -->
-                    <ul class="nav-list nav-list-auth" id="navListAuth">
-                        <li><a href="/my-properties.html" class="nav-link">Mes Biens</a></li>
-                        <li id="adminNavItem" style="display: none;">
-                            <a href="/dashboard.html" class="nav-link" style="color: var(--error); font-weight: 600;">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                           a>
-                        </li>
-                    </ul>
                 </div>
                 
-                <!-- Boutons pour NON connectés -->
-                <div class="auth-buttons" id="authButtons">
-                    <a href="/login.html" class="btn-auth btn-login">Login</a>
-                    <a href="/register.html" class="btn-auth btn-register">Register</a
-                </div>
+                <!-- Bouton Se connecter (NON connecté) -->
+                <a href="/login.html" class="auth-button" id="authButton">
+                    <i class="fas fa-user"></i>
+                    <span>Se connecter</span>
+                </a>
 
-                <!-- Menu pour CONNECTÉS -->
+                <!-- Menu utilisateur (CONNECTÉ) -->
                 <div class="user-menu-container" id="userMenuContainer">
                     <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
-                        <i class="fas fa-user-circle"></i>
+                        <div class="user-avatar" id="userAvatar">U</div>
                         <span id="userNameDisplay">User</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-content" id="userDropdown">
-                        <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
+                        <a href="/my-properties.html">
+                            <i class="fas fa-home"></i> Mes Biens
+                        </a>
                         <a href="/dashboard.html" id="adminDropdownLink" style="display: none;">
                             <i class="fas fa-tachometer-alt"></i> Dashboard Admin
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </a>
                     </div>
                 </div>
                 
@@ -467,31 +531,32 @@
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-            const authButtons = document.getElementById('authButtons');
+            const authButton = document.getElementById('authButton');
             const userMenuContainer = document.getElementById('userMenuContainer');
-            const navListAuth = document.getElementById('navListAuth');
             const userNameDisplay = document.getElementById('userNameDisplay');
-            const adminNavItem = document.getElementById('adminNavItem');
+            const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
 
             if (token && user) {
                 // Utilisateur CONNECTÉ
-                authButtons.style.display = 'none';
+                authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
-                navListAuth.style.display = 'flex'; // Affiche "Mes Biens" dans le menu principal
                 
-                userNameDisplay.textContent = user.full_name || user.email.split('@')[0];
+                // Afficher le nom de l'utilisateur
+                const displayName = user.full_name || user.email.split('@')[0];
+                userNameDisplay.textContent = displayName;
+                
+                // Avatar avec la première lettre
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
 
-                // Si c'est un admin, on affiche les liens admin
+                // Si c'est un admin, afficher le lien Dashboard
                 if (user.role === 'admin') {
-                    adminNavItem.style.display = 'block',
-                    adminDropdownLink.style.display = 'flex'
+                    adminDropdownLink.style.display = 'flex';
                 }
             } else {
                 // Utilisateur NON CONNECTÉ
-                authButtons.style.display = 'flex';
+                authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
-                navListAuth.style.display = 'none';
             }
         });
 
@@ -520,14 +585,14 @@
         // ============================================
         async function loadFeaturedProperties() {
             const grid = document.getElementById('featuredGrid');
-            const API_URL = window.location.origin + '/api'; // Fallback sécurisé
+            const API_URL = window.location.origin + '/api';
             
             try {
                 const response = await fetch(`${API_URL}/properties`);
                 if (!response.ok) throw new Error('Erreur lors du chargement');
                 
                 const properties = await response.json();
-                const featuredProps = properties.slice(0, 6); // 6 premiers biens
+                const featuredProps = properties.slice(0, 6);
                 
                 if (featuredProps.length === 0) {
                     grid.innerHTML = `

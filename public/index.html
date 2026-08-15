@@ -20,7 +20,7 @@
     <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR AMÉLIORÉE
+           NAVBAR AMÉLIORÉE & INTÉGRÉE
            ============================================ */
         .navbar {
             background: var(--white);
@@ -69,6 +69,8 @@
             font-size: 0.95rem;
             transition: color 0.3s ease;
             position: relative;
+            display: flex;
+            align-items: center;
         }
         
         .nav-link:hover,
@@ -102,6 +104,17 @@
         .nav-link-cta::after {
             display: none;
         }
+
+        /* Style spécifique pour l'icône "Mes Biens" */
+        #mesBiensNavItem .nav-link i {
+            margin-right: 6px;
+            font-size: 0.85rem;
+            color: var(--matte-brass);
+            transition: color 0.3s ease;
+        }
+        #mesBiensNavItem .nav-link:hover i {
+            color: var(--bleu-nuit);
+        }
         
         /* Bouton Se connecter unique */
         .auth-button {
@@ -126,36 +139,40 @@
             transform: translateY(-2px);
         }
         
-        /* Menu utilisateur connecté */
+        /* ============================================
+           MENU UTILISATEUR INTÉGRÉ (Seamless)
+           ============================================ */
         .user-menu-container {
             position: relative;
             display: none; /* Caché par défaut */
+            margin-left: 0;
         }
         
         .user-dropdown-btn {
-            background: var(--off-white);
-            border: 2px solid var(--border-light);
+            background: transparent;
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            border-radius: 25px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            color: var(--bleu-nuit);
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
             font-weight: 500;
+            color: var(--bleu-nuit);
             transition: all 0.3s ease;
         }
         
         .user-dropdown-btn:hover {
-            border-color: var(--matte-brass);
-            background: var(--white);
+            background: var(--off-white);
+            color: var(--matte-brass);
         }
         
+        /* Avatar plus petit et discret pour s'aligner avec le texte */
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: var(--matte-brass);
             color: var(--bleu-nuit);
@@ -163,21 +180,41 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
         
+        .user-dropdown-btn:hover .user-avatar {
+            background: var(--bleu-nuit);
+            color: var(--matte-brass);
+        }
+        
+        /* Flèche du dropdown */
+        .user-dropdown-btn .fa-chevron-down {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 4px;
+            transition: transform 0.3s ease;
+        }
+        
+        .user-dropdown-btn.active .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* Dropdown content */
         .dropdown-content {
             position: absolute;
             top: calc(100% + 10px);
             right: 0;
             background: var(--white);
-            min-width: 220px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            border-radius: 6px;
             overflow: hidden;
             z-index: 1000;
             display: none;
-            animation: slideDown 0.3s ease;
+            animation: slideDown 0.25s ease;
             border: 1px solid var(--border-light);
         }
         
@@ -189,12 +226,13 @@
         .dropdown-content a {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
+            gap: 10px;
+            padding: 12px 18px;
             color: var(--bleu-nuit);
             text-decoration: none;
             transition: all 0.2s ease;
             font-size: 0.9rem;
+            font-weight: 500;
             border-bottom: 1px solid var(--border-light);
         }
         
@@ -205,19 +243,24 @@
         .dropdown-content a:hover {
             background: var(--off-white);
             color: var(--matte-brass);
-            padding-left: 25px;
+            padding-left: 22px;
         }
         
         .dropdown-content a i {
-            width: 20px;
+            width: 18px;
             text-align: center;
             color: var(--matte-brass);
+            font-size: 0.85rem;
+        }
+        
+        .dropdown-content a:hover i {
+            color: var(--bleu-nuit);
         }
         
         .dropdown-divider {
             height: 1px;
             background: var(--border-light);
-            margin: 5px 0;
+            margin: 4px 0;
         }
         
         /* ============================================
@@ -286,6 +329,13 @@
                         <li><a href="/services.html" class="nav-link">Services</a></li>
                         <li><a href="/about.html" class="nav-link">About</a></li>
                         <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
+                        
+                        <!-- Lien "Mes Biens" - Visible uniquement si connecté -->
+                        <li id="mesBiensNavItem" style="display: none;">
+                            <a href="/my-properties.html" class="nav-link">
+                                <i class="fas fa-home"></i> Mes Biens
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 
@@ -527,8 +577,6 @@
         // ============================================
         // 1. GESTION DE LA NAVIGATION (Auth / User)
         // ============================================
-        // ============================================
-
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -538,15 +586,21 @@
             const userNameDisplay = document.getElementById('userNameDisplay');
             const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
+            const mesBiensNavItem = document.getElementById('mesBiensNavItem'); // NOUVEAU
         
-            console.log(' Debug Auth:', { token: token ? 'EXISTS' : 'NULL', user });
+            console.log('🔍 Debug Auth:', { token: token ? 'EXISTS' : 'NULL', user });
         
             if (token && user) {
-                // Utilisateur CONNECTÉ
+                // ✅ Utilisateur CONNECTÉ
                 console.log('✅ Utilisateur connecté:', user.full_name || user.email);
                 
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
+                
+                // Afficher "Mes Biens" dans la navbar principale
+                if (mesBiensNavItem) {
+                    mesBiensNavItem.style.display = 'block';
+                }
                 
                 // Afficher le nom de l'utilisateur
                 const displayName = user.full_name || user.email.split('@')[0];
@@ -560,16 +614,29 @@
                     adminDropdownLink.style.display = 'flex';
                 }
             } else {
-                // Utilisateur NON CONNECTÉ
+                // ❌ Utilisateur NON CONNECTÉ
                 console.log('❌ Utilisateur non connecté');
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
+                
+                // Cacher "Mes Biens"
+                if (mesBiensNavItem) {
+                    mesBiensNavItem.style.display = 'none';
+                }
             }
         });
 
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdown');
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            const btn = document.querySelector('.user-dropdown-btn');
+            
+            if (dropdown.style.display === 'none' || !dropdown.style.display) {
+                dropdown.style.display = 'block';
+                if (btn) btn.classList.add('active');
+            } else {
+                dropdown.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            }
         }
 
         function logout() {
@@ -582,8 +649,11 @@
         document.addEventListener('click', (e) => {
             const userMenu = document.getElementById('userMenuContainer');
             const dropdown = document.getElementById('userDropdown');
+            const btn = document.querySelector('.user-dropdown-btn');
+            
             if (userMenu && !userMenu.contains(e.target)) {
                 if (dropdown) dropdown.style.display = 'none';
+                if (btn) btn.classList.remove('active');
             }
         });
 
@@ -656,11 +726,6 @@
         }
         
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
-
-        // ============================================
-        // 3. GESTION DE LA RECHERCHE
-        // ============================================
-        
     </script>
 </body>
 </html>

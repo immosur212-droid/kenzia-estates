@@ -17,249 +17,185 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
     
-    <!-- Styles pour Featured Properties -->
+    <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           FEATURED PROPERTIES SECTION
+           NAVBAR DYNAMIQUE (Auth / User Menu)
            ============================================ */
-        .featured-properties {
+        .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .nav-list {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 25px;
+        }
+        
+        .nav-list-auth {
+            display: none; /* Caché par défaut, affiché par JS si connecté */
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .btn-auth {
+            padding: 8px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login {
+            color: var(--bleu-nuit);
+            border: 1px solid var(--border-light);
+        }
+        
+        .btn-login:hover {
+            border-color: var(--matte-brass);
+            color: var(--matte-brass);
+        }
+        
+        .btn-register {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+        }
+        
+        .btn-register:hover {
+            background: var(--bleu-nuit);
+            color: var(--white);
+        }
+        
+        .user-menu-container {
+            position: relative;
+            margin-left: 15px;
+        }
+        
+        .user-dropdown-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--bleu-nuit);
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .user-dropdown-btn:hover {
             background: var(--off-white);
         }
         
-        .featured-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 50px;
-        }
-        
-        .featured-header .section-header {
-            text-align: left;
-            margin-bottom: 0;
-        }
-        
-        .view-all-btn {
-            background: var(--matte-brass);
-            color: var(--bleu-nuit);
-            padding: 12px 30px;
-            border: 2px solid var(--matte-brass);
-            font-weight: 600;
-            letter-spacing: 1px;
-            transition: var(--transition-fast);
-            white-space: nowrap;
-        }
-        
-        .view-all-btn:hover {
-            background: transparent;
-            color: var(--matte-brass);
-        }
-        
-        .featured-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-        
-        .featured-card {
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
             background: var(--white);
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            margin-top: 8px;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(184, 153, 112, 0.1);
-            transition: var(--transition-fast);
+            z-index: 1000;
+            display: none;
+            animation: slideDown 0.2s ease;
         }
         
-        .featured-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .featured-image {
-            position: relative;
-            height: 250px;
-            overflow: hidden;
-        }
-        
-        .featured-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-smooth);
-        }
-        
-        .featured-card:hover .featured-image img {
-            transform: scale(1.08);
-        }
-        
-        .featured-badges {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            display: flex;
-            gap: 8px;
-            z-index: 2;
-        }
-        
-        .featured-badge {
-            background: var(--matte-brass);
-            color: var(--bleu-nuit);
-            padding: 5px 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        
-        .featured-badge.luxury {
-            background: var(--bleu-nuit);
-            color: var(--matte-brass);
-        }
-        
-        .featured-badge.new {
-            background: var(--success);
-            color: var(--white);
-        }
-        
-        .featured-price {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            background: var(--bleu-nuit);
-            color: var(--white);
-            padding: 8px 16px;
-            font-family: var(--font-serif);
-            font-size: 1.2rem;
-            font-weight: 600;
-            z-index: 2;
-        }
-        
-        .featured-content {
-            padding: 25px;
-        }
-        
-        .featured-location {
+        .dropdown-content a {
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
-        
-        .featured-location i {
-            color: var(--matte-brass);
-        }
-        
-        .featured-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            gap: 10px;
+            padding: 12px 20px;
             color: var(--bleu-nuit);
-            line-height: 1.3;
-        }
-        
-        .featured-features {
-            display: flex;
-            gap: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-light);
-            flex-wrap: wrap;
-        }
-        
-        .featured-feature {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        
-        .featured-feature i {
-            color: var(--matte-brass);
-        }
-        
-        .featured-link {
-            display: block;
-            margin-top: 20px;
-            color: var(--matte-brass);
-            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
             font-size: 0.9rem;
-            letter-spacing: 1px;
-            transition: var(--transition-fast);
         }
         
-        .featured-link:hover {
-            color: var(--bleu-nuit);
-        }
-        
-        .featured-link i {
-            margin-left: 5px;
-            transition: var(--transition-fast);
-        }
-        
-        .featured-link:hover i {
-            transform: translateX(5px);
-        }
-        
-        .featured-loading {
-            text-align: center;
-            padding: 80px 20px;
-            grid-column: 1 / -1;
-        }
-        
-        .featured-loading i {
-            font-size: 3rem;
+        .dropdown-content a:hover {
+            background: var(--off-white);
             color: var(--matte-brass);
-            margin-bottom: 20px;
         }
         
-        .featured-loading p {
-            color: var(--text-muted);
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 5px 0;
         }
+
+        /* ============================================
+           FEATURED PROPERTIES SECTION
+           ============================================ */
+        .featured-properties { background: var(--off-white); }
+        .featured-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .featured-header .section-header { text-align: left; margin-bottom: 0; }
+        .view-all-btn { background: var(--matte-brass); color: var(--bleu-nuit); padding: 12px 30px; border: 2px solid var(--matte-brass); font-weight: 600; letter-spacing: 1px; transition: var(--transition-fast); white-space: nowrap; text-decoration: none; border-radius: 4px; }
+        .view-all-btn:hover { background: transparent; color: var(--matte-brass); }
+        .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
+        .featured-card { background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(184, 153, 112, 0.1); transition: var(--transition-fast); text-decoration: none; color: inherit; display: block; }
+        .featured-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+        .featured-image { position: relative; height: 250px; overflow: hidden; }
+        .featured-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
+        .featured-card:hover .featured-image img { transform: scale(1.08); }
+        .featured-badges { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; z-index: 2; }
+        .featured-badge { background: var(--matte-brass); color: var(--bleu-nuit); padding: 5px 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 3px; }
+        .featured-badge.luxury { background: var(--bleu-nuit); color: var(--matte-brass); }
+        .featured-badge.new { background: var(--success); color: var(--white); }
+        .featured-price { position: absolute; bottom: 15px; left: 15px; background: var(--bleu-nuit); color: var(--white); padding: 8px 16px; font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; z-index: 2; border-radius: 4px; }
+        .featured-content { padding: 25px; }
+        .featured-location { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px; }
+        .featured-location i { color: var(--matte-brass); }
+        .featured-title { font-size: 1.2rem; margin-bottom: 15px; color: var(--bleu-nuit); line-height: 1.3; font-family: var(--font-serif); }
+        .featured-features { display: flex; gap: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); flex-wrap: wrap; }
+        .featured-feature { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: var(--text-muted); }
+        .featured-feature i { color: var(--matte-brass); }
+        .featured-link { display: block; margin-top: 20px; color: var(--matte-brass); font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: var(--transition-fast); }
+        .featured-link:hover { color: var(--bleu-nuit); }
+        .featured-link i { margin-left: 5px; transition: var(--transition-fast); }
+        .featured-link:hover i { transform: translateX(5px); }
+        .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; grid-column: 1 / -1; }
+        .featured-loading i, .featured-empty i { font-size: 3rem; color: var(--matte-brass); margin-bottom: 20px; }
+        .featured-empty i { color: var(--border-light); font-size: 4rem; }
+        .featured-empty h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--bleu-nuit); }
+        .featured-empty p { color: var(--text-muted); margin-bottom: 20px; }
         
-        .featured-empty {
-            text-align: center;
-            padding: 80px 20px;
-            grid-column: 1 / -1;
+        @media (max-width: 992px) {
+            .nav-menu { display: none; } /* Géré par votre main.js pour le mobile */
+            .auth-buttons, .user-menu-container { display: none !important; } /* Simplifié pour mobile, à gérer dans main.js si besoin */
         }
-        
-        .featured-empty i {
-            font-size: 4rem;
-            color: var(--border-light);
-            margin-bottom: 20px;
-        }
-        
-        .featured-empty h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--bleu-nuit);
-        }
-        
-        .featured-empty p {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-        
         @media (max-width: 768px) {
-            .featured-header {
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-            }
-            
-            .featured-header .section-header {
-                text-align: center;
-                width: 100%;
-            }
-            
-            .view-all-btn {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .featured-grid {
-                grid-template-columns: 1fr;
-            }
+            .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+            .featured-header .section-header { text-align: center; width: 100%; }
+            .view-all-btn { width: 100%; text-align: center; }
+            .featured-grid { grid-template-columns: 1fr; }
         }
+   
     </style>
 </head>
 <body>
@@ -268,24 +204,55 @@
         <div class="container">
             <div class="nav-wrapper">
                 <!-- Logo Compact -->
-                <a href="index.html" class="logo">
+                <a href="/index.html" class="logo">
                     <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
                 </a>
                 
-                <!-- Navigation Menu -->
+                <!-- Navigation Menu Principal -->
                 <div class="nav-menu" id="navMenu">
                     <ul class="nav-list">
                         <li><a href="/index.html" class="nav-link active">Home</a></li>
                         <li><a href="/properties.html" class="nav-link">Properties</a></li>
-                        <!-- Dans la navbar, après "Properties" -->
-                        <li><a href="/my-properties.html">Mes Biens</a></li>
                         <li><a href="/services.html" class="nav-link">Services</a></li>
                         <li><a href="/about.html" class="nav-link">About</a></li>
                         <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
                     </ul>
+
+                    <!-- Liens Authentifiés (Injectés par JS) -->
+                    <ul class="nav-list nav-list-auth" id="navListAuth">
+                        <li><a href="/my-properties.html" class="nav-link">Mes Biens</a></li>
+                        <li id="adminNavItem" style="display: none;">
+                            <a href="/dashboard.html" class="nav-link" style="color: var(--error); font-weight: 600;">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                           a>
+                        </li>
+                    </ul>
                 </div>
                 
-                <!-- Hamburger Menu -->
+                <!-- Boutons pour NON connectés -->
+                <div class="auth-buttons" id="authButtons">
+                    <a href="/login.html" class="btn-auth btn-login">Login</a>
+                    <a href="/register.html" class="btn-auth btn-register">Register</a
+                </div>
+
+                <!-- Menu pour CONNECTÉS -->
+                <div class="user-menu-container" id="userMenuContainer">
+                    <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="userNameDisplay">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-content" id="userDropdown">
+                        <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
+                        <a href="/dashboard.html" id="adminDropdownLink" style="display: none;">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                    </div>
+                </div>
+                
+                <!-- Hamburger Menu (Mobile) -->
                 <button class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -293,12 +260,6 @@
                 </button>
             </div>
         </div>
-        <div class="user-menu">
-    <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
-    <a href="/dashboard.html" id="adminLink" style="display: none;"><i class="fas fa-tachometer-alt"></i> Dashboard Admin</a>
-    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-</div>
-
     </nav>
 
     <!-- Hero Section -->
@@ -365,7 +326,7 @@
                 </div>
                 
                 <div class="hero-cta">
-                    <a href="contact.html" class="btn btn-primary btn-large">Sell Your Property</a>
+                    <a href="/contact.html" class="btn btn-primary btn-large">Sell Your Property</a>
                     <a href="#" class="btn btn-outline-white btn-large" onclick="openEstimationModal()">Free Estimation</a>
                 </div>
             </div>
@@ -388,25 +349,17 @@
             
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-hand-holding-dollar"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-hand-holding-dollar"></i></div>
                     <h3>Transparent Pricing</h3>
                     <p>No hidden fees. No surprises. Every property listed with clear pricing and complete documentation.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-key"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-key"></i></div>
                     <h3>Verified Properties</h3>
                     <p>Every property is personally visited and verified by our team. What you see is what you get.</p>
                 </div>
-                
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                     <h3>Market Insights</h3>
                     <p>Access exclusive market reports, price trends, and neighborhood guides to make informed decisions.</p>
                 </div>
@@ -414,9 +367,7 @@
         </div>
     </section>
 
-    <!-- ============================================
-         FEATURED PROPERTIES SECTION (NOUVEAU)
-         ============================================ -->
+    <!-- Featured Properties Section -->
     <section class="section featured-properties">
         <div class="container">
             <div class="featured-header">
@@ -424,13 +375,12 @@
                     <h2 class="section-title">Featured Properties</h2>
                     <p class="section-subtitle">Handpicked properties for you</p>
                 </div>
-                <a href="properties.html" class="btn view-all-btn">
+                <a href="/properties.html" class="btn view-all-btn">
                     View All Properties <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
             
             <div class="featured-grid" id="featuredGrid">
-                <!-- Loading state -->
                 <div class="featured-loading">
                     <i class="fas fa-spinner fa-spin"></i>
                     <p>Loading featured properties...</p>
@@ -444,8 +394,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="index.html" class="footer-logo">
-                        <img src="images/logo-footer.png" alt="Kenzia Estates - Clarity in every key." class="logo-footer-img">
+                    <a href="/index.html" class="footer-logo">
+                        <img src="images/logo-footer.png" alt="Kenzia Estates" class="logo-footer-img">
                     </a>
                     <p class="footer-description">Premium real estate agency in Morocco, offering transparent and professional services for buying, selling, and renting properties.</p>
                     <div class="social-links">
@@ -455,7 +405,6 @@
                         <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
-                
                 <div class="footer-links">
                     <h4>Services</h4>
                     <ul>
@@ -466,7 +415,6 @@
                         <li><a href="#">Investment Consulting</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-links">
                     <h4>Cities</h4>
                     <ul>
@@ -477,32 +425,20 @@
                         <li><a href="#">Agadir</a></li>
                     </ul>
                 </div>
-                
                 <div class="footer-contact">
                     <h4>Contact</h4>
                     <ul class="contact-list">
-                        <li>
-                            <i class="fas fa-location-dot"></i>
-                            <span>Bd. Zerktouni, Casablanca, Morocco</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+212 5XX-XXXXXX</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>contact@kenziaestates.ma</span>
-                        </li>
+                        <li><i class="fas fa-location-dot"></i><span>Bd. Zerktouni, Casablanca, Morocco</span></li>
+                        <li><i class="fas fa-phone"></i><span>+212 771 531 415</span></li>
+                        <li><i class="fas fa-envelope"></i><span>contact@kenziaestates.ma</span></li>
                     </ul>
                 </div>
             </div>
-            
             <div class="footer-bottom">
                 <p>&copy; 2026 Kenzia Estates. All rights reserved.</p>
                 <div class="footer-legal">
                     <a href="#">Privacy Policy</a>
                     <a href="#">Terms of Service</a>
-                    <a href="#">Cookie Policy</a>
                 </div>
             </div>
         </div>
@@ -522,30 +458,76 @@
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
     
-    <!-- Featured Properties Script -->
+    <!-- Scripts spécifiques à l'index -->
     <script>
         // ============================================
-        // CONFIGURATION API
+        // 1. GESTION DE LA NAVIGATION (Auth / User)
         // ============================================
-        const API_URL = CONFIG.API_URL;
-        
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+            const authButtons = document.getElementById('authButtons');
+            const userMenuContainer = document.getElementById('userMenuContainer');
+            const navListAuth = document.getElementById('navListAuth');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const adminNavItem = document.getElementById('adminNavItem');
+            const adminDropdownLink = document.getElementById('adminDropdownLink');
+
+            if (token && user) {
+                // Utilisateur CONNECTÉ
+                authButtons.style.display = 'none';
+                userMenuContainer.style.display = 'block';
+                navListAuth.style.display = 'flex'; // Affiche "Mes Biens" dans le menu principal
+                
+                userNameDisplay.textContent = user.full_name || user.email.split('@')[0];
+
+                // Si c'est un admin, on affiche les liens admin
+                if (user.role === 'admin') {
+                    adminNavItem.style.display = 'block',
+                    adminDropdownLink.style.display = 'flex'
+                }
+            } else {
+                // Utilisateur NON CONNECTÉ
+                authButtons.style.display = 'flex';
+                userMenuContainer.style.display = 'none';
+                navListAuth.style.display = 'none';
+            }
+        });
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/';
+        }
+
+        // Fermer le dropdown si on clique en dehors
+        document.addEventListener('click', (e) => {
+            const userMenu = document.getElementById('userMenuContainer');
+            const dropdown = document.getElementById('userDropdown');
+            if (userMenu && !userMenu.contains(e.target)) {
+                if (dropdown) dropdown.style.display = 'none';
+            }
+        });
+
         // ============================================
-        // CHARGER LES PROPRIÉTÉS FEATURED
+        // 2. CHARGEMENT DES PROPRIÉTÉS FEATURED
         // ============================================
         async function loadFeaturedProperties() {
             const grid = document.getElementById('featuredGrid');
+            const API_URL = window.location.origin + '/api'; // Fallback sécurisé
             
             try {
                 const response = await fetch(`${API_URL}/properties`);
-                
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement');
-                }
+                if (!response.ok) throw new Error('Erreur lors du chargement');
                 
                 const properties = await response.json();
-                
-                // Prendre les 6 premières propriétés (les plus récentes)
-                const featuredProps = properties.slice(0, 6);
+                const featuredProps = properties.slice(0, 6); // 6 premiers biens
                 
                 if (featuredProps.length === 0) {
                     grid.innerHTML = `
@@ -553,61 +535,40 @@
                             <i class="fas fa-home"></i>
                             <h3>No Properties Available</h3>
                             <p>Check back soon for new listings!</p>
-                            <a href="properties.html" class="btn btn-primary">
-                                Browse All Properties
-                            </a>
-                        </div>
-                    `;
+                            <a href="/properties.html" class="btn btn-primary" style="margin-top:20px; display:inline-block; text-decoration:none;">Browse All Properties</a>
+                        </div>`;
                     return;
                 }
                 
                 grid.innerHTML = featuredProps.map(property => {
-                    // Construire les badges
                     let badgesHTML = '';
-                    if (property.transaction === 'sale') {
-                        badgesHTML += '<span class="featured-badge">FOR SALE</span>';
-                    } else {
-                        badgesHTML += '<span class="featured-badge">FOR RENT</span>';
-                    }
-                    if (property.is_luxury) {
-                        badgesHTML += '<span class="featured-badge luxury">LUXURY</span>';
-                    }
-                    if (property.is_new) {
-                        badgesHTML += '<span class="featured-badge new">NEW</span>';
-                    }
+                    if (property.transaction === 'sale') badgesHTML += '<span class="featured-badge">FOR SALE</span>';
+                    else badgesHTML += '<span class="featured-badge">FOR RENT</span>';
+                    if (property.is_luxury) badgesHTML += '<span class="featured-badge luxury">LUXURY</span>';
+                    if (property.is_new) badgesHTML += '<span class="featured-badge new">NEW</span>';
+                    
+                    const cityFormatted = property.city ? property.city.charAt(0).toUpperCase() + property.city.slice(1) : 'Unknown';
                     
                     return `
-                        <a href="property-detail.html?id=${property.id}" class="featured-card" style="text-decoration: none; color: inherit;">
+                        <a href="/property-detail.html?id=${property.id}" class="featured-card">
                             <div class="featured-image">
-                                <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" 
-                                     alt="${property.title}" 
-                                     loading="lazy">
+                                <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" alt="${property.title}" loading="lazy">
                                 <div class="featured-badges">${badgesHTML}</div>
                                 <div class="featured-price">${property.price_label}</div>
                             </div>
                             <div class="featured-content">
                                 <div class="featured-location">
-                                    <i class="fas fa-location-dot"></i>
-                                    ${property.neighborhood}, ${property.city.charAt(0).toUpperCase() + property.city.slice(1)}
+                                    <i class="fas fa-location-dot"></i> ${property.neighborhood}, ${cityFormatted}
                                 </div>
                                 <h3 class="featured-title">${property.title}</h3>
                                 <div class="featured-features">
-                                    <div class="featured-feature">
-                                        <i class="fas fa-bed"></i> ${property.bedrooms} Beds
-                                    </div>
-                                    <div class="featured-feature">
-                                        <i class="fas fa-bath"></i> ${property.bathrooms} Baths
-                                    </div>
-                                    <div class="featured-feature">
-                                        <i class="fas fa-ruler-combined"></i> ${property.surface} m²
-                                    </div>
+                                    <div class="featured-feature"><i class="fas fa-bed"></i> ${property.bedrooms} Beds</div>
+                                    <div class="featured-feature"><i class="fas fa-bath"></i> ${property.bathrooms} Baths</div>
+                                    <div class="featured-feature"><i class="fas fa-ruler-combined"></i> ${property.surface} m²</div>
                                 </div>
-                                <span class="featured-link">
-                                    View Details <i class="fas fa-arrow-right"></i>
-                                </span>
+                                <span class="featured-link">View Details <i class="fas fa-arrow-right"></i></span>
                             </div>
-                        </a>
-                    `;
+                        </a>`;
                 }).join('');
                 
             } catch (error) {
@@ -617,42 +578,34 @@
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Error Loading Properties</h3>
                         <p>Please try again later.</p>
-                        <button onclick="loadFeaturedProperties()" class="btn btn-primary">
-                            <i class="fas fa-redo"></i> Retry
-                        </button>
-                    </div>
-                `;
+                        <button onclick="loadFeaturedProperties()" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-redo"></i> Retry</button>
+                    </div>`;
             }
         }
         
-        // Charger au démarrage
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
-        // Gestion de la recherche
-document.getElementById('searchForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const city = document.getElementById('citySelect').value;
-    const type = document.getElementById('propertyType').value;
-    const budget = document.getElementById('budget').value;
-    
-    // Construire l'URL avec les paramètres
-    let url = 'properties.html?';
-    const params = [];
-    
-    if (city) params.push(`city=${city}`);
-    if (type) params.push(`type=${type}`);
-    if (budget) params.push(`budget=${encodeURIComponent(budget)}`);
-    
-    url += params.join('&');
-    
-    // Redirection
-    window.location.href = url;
-});
-            // Afficher le lien admin seulement pour les admins
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    if (user && user.role === 'admin') {
-        document.getElementById('adminLink').style.display = 'block';
-    }
+
+        // ============================================
+        // 3. GESTION DE LA RECHERCHE
+        // ============================================
+        const searchForm = document.getElementById('searchForm');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const city = document.getElementById('citySelect').value;
+                const type = document.getElementById('propertyType').value;
+                const budget = document.getElementById('budget').value;
+                
+                let url = '/properties.html?';
+                const params = [];
+                if (city) params.push(`city=${city}`);
+                if (type) params.push(`type=${type}`);
+                if (budget) params.push(`budget=${encodeURIComponent(budget)}`);
+                
+                url += params.join('&');
+                window.location.href = url;
+            });
+        }
     </script>
 </body>
 </html>

@@ -69,8 +69,6 @@
             font-size: 0.95rem;
             transition: color 0.3s ease;
             position: relative;
-            display: flex;
-            align-items: center;
         }
         
         .nav-link:hover,
@@ -103,17 +101,6 @@
         
         .nav-link-cta::after {
             display: none;
-        }
-
-        /* Style spécifique pour l'icône "Mes Biens" */
-        #mesBiensNavItem .nav-link i {
-            margin-right: 6px;
-            font-size: 0.85rem;
-            color: var(--matte-brass);
-            transition: color 0.3s ease;
-        }
-        #mesBiensNavItem .nav-link:hover i {
-            color: var(--bleu-nuit);
         }
         
         /* Bouton Se connecter unique */
@@ -329,13 +316,6 @@
                         <li><a href="/services.html" class="nav-link">Services</a></li>
                         <li><a href="/about.html" class="nav-link">About</a></li>
                         <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
-                        
-                        <!-- Lien "Mes Biens" - Visible uniquement si connecté -->
-                        <li id="mesBiensNavItem" style="display: none;">
-                            <a href="/my-properties.html" class="nav-link">
-                                <i class="fas fa-home"></i> Mes Biens
-                            </a>
-                        </li>
                     </ul>
                 </div>
                 
@@ -586,7 +566,6 @@
             const userNameDisplay = document.getElementById('userNameDisplay');
             const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
-            const mesBiensNavItem = document.getElementById('mesBiensNavItem'); // NOUVEAU
         
             console.log('🔍 Debug Auth:', { token: token ? 'EXISTS' : 'NULL', user });
         
@@ -596,11 +575,6 @@
                 
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
-                
-                // Afficher "Mes Biens" dans la navbar principale
-                if (mesBiensNavItem) {
-                    mesBiensNavItem.style.display = 'block';
-                }
                 
                 // Afficher le nom de l'utilisateur
                 const displayName = user.full_name || user.email.split('@')[0];
@@ -618,11 +592,6 @@
                 console.log('❌ Utilisateur non connecté');
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
-                
-                // Cacher "Mes Biens"
-                if (mesBiensNavItem) {
-                    mesBiensNavItem.style.display = 'none';
-                }
             }
         });
 

@@ -293,6 +293,12 @@
                 </button>
             </div>
         </div>
+        <div class="user-menu">
+    <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
+    <a href="/dashboard.html" id="adminLink" style="display: none;"><i class="fas fa-tachometer-alt"></i> Dashboard Admin</a>
+    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+</div>
+
     </nav>
 
     <!-- Hero Section -->
@@ -642,6 +648,11 @@ document.getElementById('searchForm').addEventListener('submit', function(e) {
     // Redirection
     window.location.href = url;
 });
+            // Afficher le lien admin seulement pour les admins
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (user && user.role === 'admin') {
+        document.getElementById('adminLink').style.display = 'block';
+    }
     </script>
 </body>
 </html>

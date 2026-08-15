@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Biens | Kenzia Estates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .my-properties-page {
+            min-height: 100vh;
+            background: var(--off-white);
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--bleu-nuit);
+            font-family: var(--font-serif);
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+        .btn-primary {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+        }
+        .btn-primary:hover {
+            background: var(--bleu-nuit);
+            color: var(--white);
+        }
+        .btn-secondary {
+            background: var(--off-white);
+            color: var(--bleu-nuit);
+            border: 2px solid var(--border-light);
+        }
+        .btn-secondary:hover {
+            border-color: var(--matte-brass);
+        }
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+        }
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+        .btn-edit {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+        .btn-delete {
+            background: var(--error);
+            color: var(--white);
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        .property-card {
+            background: var(--white);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition-fast);
+        }
+        .property-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+        .property-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .property-content {
+            padding: 20px;
+        }
+        .property-title {
+            font-size: 1.2rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 10px;
+            font-family: var(--font-serif);
+        }
+        .property-location {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--matte-brass);
+            margin-bottom: 15px;
+        }
+        .property-features {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .property-features span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-sale {
+            background: rgba(184, 153, 112, 0.2);
+            color: var(--matte-brass);
+        }
+        .badge-rent {
+            background: rgba(39, 174, 96, 0.2);
+            color: var(--success);
+        }
+        .property-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-light);
+        }
+        .property-actions button {
+            flex: 1;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--border-light);
+            margin-bottom: 20px;
+        }
+        .empty-state h2 {
+            color: var(--bleu-nuit);
+            margin-bottom: 15px;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .loading i {
+            font-size: 3rem;
+            color: var(--matte-brass);
+            margin-bottom: 15px;
+        }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--off-white);
+            border-radius: 10px 10px 0 0;
+        }
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--bleu-nuit);
+            margin: 0;
+            font-family: var(--font-serif);
+        }
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .btn-close:hover {
+            background: var(--off-white);
+            color: var(--bleu-nuit);
+        }
+        .property-form {
+            padding: 30px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--bleu-nuit);
+            font-size: 0.9rem;
+        }
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid var(--border-light);
+            border-radius: 5px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            background: var(--white);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--matte-brass);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--bleu-nuit);
+        }
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .image-upload-area {
+            position: relative;
+            border: 2px dashed var(--border-light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--off-white);
+            min-height: 150px;
+        }
+        .image-upload-area:hover {
+            border-color: var(--matte-brass);
+        }
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border-light);
+        }
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: var(--error);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 25px 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="my-properties-page">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <a href="/index.html" style="color: var(--matte-brass); text-decoration: none; font-size: 0.9rem;">
+                        <i class="fas fa-arrow-left"></i> Retour à l'accueil
+                    </a>
+                    <h1 style="margin-top: 10px;">Mes Biens Immobiliers</h1>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Gérez vos propriétés en toute simplicité</p>
+                </div>
+                <button class="btn btn-primary" id="addPropertyBtn">
+                    <i class="fas fa-plus"></i> Ajouter un bien
+                </button>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Chargement de vos biens...</p>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-home"></i>
+                <h2>Aucun bien pour le moment</h2>
+                <p>Commencez par ajouter votre première propriété</p>
+                <button class="btn btn-primary" onclick="openModal()" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> Ajouter mon premier bien
+                </button>
+            </div>
+
+            <div id="propertiesGrid" class="properties-grid" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Modal Ajout/Modification -->
+    <div class="modal" id="propertyModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un bien</h2>
+                <button class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="propertyForm" class="property-form">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="propTitle">Titre du bien *</label>
+                        <input type="text" id="propTitle" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="propCity">Ville *</label>
+                        <select id="propCity" class="form-control" required>
+                            <option value="">Sélectionner</option>
+                            <option value="casablanca">Casablanca</option>
+                            <option value="marrakech">Marrakech</option>
+                            <option value="rabat">Rabat</option>
+                            <option value="tanger">Tanger</option>
+                            <option value="agadir">Agadir</option>
+                            <option value="fes">Fès</option>
+                            <option value="essaouira">Essaouira</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propNeighborhood">Quartier *</label>
+                        <input type="text" id="propNeighborhood" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="propType">Type de bien *</label>
+                        <select id="propType" class="form-control" required>
+                            <option value="">Sélectionner</option>
+                            <option value="villa">Villa</option>
+                            <option value="apartment">Appartement</option>
+                            <option value="riad">Riad</option>
+                            <option value="penthouse">Penthouse</option>
+                            <option value="land">Terrain</option>
+                            <option value="commercial">Commercial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="propTransaction">Transaction *</label>
+                        <select id="propTransaction" class="form-control" required>
+                            <option value="">Sélectionner</option>
+                            <option value="sale">À vendre</option>
+                            <option value="rent">À louer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="propPrice">Prix (MAD) *</label>
+                        <input type="number" id="propPrice" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="propSurface">Surface (m²) *</label>
+                        <input type="number" id="propSurface" class="form-control" required min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="propBedrooms">Chambres *</label>
+                        <input type="number" id="propBedrooms" class="form-control" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="propBathrooms">Salles de bain *</label>
+                        <input type="number" id="propBathrooms" class="form-control" required min="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label>Photos du bien *</label>
+                        <div class="image-upload-area">
+                            <input type="file" id="propImages" class="file-input" multiple accept="image/*">
+                            <div id="uploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--matte-brass);"></i>
+                                <p style="margin: 10px 0 5px; font-weight: 600;">Cliquez ou glissez vos images</p>
+                                <small style="color: var(--text-muted);">Jusqu'à 5 images • Max 5MB chacune</small>
+                            </div>
+                            <div class="image-preview" id="imagePreview"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="propDescription">Description</label>
+                        <textarea id="propDescription" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="propIsNew"> Nouveau
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="propIsLuxury"> Luxe
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="propLat">Latitude (optionnel)</label>
+                        <input type="number" id="propLat" class="form-control" step="any">
+                    </div>
+                    <div class="form-group">
+                        <label for="propLng">Longitude (optionnel)</label>
+                        <input type="number" id="propLng" class="form-control" step="any">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const API_URL = window.location.origin + '/api';
+        let editingPropertyId = null;
+        let existingImages = [];
+        let selectedFiles = [];
+
+        // ============================================
+        // VÉRIFICATION AUTHENTIFICATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+            if (!token || !user) {
+                alert('Veuillez vous connecter pour accéder à cette page');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            loadProperties();
+        });
+
+        // ============================================
+        // CHARGEMENT DES BIENS
+        // ============================================
+        async function loadProperties() {
+            const token = localStorage.getItem('token');
+            const loading = document.getElementById('loadingState');
+            const empty = document.getElementById('emptyState');
+            const grid = document.getElementById('propertiesGrid');
+
+            try {
+                const res = await fetch(`${API_URL}/properties`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error('Erreur de chargement');
+
+                const properties = await res.json();
+                loading.style.display = 'none';
+
+                if (properties.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                grid.innerHTML = properties.map(prop => `
+                    <div class="property-card">
+                        <img src="${prop.image_url || 'images/placeholder.jpg'}" 
+                             class="property-image" 
+                             onerror="this.src='images/placeholder.jpg'">
+                        <div class="property-content">
+                            <h3 class="property-title">${prop.title}</h3>
+                            <div class="property-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                ${prop.neighborhood}, ${prop.city}
+                            </div>
+                            <div class="property-price">${prop.price_label}</div>
+                            <div class="property-features">
+                                <span><i class="fas fa-ruler-combined"></i> ${prop.surface} m²</span>
+                                <span><i class="fas fa-bed"></i> ${prop.bedrooms}</span>
+                                <span><i class="fas fa-bath"></i> ${prop.bathrooms}</span>
+                            </div>
+                            <span class="badge badge-${prop.transaction}">${prop.transaction === 'sale' ? 'À vendre' : 'À louer'}</span>
+                            <div class="property-actions">
+                                <button class="btn btn-edit" onclick="editProperty('${prop.id}')">
+                                    <i class="fas fa-edit"></i> Modifier
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteProperty('${prop.id}')">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('Erreur:', err);
+                loading.innerHTML = '<p style="color: var(--error);">Erreur de chargement. <button onclick="loadProperties()" class="btn btn-primary" style="margin-top: 20px;">Réessayer</button></p>';
+            }
+        }
+
+        // ============================================
+        // MODAL
+        // ============================================
+        function openModal() {
+            document.getElementById('propertyModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('propertyModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('propertyForm').reset();
+            editingPropertyId = null;
+            existingImages = [];
+            selectedFiles = [];
+            updateImagePreview();
+            document.getElementById('modalTitle').textContent = 'Ajouter un bien';
+            document.getElementById('uploadPlaceholder').style.display = 'block';
+        }
+
+        // ============================================
+        // GESTION DES IMAGES
+        // ============================================
+        document.getElementById('propImages').addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            const newFiles = Array.from(files);
+            if (existingImages.length + selectedFiles.length + newFiles.length > 5) {
+                alert('Maximum 5 images');
+                return;
+            }
+            for (let file of newFiles) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`Fichier "${file.name}" trop volumineux (max 5MB)`);
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert(`"${file.name}" n'est pas une image`);
+                    return;
+                }
+            }
+            selectedFiles = [...selectedFiles, ...newFiles];
+            updateImagePreview();
+        }
+
+        function updateImagePreview() {
+            const preview = document.getElementById('imagePreview');
+            const placeholder = document.getElementById('uploadPlaceholder');
+            preview.innerHTML = '';
+
+            const allImages = [...existingImages, ...selectedFiles];
+            if (allImages.length === 0) {
+                placeholder.style.display = 'block';
+                return;
+            }
+            placeholder.style.display = 'none';
+
+            allImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'preview-item';
+                const imgSrc = index < existingImages.length 
+                    ? img 
+                    : URL.createObjectURL(selectedFiles[index - existingImages.length]);
+                div.innerHTML = `
+                    <img src="${imgSrc}">
+                    <button type="button" class="remove-btn" onclick="removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                preview.appendChild(div);
+            });
+        }
+
+        function removeImage(index) {
+            if (index < existingImages.length) {
+                existingImages.splice(index, 1);
+            } else {
+                selectedFiles.splice(index - existingImages.length, 1);
+            }
+            updateImagePreview();
+        }
+
+        // ============================================
+        // MODIFICATION D'UN BIEN
+        // ============================================
+        async function editProperty(id) {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${API_URL}/properties/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error('Bien non trouvé');
+
+                const property = await res.json();
+                editingPropertyId = id;
+
+                // Gestion des images existantes
+                existingImages = [];
+                if (property.images) {
+                    try {
+                        existingImages = JSON.parse(property.images);
+                    } catch (e) {
+                        existingImages = property.image_url ? [property.image_url] : [];
+                    }
+                } else if (property.image_url) {
+                    existingImages = [property.image_url];
+                }
+                selectedFiles = [];
+
+                // Remplir le formulaire
+                document.getElementById('modalTitle').textContent = 'Modifier le bien';
+                document.getElementById('propTitle').value = property.title || '';
+                document.getElementById('propCity').value = property.city || '';
+                document.getElementById('propNeighborhood').value = property.neighborhood || '';
+                document.getElementById('propType').value = property.type || '';
+                document.getElementById('propTransaction').value = property.transaction || '';
+                document.getElementById('propPrice').value = property.price || '';
+                document.getElementById('propSurface').value = property.surface || '';
+                document.getElementById('propBedrooms').value = property.bedrooms || '';
+                document.getElementById('propBathrooms').value = property.bathrooms || '';
+                document.getElementById('propDescription').value = property.description || '';
+                document.getElementById('propIsNew').checked = property.is_new || false;
+                document.getElementById('propIsLuxury').checked = property.is_luxury || false;
+                document.getElementById('propLat').value = property.lat || '';
+                document.getElementById('propLng').value = property.lng || '';
+
+                updateImagePreview();
+                openModal();
+
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur lors du chargement du bien');
+            }
+        }
+
+        // ============================================
+        // SUPPRESSION D'UN BIEN
+        // ============================================
+        async function deleteProperty(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer ce bien ?')) return;
+
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`${API_URL}/properties/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (res.ok) {
+                    alert('Bien supprimé avec succès');
+                    await loadProperties();
+                } else {
+                    const data = await res.json();
+                    alert('Erreur: ' + (data.error || 'Suppression échouée'));
+                }
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur de connexion au serveur');
+            }
+        }
+
+        // ============================================
+        // SOUMISSION DU FORMULAIRE
+        // ============================================
+        document.getElementById('propertyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+
+            if ([...existingImages, ...selectedFiles].length === 0) {
+                alert('Veuillez sélectionner au moins une image');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('propTitle').value.trim());
+            formData.append('city', document.getElementById('propCity').value);
+            formData.append('neighborhood', document.getElementById('propNeighborhood').value.trim());
+            formData.append('type', document.getElementById('propType').value);
+            formData.append('transaction', document.getElementById('propTransaction').value);
+            formData.append('price', document.getElementById('propPrice').value);
+            formData.append('surface', document.getElementById('propSurface').value);
+            formData.append('bedrooms', document.getElementById('propBedrooms').value);
+            formData.append('bathrooms', document.getElementById('propBathrooms').value);
+            formData.append('description', document.getElementById('propDescription').value.trim());
+            formData.append('is_new', document.getElementById('propIsNew').checked);
+            formData.append('is_luxury', document.getElementById('propIsLuxury').checked);
+            if (document.getElementById('propLat').value) formData.append('lat', document.getElementById('propLat').value);
+            if (document.getElementById('propLng').value) formData.append('lng', document.getElementById('propLng').value);
+            if (existingImages.length > 0) formData.append('existing_images', JSON.stringify(existingImages));
+            selectedFiles.forEach(file => formData.append('images', file));
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+
+            try {
+                // Les users utilisent /api/properties, les admins peuvent utiliser /api/admin/properties
+                const endpoint = user.role === 'admin' && !editingPropertyId 
+                    ? '/admin/properties' 
+                    : '/properties';
+                
+                const url = editingPropertyId 
+                    ? `${API_URL}/properties/${editingPropertyId}`
+                    : `${API_URL}${endpoint}`;
+                
+                const method = editingPropertyId ? 'PUT' : 'POST';
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(editingPropertyId ? 'Bien modifié avec succès !' : 'Bien ajouté avec succès !');
+                    closeModal();
+                    await loadProperties();
+                } else {
+                    alert('Erreur: ' + (data.error || 'Échec de l\'enregistrement'));
+                }
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur de connexion au serveur');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+            }
+        });
+
+        // ============================================
+        // BOUTON AJOUTER
+        // ============================================
+        document.getElementById('addPropertyBtn').addEventListener('click', openModal);
+    </script>
+</body>
+</html>

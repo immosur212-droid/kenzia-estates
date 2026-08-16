@@ -95,6 +95,7 @@
     border-radius: 0 !important;
     font-weight: 500 !important;
     position: relative;
+    display: inline-block;
 }
 
 .nav-link-cta:hover {
@@ -105,7 +106,7 @@
     width: 100%;
 }
 
-/* Soulignement dynamique au survol */
+/* Soulignement dynamique */
 .nav-link-cta::after {
     content: '';
     position: absolute;
@@ -120,24 +121,26 @@
 .auth-button {
     background: var(--matte-brass);
     color: var(--bleu-nuit);
-    padding: 10px 25px;
+    padding: 8px 18px; /* Réduit de 10px 25px à 8px 18px */
     border-radius: 4px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem; /* Réduit de 0.95rem à 0.85rem */
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-left: 15px; /* Espace entre Contact Us et Se connecter */
+    gap: 6px; /* Réduit de 8px à 6px */
 }
 
 .auth-button:hover {
     background: var(--bleu-nuit);
     color: var(--white);
     transform: translateY(-2px);
+}
+        .auth-button i {
+    font-size: 0.8rem; /* Icône plus petite */
 }
         
         /* ============================================

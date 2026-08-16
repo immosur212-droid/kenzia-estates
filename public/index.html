@@ -94,21 +94,27 @@
     border: none !important;
     border-radius: 0 !important;
     font-weight: 500 !important;
+    position: relative;
 }
 
 .nav-link-cta:hover {
     color: var(--matte-brass) !important;
     background: none !important;
 }
+        .nav-link-cta:hover::after {
+    width: 100%;
+}
 
+/* Soulignement dynamique au survol */
 .nav-link-cta::after {
     content: '';
     position: absolute;
     bottom: -5px;
     left: 0;
-    width: 100%;
+    width: 0;
     height: 2px;
     background: var(--matte-brass);
+    transition: width 0.3s ease;
 }
         /* Bouton Se connecter - Style primaire */
 .auth-button {

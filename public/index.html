@@ -86,24 +86,30 @@
             background: var(--matte-brass);
         }
         
-/* Contact Us comme lien normal */
+/* Contact Us - Même style que Home, Properties, Services, About */
 .nav-link-cta {
-    background: none;
-    color: var(--bleu-nuit);
-    padding: 0;
-    border: none;
-    font-weight: 500;
+    background: none !important;
+    color: var(--bleu-nuit) !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-weight: 500 !important;
 }
 
 .nav-link-cta:hover {
-    color: var(--matte-brass);
-    background: none;
+    color: var(--matte-brass) !important;
+    background: none !important;
 }
-        
-        .nav-link-cta::after {
-            display: none;
-        }
-        
+
+.nav-link-cta::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--matte-brass);
+}
         /* Bouton Se connecter - Style primaire */
 .auth-button {
     background: var(--matte-brass);

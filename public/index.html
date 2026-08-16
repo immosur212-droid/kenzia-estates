@@ -86,21 +86,19 @@
             background: var(--matte-brass);
         }
         
-        /* Bouton Contact Us - Style secondaire */
-        .nav-link-cta {
-            background: transparent;
-            color: var(--bleu-nuit);
-            padding: 8px 16px;
-            border: 2px solid var(--matte-brass);
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link-cta:hover {
-            background: var(--matte-brass);
-            color: var(--bleu-nuit);
-        }
+/* Contact Us comme lien normal */
+.nav-link-cta {
+    background: none;
+    color: var(--bleu-nuit);
+    padding: 0;
+    border: none;
+    font-weight: 500;
+}
+
+.nav-link-cta:hover {
+    color: var(--matte-brass);
+    background: none;
+}
         
         .nav-link-cta::after {
             display: none;

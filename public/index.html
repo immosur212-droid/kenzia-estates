@@ -20,7 +20,7 @@
     <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR AMÉLIORÉE & INTÉGRÉE
+           NAVBAR & LIENS (Style unifié)
            ============================================ */
         .navbar {
             background: var(--white);
@@ -38,7 +38,7 @@
         }
         
         .logo {
-            margin-left: -20px; /* Décale le logo à gauche */
+            margin-left: -20px;
         }
         
         .logo-img {
@@ -61,90 +61,82 @@
             padding: 0;
             gap: 30px;
         }
+        
         .nav-list li {
-    overflow: visible !important;
-}
-        
-        .nav-link {
-            color: var(--bleu-nuit);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-            position: relative;
+            overflow: visible !important; /* Empêche le soulignement d'être coupé */
         }
         
-        .nav-link:hover,
+        /* Style UNIFIÉ pour TOUS les liens (Home, Properties, ..., Contact Us) */
+        .nav-link, 
+        .nav-link-cta {
+            color: var(--bleu-nuit) !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+            font-size: 0.95rem !important;
+            transition: color 0.3s ease !important;
+            position: relative !important;
+            display: inline-block !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+        }
+        
+        .nav-link:hover, 
+        .nav-link-cta:hover,
         .nav-link.active {
-            color: var(--matte-brass);
+            color: var(--matte-brass) !important;
         }
         
-        .nav-link.active::after {
+        /* Soulignement dynamique pour TOUS les liens */
+        .nav-link::after, 
+        .nav-link-cta::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
-            width: 100%;
+            width: 0; /* Commence à 0 */
             height: 2px;
             background: var(--matte-brass);
+            transition: width 0.3s ease;
         }
         
-/* Contact Us - Même style que Home, Properties, Services, About */
-.nav-link-cta {
-    background: none !important;
-    color: var(--bleu-nuit) !important;
-    padding: 0 !important;
-    border: none !important;
-    border-radius: 0 !important;
-    font-weight: 500 !important;
-    position: relative;
-    display: inline-block;
-}
+        /* S'étend à 100% au survol ou si actif */
+        .nav-link:hover::after, 
+        .nav-link-cta:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
 
-.nav-link-cta:hover {
-    color: var(--matte-brass) !important;
-    background: none !important;
-}
-        .nav-link-cta:hover::after {
-    width: 100%;
-}
-
-/* Soulignement dynamique */
-.nav-link-cta::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--matte-brass);
-    transition: width 0.3s ease;
-}
-        /* Bouton Se connecter - Style primaire */
-.auth-button {
-    background: var(--matte-brass);
-    color: var(--bleu-nuit);
-    padding: 8px 18px; /* Réduit de 10px 25px à 8px 18px */
-    border-radius: 4px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.85rem; /* Réduit de 0.95rem à 0.85rem */
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px; /* Réduit de 8px à 6px */
-}
-
-.auth-button:hover {
-    background: var(--bleu-nuit);
-    color: var(--white);
-    transform: translateY(-2px);
-}
+        /* ============================================
+           BOUTON SE CONNECTER (Dimensions réduites)
+           ============================================ */
+        .auth-button {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+            padding: 6px 16px; /* Plus compact */
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem; /* Texte plus petit */
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap; /* Empêche le texte de passer à la ligne */
+        }
+        
+        .auth-button:hover {
+            background: var(--bleu-nuit);
+            color: var(--white);
+            transform: translateY(-1px); /* Soulèvement plus subtil */
+        }
+        
         .auth-button i {
-    font-size: 0.8rem; /* Icône plus petite */
-}
+            font-size: 0.75rem; /* Icône proportionnelle */
+        }
         
         /* ============================================
            MENU UTILISATEUR INTÉGRÉ (Seamless)

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Article du blog Kenzia Estates">
+    <title>Article | Kenzia Estates</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .blog-post-page {
+            background: var(--white);
+            min-height: 100vh;
+        }
+        
+        .blog-post-hero {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .blog-post-hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .blog-post-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+        }
+        
+        .blog-post-hero-content {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 900px;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .blog-post-hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .blog-post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .blog-post-meta i {
+            margin-right: 8px;
+        }
+        
+        .blog-post-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .blog-post-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--bleu-nuit);
+            margin-bottom: 25px;
+        }
+        
+        .blog-post-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--bleu-nuit);
+            margin: 40px 0 20px;
+        }
+        
+        .blog-post-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--bleu-nuit);
+            margin: 30px 0 15px;
+        }
+        
+        .blog-post-content ul, .blog-post-content ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+        
+        .blog-post-content li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--bleu-nuit);
+            margin-bottom: 10px;
+        }
+        
+        .blog-post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .blog-post-content blockquote {
+            border-left: 4px solid var(--matte-brass);
+            padding-left: 20px;
+            margin: 30px 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+        
+        .blog-post-content a {
+            color: var(--matte-brass);
+            text-decoration: none;
+            border-bottom: 1px solid var(--matte-brass);
+            transition: all 0.3s ease;
+        }
+        
+        .blog-post-content a:hover {
+            color: var(--bleu-nuit);
+            border-color: var(--bleu-nuit);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        
+        .loading i {
+            font-size: 3rem;
+            color: var(--matte-brass);
+            margin-bottom: 20px;
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: 100px 20px;
+        }
+        
+        .error-state i {
+            font-size: 4rem;
+            color: var(--error);
+            margin-bottom: 20px;
+        }
+        
+        .error-state h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 15px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--matte-brass);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--bleu-nuit);
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-post-hero {
+                height: 300px;
+            }
+            
+            .blog-post-hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .blog-post-content {
+                padding: 40px 20px;
+            }
+            
+            .blog-post-content h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="/index.html" class="logo">
+                    <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
+                </a>
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="/index.html" class="nav-link">Home</a></li>
+                        <li><a href="/properties.html" class="nav-link">Properties</a></li>
+                        <li><a href="/services.html" class="nav-link">Services</a></li>
+                        <li><a href="/about.html" class="nav-link">About</a></li>
+                        <li><a href="/blog.html" class="nav-link active">Blog</a></li>
+                        <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
+                    </ul>
+                </div>
+                <a href="/login.html" class="auth-button" id="authButton">
+                    <i class="fas fa-user"></i>
+                    <span>Se connecter</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Post Content -->
+    <article class="blog-post-page">
+        <div id="blogPostContent">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Chargement de l'article...</p>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/index.html" class="footer-logo">
+                        <img src="images/logo-footer.png" alt="Kenzia Estates" class="logo-footer-img">
+                    </a>
+                    <p class="footer-description">Premium real estate agency in Morocco, offering transparent and professional services for buying, selling, and renting properties.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Buy Property</a></li>
+                        <li><a href="#">Sell Property</a></li>
+                        <li><a href="#">Long-term Rental</a></li>
+                        <li><a href="#">Property Estimation</a></li>
+                        <li><a href="#">Investment Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Cities</h4>
+                    <ul>
+                        <li><a href="#">Casablanca</a></li>
+                        <li><a href="#">Marrakech</a></li>
+                        <li><a href="#">Rabat</a></li>
+                        <li><a href="#">Tanger</a></li>
+                        <li><a href="#">Agadir</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-location-dot"></i><span>Bd. Zerktouni, Casablanca, Morocco</span></li>
+                        <li><i class="fas fa-phone"></i><span>+212 771 531 415</span></li>
+                        <li><i class="fas fa-envelope"></i><span>contact@kenziaestates.ma</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kenzia Estates. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            const contentDiv = document.getElementById('blogPostContent');
+
+            if (!slug) {
+                contentDiv.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>Article non trouvé</h2>
+                        <p style="color: var(--text-muted);">L'URL de l'article est invalide.</p>
+                        <a href="/blog.html" class="back-link">
+                            <i class="fas fa-arrow-left"></i> Retour au blog
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/blog/${slug}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Article non trouvé');
+                    }
+                    throw new Error('Erreur de chargement');
+                }
+                
+                const article = await response.json();
+                
+                const date = new Date(article.created_at).toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                // Mettre à jour le titre de la page
+                document.title = `${article.title} | Kenzia Estates`;
+                
+                contentDiv.innerHTML = `
+                    <div class="blog-post-hero">
+                        <img src="${article.image_url || 'https://via.placeholder.com/1200x600'}" 
+                             alt="${article.title}" 
+                             class="blog-post-hero-image"
+                             onerror="this.src='https://via.placeholder.com/1200x600'">
+                        <div class="blog-post-hero-overlay"></div>
+                        <div class="blog-post-hero-content">
+                            <h1>${article.title}</h1>
+                            <div class="blog-post-meta">
+                                <span><i class="fas fa-user"></i> ${article.author_name || 'Admin'}</span>
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                                <span><i class="fas fa-eye"></i> ${article.views || 0} vues</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blog-post-content">
+                        ${article.content}
+                        <div style="margin-top: 60px; padding-top: 40px; border-top: 2px solid var(--border-light);">
+                            <a href="/blog.html" class="back-link">
+                                <i class="fas fa-arrow-left"></i> Retour au blog
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                contentDiv.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h2>${error.message}</h2>
+                        <p style="color: var(--text-muted);">Veuillez réessayer plus tard.</p>
+                        <a href="/blog.html" class="back-link">
+                            <i class="fas fa-arrow-left"></i> Retour au blog
+                        </a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

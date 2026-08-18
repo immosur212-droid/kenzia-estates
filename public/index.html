@@ -22,7 +22,7 @@
         /* ============================================
            NAVBAR & LIENS (Style unifié)
            ============================================ */
-        .navbar {
+       .navbar {
             background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
@@ -30,29 +30,33 @@
             z-index: 1000;
         }
 
-  .nav-wrapper {
+        .nav-wrapper {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 0;
+            padding: 15px 20px; /* Padding latéral pour éviter le collage aux bords */
+            gap: 20px; /* Espace MINIMUM garanti entre le Logo, le Menu et le Bouton */
         }
         
         .logo {
-            margin-left: 0; /* Supprimez ou réduisez le margin-left négatif */
-            flex-shrink: 0; /* Empêche le logo de se compresser */
+            flex-shrink: 0; /* EMPÊCHE le logo de se compresser */
+            display: flex;
+            align-items: center;
+            z-index: 10;
         }
         
         .logo-img {
             height: 50px;
             width: auto;
+            display: block;
         }
         
         .nav-menu {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 30px; /* Réduisez la marge si nécessaire */
-            flex: 1;
+            flex: 1; /* Prend l'espace central disponible */
+            min-width: 0; 
         }     
 
         .nav-list {
@@ -60,20 +64,22 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            gap: 25px; /* Réduisez l'espacement entre les liens si besoin */
+            gap: 15px; /* Espacement RÉDUIT entre les liens pour gagner de la place */
+            align-items: center;
+            flex-wrap: nowrap;
         }
             
         .nav-list li {
-            overflow: visible !important; /* Empêche le soulignement d'être coupé */
+            overflow: visible !important;
         }
         
-        /* Style UNIFIÉ pour TOUS les liens (Home, Properties, ..., Contact Us) */
+        /* Style UNIFIÉ pour TOUS les liens */
         .nav-link, 
         .nav-link-cta {
             color: var(--bleu-nuit) !important;
             text-decoration: none !important;
             font-weight: 500 !important;
-            font-size: 0.95rem !important;
+            font-size: 0.9rem !important; /* Légèrement réduit pour gagner de la place */
             transition: color 0.3s ease !important;
             position: relative !important;
             display: inline-block !important;
@@ -81,6 +87,7 @@
             border: none !important;
             padding: 0 !important;
             border-radius: 0 !important;
+            white-space: nowrap; /* Empêche le texte de se couper */
         }
         
         .nav-link:hover, 
@@ -89,20 +96,19 @@
             color: var(--matte-brass) !important;
         }
         
-        /* Soulignement dynamique pour TOUS les liens */
+        /* Soulignement dynamique */
         .nav-link::after, 
         .nav-link-cta::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
-            width: 0; /* Commence à 0 */
+            width: 0;
             height: 2px;
             background: var(--matte-brass);
             transition: width 0.3s ease;
         }
         
-        /* S'étend à 100% au survol ou si actif */
         .nav-link:hover::after, 
         .nav-link-cta:hover::after,
         .nav-link.active::after {
@@ -110,33 +116,38 @@
         }
 
         /* ============================================
-           BOUTON SE CONNECTER (Dimensions réduites)
+           ÉLÉMENTS DE DROITE (Protection anti-compression)
            ============================================ */
+        .auth-button, .user-menu-container {
+            flex-shrink: 0; /* EMPÊCHE le bouton de se compresser */
+            white-space: nowrap;
+            z-index: 10;
+        }
+
         .auth-button {
             background: var(--matte-brass);
             color: var(--bleu-nuit);
-            padding: 6px 16px; /* Plus compact */
+            padding: 8px 16px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.8rem; /* Texte plus petit */
+            font-size: 0.85rem;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            white-space: nowrap; /* Empêche le texte de passer à la ligne */
         }
         
         .auth-button:hover {
             background: var(--bleu-nuit);
             color: var(--white);
-            transform: translateY(-1px); /* Soulèvement plus subtil */
+            transform: translateY(-1px);
         }
         
         .auth-button i {
-            font-size: 0.75rem; /* Icône proportionnelle */
+            font-size: 0.75rem;
         }
         
         /* ============================================

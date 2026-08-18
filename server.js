@@ -514,7 +514,122 @@ app.delete('/api/users/favorites/:propertyId', verifyToken, async (req, res) => 
         res.status(500).json({ error: 'Erreur serveur' });
     }
 });
+// ============================================
+// ROUTES ADMIN - BLOG (Gestion des articles)
+// ============================================
 
+// 1. Récupérer tous les articles (Admin)
+app.get('/api/admin/blog', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT b.*, u.full_name as author_name 
+            FROM blog_posts b 
+            LEFT JOIN users u ON b.author_id = u.id 
+            ORDER BY b.created_at DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erreur chargement articles:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// 2. Créer un article (Admin)
+app.post('/api/admin/blog', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { title, slug, excerpt, content, image_url, status } = req.body;
+        const authorId = req.user.id;
+
+        // Génération automatique du slug si non fourni (ex: "Mon Titre" -> "mon-titre")
+        const finalSlug = slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+        const result = await pool.query(
+            `INSERT INTO blog_posts (title, slug, excerpt, content, image_url, author_id, status) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+            [title, finalSlug, excerpt, content, image_url, authorId, status || 'draft']
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur création article:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
+
+// 3. Modifier un article (Admin)
+app.put('/api/admin/blog/:id', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, slug, excerpt, content, image_url, status } = req.body;
+
+        const result = await pool.query(
+            `UPDATE blog_posts 
+             SET title=$1, slug=$2, excerpt=$3, content=$4, image_url=$5, status=$6, updated_at=CURRENT_TIMESTAMP 
+             WHERE id=$7 RETURNING *`,
+            [title, slug, excerpt, content, image_url, status, id]
+        );
+
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Article non trouvé' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur modification article:', err);
+        res.status(500).json({ error: 'Erreur serveur: ' + err.message });
+    }
+});
+
+// 4. Supprimer un article (Admin)
+app.delete('/api/admin/blog/:id', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM blog_posts WHERE id = $1 RETURNING *', [id]);
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Article non trouvé' });
+        res.json({ message: 'Article supprimé' });
+    } catch (err) {
+        console.error('Erreur suppression article:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// ============================================
+// ROUTES PUBLIQUES - BLOG (Pour les visiteurs)
+// ============================================
+
+// 5. Récupérer les articles publiés (Public)
+app.get('/api/blog', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT id, title, slug, excerpt, image_url, author_id, created_at, views 
+            FROM blog_posts 
+            WHERE status = 'published' 
+            ORDER BY created_at DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Erreur chargement blog public:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
+
+// 6. Récupérer un article spécifique par son slug (Public)
+app.get('/api/blog/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        // On incrémente les vues à chaque lecture
+        await pool.query('UPDATE blog_posts SET views = views + 1 WHERE slug = $1', [slug]);
+        
+        const result = await pool.query(`
+            SELECT b.*, u.full_name as author_name 
+            FROM blog_posts b 
+            LEFT JOIN users u ON b.author_id = u.id 
+            WHERE b.slug = $1 AND b.status = 'published'
+        `, [slug]);
+
+        if (result.rows.length === 0) return res.status(404).json({ error: 'Article non trouvé' });
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error('Erreur chargement article public:', err);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+});
 // ============================================
 // 11. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN
 // ============================================

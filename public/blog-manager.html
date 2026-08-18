@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Blog | Kenzia Estates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Quill.js pour l'éditeur de texte riche -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        body {
+            background: var(--off-white);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .blog-manager {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--bleu-nuit);
+            margin: 0;
+        }
+        
+        .page-header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+        }
+        
+        .btn-primary:hover {
+            background: var(--bleu-nuit);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--white);
+            color: var(--bleu-nuit);
+            border: 2px solid var(--border-light);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--matte-brass);
+        }
+        
+        .btn-danger {
+            background: var(--error);
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        
+        /* Filtres */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--matte-brass);
+            color: var(--matte-brass);
+        }
+        
+        .filter-btn.active {
+            background: var(--matte-brass);
+            border-color: var(--matte-brass);
+            color: var(--bleu-nuit);
+        }
+        
+        /* Tableau */
+        .articles-table {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        
+        .articles-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .articles-table th {
+            background: var(--off-white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--bleu-nuit);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .articles-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--bleu-nuit);
+        }
+        
+        .articles-table tr:hover {
+            background: var(--off-white);
+        }
+        
+        .article-title-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .article-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .article-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            color: var(--bleu-nuit);
+        }
+        
+        .article-info .slug {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-published {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-draft {
+            background: rgba(149, 165, 166, 0.1);
+            color: #95a5a6;
+        }
+        
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit {
+            background: rgba(184, 153, 112, 0.1);
+            color: var(--matte-brass);
+        }
+        
+        .btn-edit:hover {
+            background: var(--matte-brass);
+            color: var(--bleu-nuit);
+        }
+        
+        .btn-delete {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--error);
+        }
+        
+        .btn-delete:hover {
+            background: var(--error);
+            color: var(--white);
+        }
+        
+        .btn-view {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+        
+        .btn-view:hover {
+            background: #3498db;
+            color: var(--white);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: var(--white);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--off-white);
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--bleu-nuit);
+            margin: 0;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-close:hover {
+            background: var(--white);
+            color: var(--bleu-nuit);
+        }
+        
+        .modal-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--bleu-nuit);
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-light);
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--matte-brass);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+        
+        /* Quill Editor */
+        #editor {
+            height: 300px;
+            background: var(--white);
+        }
+        
+        .ql-toolbar {
+            border: 2px solid var(--border-light) !important;
+            border-bottom: none !important;
+            border-radius: 5px 5px 0 0 !important;
+        }
+        
+        .ql-container {
+            border: 2px solid var(--border-light) !important;
+            border-radius: 0 0 5px 5px !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-size: 1rem !important;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 25px 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .loading i {
+            font-size: 3rem;
+            color: var(--matte-brass);
+            margin-bottom: 15px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--border-light);
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .articles-table {
+                overflow-x: auto;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blog-manager">
+        <div class="page-header">
+            <div>
+                <a href="/dashboard.html" style="color: var(--matte-brass); text-decoration: none; font-size: 0.9rem;">
+                    <i class="fas fa-arrow-left"></i> Retour au Dashboard
+                </a>
+                <h1 style="margin-top: 10px;">Gestion du Blog</h1>
+                <p>Créez et gérez vos articles immobiliers</p>
+            </div>
+            <button class="btn btn-primary" onclick="openModal()">
+                <i class="fas fa-plus"></i> Nouvel Article
+            </button>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="published">Publiés</button>
+            <button class="filter-btn" data-filter="draft">Brouillons</button>
+        </div>
+
+        <!-- Tableau des articles -->
+        <div class="articles-table">
+            <div id="loadingState" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Chargement des articles...</p>
+            </div>
+            
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <i class="fas fa-newspaper"></i>
+                <h3>Aucun article pour le moment</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Créez votre premier article de blog</p>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <i class="fas fa-plus"></i> Créer un article
+                </button>
+            </div>
+            
+            <table id="articlesTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Article</th>
+                        <th>Auteur</th>
+                        <th>Statut</th>
+                        <th>Vues</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="articlesTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Création/Modification -->
+    <div class="modal" id="articleModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nouvel Article</h2>
+                <button class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="articleForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="articleTitle">Titre de l'article *</label>
+                        <input type="text" id="articleTitle" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="articleSlug">Slug (URL) *</label>
+                            <input type="text" id="articleSlug" class="form-control" required>
+                            <p class="form-hint">Ex: acheter-appartement-casablanca</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="articleStatus">Statut</label>
+                            <select id="articleStatus" class="form-control">
+                                <option value="draft">Brouillon</option>
+                                <option value="published">Publié</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleExcerpt">Extrait (résumé court) *</label>
+                        <textarea id="articleExcerpt" class="form-control" rows="3" required></textarea>
+                        <p class="form-hint">Court résumé affiché dans la liste des articles</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleImage">URL de l'image de couverture</label>
+                        <input type="url" id="articleImage" class="form-control" placeholder="https://...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Contenu de l'article *</label>
+                        <div id="editor"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+        let editingArticleId = null;
+        let quill = null;
+        let currentFilter = 'all';
+
+        // Initialisation de Quill Editor
+        document.addEventListener('DOMContentLoaded', () => {
+            quill = new Quill('#editor', {
+                theme: 'snow',
+                placeholder: 'Rédigez votre article ici...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            loadArticles();
+            setupFilters();
+            setupSlugGeneration();
+        });
+
+        // Génération automatique du slug
+        function setupSlugGeneration() {
+            const titleInput = document.getElementById('articleTitle');
+            const slugInput = document.getElementById('articleSlug');
+            
+            titleInput.addEventListener('input', (e) => {
+                if (!editingArticleId) { // Ne pas modifier si on édite
+                    const slug = e.target.value
+                        .toLowerCase()
+                        .normalize('NFD')
+                        .replace(/[\u0300-\u036f]/g, '') // Enlève les accents
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/(^-|-$)/g, '');
+                    slugInput.value = slug;
+                }
+            });
+        }
+
+        // Filtres
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    loadArticles();
+                });
+            });
+        }
+
+        // Chargement des articles
+        async function loadArticles() {
+            const token = localStorage.getItem('token');
+            const loading = document.getElementById('loadingState');
+            const empty = document.getElementById('emptyState');
+            const table = document.getElementById('articlesTable');
+            const tbody = document.getElementById('articlesTableBody');
+
+            try {
+                const res = await fetch(`${API_URL}/admin/blog`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error('Erreur de chargement');
+
+                const articles = await res.json();
+                loading.style.display = 'none';
+
+                // Filtrage
+                const filtered = currentFilter === 'all' 
+                    ? articles 
+                    : articles.filter(a => a.status === currentFilter);
+
+                if (filtered.length === 0) {
+                    table.style.display = 'none';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                table.style.display = 'table';
+                empty.style.display = 'none';
+                tbody.innerHTML = '';
+
+                filtered.forEach(article => {
+                    const date = new Date(article.created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div class="article-title-cell">
+                                <img src="${article.image_url || 'https://via.placeholder.com/60'}" 
+                                     class="article-thumb"
+                                     onerror="this.src='https://via.placeholder.com/60'">
+                                <div class="article-info">
+                                    <h4>${article.title}</h4>
+                                    <span class="slug">/${article.slug}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${article.author_name || 'Admin'}</td>
+                        <td>
+                            <span class="badge badge-${article.status}">
+                                ${article.status === 'published' ? 'Publié' : 'Brouillon'}
+                            </span>
+                        </td>
+                        <td>${article.views || 0}</td>
+                        <td>${date}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-icon btn-view" onclick="viewArticle('${article.slug}')" title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-icon btn-edit" onclick="editArticle(${article.id})" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-delete" onclick="deleteArticle(${article.id})" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+            } catch (err) {
+                console.error('Erreur:', err);
+                loading.innerHTML = '<p style="color: var(--error);">Erreur de chargement. <button onclick="loadArticles()" class="btn btn-primary btn-sm" style="margin-top: 15px;">Réessayer</button></p>';
+            }
+        }
+
+        // Ouvrir le modal
+        function openModal() {
+            document.getElementById('articleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('modalTitle').textContent = 'Nouvel Article';
+            document.getElementById('articleForm').reset();
+            quill.setContents([]);
+            editingArticleId = null;
+        }
+
+        // Fermer le modal
+        function closeModal() {
+            document.getElementById('articleModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingArticleId = null;
+        }
+
+        // Modifier un article
+        async function editArticle(id) {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const res = await fetch(`${API_URL}/admin/blog`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!res.ok) throw new Error('Erreur');
+                
+                const articles = await res.json();
+                const article = articles.find(a => a.id === id);
+                
+                if (!article) throw new Error('Article non trouvé');
+                
+                editingArticleId = id;
+                document.getElementById('modalTitle').textContent = 'Modifier l\'article';
+                document.getElementById('articleTitle').value = article.title;
+                document.getElementById('articleSlug').value = article.slug;
+                document.getElementById('articleExcerpt').value = article.excerpt;
+                document.getElementById('articleImage').value = article.image_url || '';
+                document.getElementById('articleStatus').value = article.status;
+                
+                // Charger le contenu dans Quill
+                quill.root.innerHTML = article.content;
+                
+                document.getElementById('articleModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur lors du chargement de l\'article');
+            }
+        }
+
+        // Supprimer un article
+        async function deleteArticle(id) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+            
+            const token = localStorage.getItem('token');
+            
+            try {
+                const res = await fetch(`${API_URL}/admin/blog/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (res.ok) {
+                    alert('Article supprimé');
+                    await loadArticles();
+                } else {
+                    const data = await res.json();
+                    alert('Erreur: ' + data.error);
+                }
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur de connexion');
+            }
+        }
+
+        // Voir un article
+        function viewArticle(slug) {
+            window.open(`/blog-post.html?slug=${slug}`, '_blank');
+        }
+
+        // Soumission du formulaire
+        document.getElementById('articleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const token = localStorage.getItem('token');
+            const content = quill.root.innerHTML;
+            
+            if (!content || content === '<p><br></p>') {
+                alert('Veuillez rédiger le contenu de l\'article');
+                return;
+            }
+            
+            const data = {
+                title: document.getElementById('articleTitle').value.trim(),
+                slug: document.getElementById('articleSlug').value.trim(),
+                excerpt: document.getElementById('articleExcerpt').value.trim(),
+                content: content,
+                image_url: document.getElementById('articleImage').value.trim(),
+                status: document.getElementById('articleStatus').value
+            };
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+            
+            try {
+                const url = editingArticleId 
+                    ? `${API_URL}/admin/blog/${editingArticleId}`
+                    : `${API_URL}/admin/blog`;
+                
+                const method = editingArticleId ? 'PUT' : 'POST';
+                
+                const res = await fetch(url, {
+                    method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (res.ok) {
+                    alert(editingArticleId ? 'Article modifié !' : 'Article créé !');
+                    closeModal();
+                    await loadArticles();
+                } else {
+                    const errorData = await res.json();
+                    alert('Erreur: ' + (errorData.error || 'Échec de l\'enregistrement'));
+                }
+            } catch (err) {
+                console.error('Erreur:', err);
+                alert('Erreur de connexion au serveur');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
+            }
+        });
+    </script>
+</body>
+</html>

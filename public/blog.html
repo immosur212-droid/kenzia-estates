@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blog immobilier Kenzia Estates - Conseils, guides et actualités sur l'immobilier au Maroc">
+    <title>Blog Immobilier | Kenzia Estates</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .blog-page {
+            background: var(--off-white);
+            min-height: 100vh;
+            padding: 60px 20px;
+        }
+        
+        .blog-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+        
+        .blog-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 20px;
+        }
+        
+        .blog-header p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .blog-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .blog-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .blog-card-content {
+            padding: 25px;
+        }
+        
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+        
+        .blog-card-meta i {
+            color: var(--matte-brass);
+            margin-right: 5px;
+        }
+        
+        .blog-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+        
+        .blog-card-excerpt {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .read-more {
+            color: var(--matte-brass);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .read-more:hover {
+            color: var(--bleu-nuit);
+            gap: 12px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .loading i {
+            font-size: 3rem;
+            color: var(--matte-brass);
+            margin-bottom: 20px;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--border-light);
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--bleu-nuit);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-header h1 {
+                font-size: 2rem;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (même que index.html) -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <a href="/index.html" class="logo">
+                    <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
+                </a>
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="/index.html" class="nav-link">Home</a></li>
+                        <li><a href="/properties.html" class="nav-link">Properties</a></li>
+                        <li><a href="/services.html" class="nav-link">Services</a></li>
+                        <li><a href="/about.html" class="nav-link">About</a></li>
+                        <li><a href="/blog.html" class="nav-link active">Blog</a></li>
+                        <li><a href="/contact.html" class="nav-link nav-link-cta">Contact Us</a></li>
+                    </ul>
+                </div>
+                <a href="/login.html" class="auth-button" id="authButton">
+                    <i class="fas fa-user"></i>
+                    <span>Se connecter</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blog Content -->
+    <section class="blog-page">
+        <div class="blog-header">
+            <h1>Blog Immobilier</h1>
+            <p>Découvrez nos conseils d'experts, analyses de marché et guides pratiques pour réussir vos projets immobiliers au Maroc.</p>
+        </div>
+        
+        <div class="blog-grid" id="blogGrid">
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Chargement des articles...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (même que index.html) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/index.html" class="footer-logo">
+                        <img src="images/logo-footer.png" alt="Kenzia Estates" class="logo-footer-img">
+                    </a>
+                    <p class="footer-description">Premium real estate agency in Morocco, offering transparent and professional services for buying, selling, and renting properties.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Buy Property</a></li>
+                        <li><a href="#">Sell Property</a></li>
+                        <li><a href="#">Long-term Rental</a></li>
+                        <li><a href="#">Property Estimation</a></li>
+                        <li><a href="#">Investment Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Cities</h4>
+                    <ul>
+                        <li><a href="#">Casablanca</a></li>
+                        <li><a href="#">Marrakech</a></li>
+                        <li><a href="#">Rabat</a></li>
+                        <li><a href="#">Tanger</a></li>
+                        <li><a href="#">Agadir</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contact</h4>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-location-dot"></i><span>Bd. Zerktouni, Casablanca, Morocco</span></li>
+                        <li><i class="fas fa-phone"></i><span>+212 771 531 415</span></li>
+                        <li><i class="fas fa-envelope"></i><span>contact@kenziaestates.ma</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Kenzia Estates. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('blogGrid');
+            
+            try {
+                const response = await fetch(`${API_URL}/blog`);
+                
+                if (!response.ok) throw new Error('Erreur de chargement');
+                
+                const articles = await response.json();
+                
+                if (articles.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-newspaper"></i>
+                            <h3>Aucun article pour le moment</h3>
+                            <p style="color: var(--text-muted); font-size: 1.1rem;">Revenez bientôt pour découvrir nos nouveaux contenus !</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = articles.map(article => {
+                    const date = new Date(article.created_at).toLocaleDateString('fr-FR', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    
+                    return `
+                        <a href="/blog-post.html?slug=${article.slug}" class="blog-card">
+                            <img src="${article.image_url || 'https://via.placeholder.com/600x400'}" 
+                                 alt="${article.title}" 
+                                 class="blog-card-image"
+                                 onerror="this.src='https://via.placeholder.com/600x400'">
+                            <div class="blog-card-content">
+                                <div class="blog-card-meta">
+                                    <span><i class="fas fa-calendar"></i> ${date}</span>
+                                    <span><i class="fas fa-eye"></i> ${article.views || 0} vues</span>
+                                </div>
+                                <h2 class="blog-card-title">${article.title}</h2>
+                                <p class="blog-card-excerpt">${article.excerpt}</p>
+                                <span class="read-more">
+                                    Lire la suite <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error);"></i>
+                        <h3>Erreur de chargement</h3>
+                        <p style="color: var(--text-muted);">Veuillez réessayer plus tard.</p>
+                        <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 20px;">
+                            <i class="fas fa-redo"></i> Réessayer
+                        </button>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

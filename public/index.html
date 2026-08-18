@@ -36,6 +36,15 @@
             justify-content: space-between;
             padding: 15px 0;
         }
+        /* Pour forcer l'espacement */
+.nav-wrapper > * {
+    flex-shrink: 0;
+}
+
+.nav-menu {
+    flex: 1;
+    min-width: 0; /* Permet au menu de se compresser si nécessaire */
+}
         
         .logo {
             margin-left: 0; /* Supprimez ou réduisez le margin-left négatif */

@@ -30,16 +30,12 @@
             z-index: 1000;
         }
 
-                /* Pour forcer l'espacement */
-.nav-wrapper > * {
-    flex-shrink: 0;
-}
-
-.nav-menu {
-    flex: 1;
-    min-width: 0; /* Permet au menu de se compresser si nécessaire */
-}
-    
+  .nav-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
         
         .logo {
             margin-left: 0; /* Supprimez ou réduisez le margin-left négatif */
@@ -51,8 +47,14 @@
             width: auto;
         }
         
-      
-        
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 30px; /* Réduisez la marge si nécessaire */
+            flex: 1;
+        }     
+
         .nav-list {
             display: flex;
             list-style: none;

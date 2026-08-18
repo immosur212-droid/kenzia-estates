@@ -515,6 +515,34 @@ app.delete('/api/users/favorites/:propertyId', verifyToken, async (req, res) => 
     }
 });
 // ============================================
+// ROUTE TEMPORAIRE : CRÉER LA TABLE BLOG
+// ============================================
+// ⚠️ À SUPPRIMER après utilisation !
+app.get('/api/create-blog-table', async (req, res) => {
+    try {
+        const query = `
+            CREATE TABLE IF NOT EXISTS blog_posts (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                slug VARCHAR(255) UNIQUE NOT NULL,
+                excerpt TEXT NOT NULL,
+                content TEXT NOT NULL,
+                image_url TEXT,
+                author_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                status VARCHAR(20) DEFAULT 'draft',
+                views INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+        await pool.query(query);
+        res.json({ message: '✅ Table blog_posts créée avec succès !' });
+    } catch (err) {
+        console.error('Erreur création table:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+// ============================================
 // 11. ROUTE CATCH-ALL (FRONTEND) - TOUT À LA FIN
 // ============================================
 app.use((req, res, next) => {

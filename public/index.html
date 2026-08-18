@@ -320,6 +320,38 @@
             .view-all-btn { width: 100%; text-align: center; }
             .featured-grid { grid-template-columns: 1fr; }
         }
+                /* ============================================
+           MEDIA QUERY POUR ÉCRANS 13 POUCES (1200px et moins)
+           ============================================ */
+        @media (max-width: 1200px) {
+            .nav-menu {
+                display: none !important; /* Cache le menu complet */
+            }
+            
+            .hamburger {
+                display: block !important; /* Affiche le menu hamburger */
+            }
+            
+            .nav-list {
+                gap: 10px; /* Réduit l'espacement si on garde le menu */
+            }
+            
+            .nav-link, .nav-link-cta {
+                font-size: 0.85rem !important; /* Réduit la taille du texte */
+            }
+            
+            .auth-button span {
+                display: none; /* Cache le texte "Se connecter", garde juste l'icône */
+            }
+            
+            .auth-button {
+                padding: 8px 12px;
+            }
+            
+            .logo-img {
+                height: 45px; /* Réduit légèrement la taille du logo */
+            }
+        }
     </style>
 </head>
 <body>

@@ -355,27 +355,32 @@
         /* ============================================
    CORRECTION MENU MOBILE (HAMBURGER)
    ============================================ */
+/* ============================================
+   CORRECTION MENU MOBILE (HAMBURGER)
+   ============================================ */
 @media (max-width: 1200px) {
-    /* 1. Le menu devient un panneau latéral caché à droite */
+    /* 1. Le menu devient un panneau qui descend sous la navbar */
     .nav-menu {
-        position: fixed;
-        top: 80px; /* Ajustez si votre navbar est plus haute */
-        right: -100%; /* Caché hors de l'écran par défaut */
-        width: 280px;
-        height: calc(100vh - 80px);
+        position: absolute; /* Changed from fixed to absolute */
+        top: 100%; /* Juste en dessous de la navbar */
+        left: 0;
+        right: 0;
         background: var(--white, #ffffff);
         flex-direction: column;
         align-items: flex-start;
         padding: 30px 20px;
-        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-        transition: right 0.4s ease-in-out; /* Animation fluide */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        max-height: 0; /* Caché par défaut */
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
         z-index: 999;
-        display: flex !important; /* Nécessaire pour l'animation */
+        display: flex !important;
+        width: 100%; /* Prend toute la largeur */
     }
 
-    /* 2. Quand le menu a la classe "active", il entre dans l'écran */
+    /* 2. Quand le menu a la classe "active", il se déploie */
     .nav-menu.active {
-        right: 0 !important;
+        max-height: 500px; /* Hauteur suffisante pour le contenu */
     }
 
     /* 3. Empiler les liens verticalement */
@@ -390,6 +395,7 @@
         display: block;
         width: 100%;
         padding: 10px 0;
+        border-bottom: 1px solid var(--border-light, #e0e0e0);
     }
 
     /* 4. Style du bouton Hamburger (les 3 lignes) */
@@ -403,7 +409,8 @@
         border: none;
         cursor: pointer;
         padding: 0;
-        z-index: 1001; /* DOIT être au-dessus du menu pour pouvoir le fermer */
+        z-index: 1001;
+        margin-left: auto; /* Pousse le hamburger à droite */
     }
 
     .hamburger span {
@@ -426,9 +433,16 @@
         transform: translateY(-9px) rotate(-45deg);
     }
 
-    /* Cacher le bouton "Se connecter" classique sur mobile pour éviter l'encombrement */
+    /* Cacher le bouton "Se connecter" classique sur mobile */
     .auth-button {
         display: none !important;
+    }
+    
+    /* S'assurer que la navbar reste en position sticky */
+    .navbar {
+        position: sticky !important;
+        top: 0;
+        z-index: 1000;
     }
 }
         // ============================================

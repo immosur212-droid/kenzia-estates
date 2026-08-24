@@ -505,35 +505,67 @@
         display: none !important;
     }
 }
-        // ============================================
-// 3. GESTION DU MENU MOBILE (HAMBURGER)
+  // ============================================
+// GESTION DU MENU LATÉRAL MOBILE
 // ============================================
 const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
 
-if (hamburger && navMenu) {
-    // Ouvrir / Fermer le menu au clic sur le hamburger
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
+// Créer l'overlay dynamiquement
+const overlay = document.createElement('div');
+overlay.className = 'nav-overlay';
+document.body.appendChild(overlay);
 
-    // Fermer le menu automatiquement quand on clique sur un lien
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
+// Ajouter le bouton fermer dans le menu
+const closeBtn = document.createElement('button');
+closeBtn.className = 'nav-close';
+closeBtn.innerHTML = '&times;';
+closeBtn.setAttribute('aria-label', 'Fermer le menu');
+navMenu.insertBefore(closeBtn, navMenu.firstChild);
 
-    // Fermer le menu si on clique en dehors de celui-ci
-    document.addEventListener('click', (e) => {
-        if (!navMenu.contains(e.target) && !hamburger.contains(e.target) && navMenu.classList.contains('active')) {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        }
+// Ouvrir le menu
+hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+});
+
+// Fermer avec le bouton X
+closeBtn.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// Fermer en cliquant sur l'overlay
+overlay.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    navMenu.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+});
+
+// Fermer en cliquant sur un lien
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
     });
-}
+});
+
+// Fermer avec la touche Echap
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+});
     </style>
 </head>
 <body>

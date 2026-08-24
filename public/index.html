@@ -352,53 +352,122 @@
                 height: 45px; /* Réduit légèrement la taille du logo */
             }
         }
-        /* ============================================
-   CORRECTION MENU MOBILE (HAMBURGER)
-   ============================================ */
+
 /* ============================================
-   CORRECTION MENU MOBILE (HAMBURGER)
+   MENU MOBILE LATÉRAL (Style Services)
    ============================================ */
 @media (max-width: 1200px) {
-    /* 1. Le menu devient un panneau qui descend sous la navbar */
-    .nav-menu {
-        position: absolute; /* Changed from fixed to absolute */
-        top: 100%; /* Juste en dessous de la navbar */
+    /* Overlay sombre quand le menu est ouvert */
+    .nav-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
         left: 0;
-        right: 0;
-        background: var(--white, #ffffff);
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 30px 20px;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        max-height: 0; /* Caché par défaut */
-        overflow: hidden;
-        transition: max-height 0.4s ease-in-out;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 998;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .nav-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Panneau latéral */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -300px; /* Caché à droite */
+        width: 280px;
+        height: 100vh;
+        background: var(--off-white, #f9f8f6);
+        padding: 80px 30px 30px;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
         z-index: 999;
         display: flex !important;
-        width: 100%; /* Prend toute la largeur */
+        flex-direction: column;
+        overflow-y: auto;
     }
 
-    /* 2. Quand le menu a la classe "active", il se déploie */
+    /* Menu ouvert */
     .nav-menu.active {
-        max-height: 500px; /* Hauteur suffisante pour le contenu */
+        right: 0;
     }
 
-    /* 3. Empiler les liens verticalement */
+    /* Bouton fermer (X) */
+    .nav-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--bleu-nuit);
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .nav-close:hover {
+        background: rgba(184, 153, 112, 0.1);
+        color: var(--matte-brass);
+    }
+
+    /* Liste des liens */
     .nav-list {
         flex-direction: column;
         width: 100%;
-        gap: 20px;
+        gap: 5px;
+        margin-top: 20px;
     }
 
-    .nav-link, .nav-link-cta {
-        font-size: 1.1rem !important;
-        display: block;
+    .nav-list li {
         width: 100%;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--border-light, #e0e0e0);
     }
 
-    /* 4. Style du bouton Hamburger (les 3 lignes) */
+    .nav-link {
+        display: block;
+        padding: 15px 0;
+        font-size: 1rem !important;
+        color: var(--bleu-nuit) !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        color: var(--matte-brass) !important;
+        padding-left: 10px;
+    }
+
+    /* Bouton Contact dans le menu */
+    .nav-link-cta {
+        display: block;
+        background: var(--matte-brass);
+        color: var(--bleu-nuit) !important;
+        padding: 15px 20px !important;
+        text-align: center;
+        border-radius: 4px;
+        margin-top: 20px;
+        font-weight: 600 !important;
+        border: none !important;
+    }
+
+    .nav-link-cta:hover {
+        background: var(--bleu-nuit);
+        color: var(--white) !important;
+        padding-left: 20px !important;
+    }
+
+    /* Hamburger */
     .hamburger {
         display: flex !important;
         flex-direction: column;
@@ -409,20 +478,18 @@
         border: none;
         cursor: pointer;
         padding: 0;
-        z-index: 1001;
-        margin-left: auto; /* Pousse le hamburger à droite */
+        z-index: 1000;
     }
 
     .hamburger span {
         display: block;
         width: 100%;
         height: 3px;
-        background: var(--bleu-nuit, #1a2b4c);
+        background: var(--bleu-nuit);
         border-radius: 3px;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease;
     }
 
-    /* 5. Animation du hamburger qui se transforme en croix (X) */
     .hamburger.active span:nth-child(1) {
         transform: translateY(9px) rotate(45deg);
     }
@@ -433,16 +500,9 @@
         transform: translateY(-9px) rotate(-45deg);
     }
 
-    /* Cacher le bouton "Se connecter" classique sur mobile */
+    /* Cacher bouton auth sur mobile */
     .auth-button {
         display: none !important;
-    }
-    
-    /* S'assurer que la navbar reste en position sticky */
-    .navbar {
-        position: sticky !important;
-        top: 0;
-        z-index: 1000;
     }
 }
         // ============================================

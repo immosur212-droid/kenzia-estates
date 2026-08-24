@@ -519,7 +519,7 @@
                 }
 
                 const subjectLabels = { 'buy': 'Purchase', 'sell': 'Sale', 'rent': 'Rent', 'estimation': 'Estimation', 'other': 'Other' };
-                messagesList.innerHTML = messages.map(msg => {
+                                messagesList.innerHTML = messages.map(msg => {
                     const date = new Date(msg.created_at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' });
                     return `
                         <div class="message-card ${!msg.is_read ? 'unread' : ''}">
@@ -528,6 +528,7 @@
                                     <h3>${msg.full_name}</h3>
                                     <div class="message-meta">
                                         <span><i class="fas fa-envelope"></i> ${msg.email}</span>
+                                        ${msg.phone ? `<span><i class="fas fa-phone"></i> ${msg.phone}</span>` : '<span><i class="fas fa-phone-slash"></i> Non renseigné</span>'}
                                         <span><i class="fas fa-clock"></i> ${date}</span>
                                     </div>
                                 </div>

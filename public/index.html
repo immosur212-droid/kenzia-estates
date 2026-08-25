@@ -6,17 +6,23 @@
     <meta name="description" content="Kenzia Estates - Premium Real Estate Agency in Morocco. Clarity in every key.">
     <title>Kenzia Estates | Premium Real Estate Morocco - Clarity in every key</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
     
+    <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR DESKTOP
+           NAVBAR & LIENS (Style unifié)
            ============================================ */
-        .navbar {
+       .navbar {
             background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
@@ -28,24 +34,28 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 20px;
-            gap: 20px;
+            padding: 15px 20px; /* Padding latéral pour éviter le collage aux bords */
+            gap: 20px; /* Espace MINIMUM garanti entre le Logo, le Menu et le Bouton */
         }
         
         .logo {
-            flex-shrink: 0;
+            flex-shrink: 0; /* EMPÊCHE le logo de se compresser */
             display: flex;
             align-items: center;
             z-index: 10;
         }
         
-        .logo-img { height: 50px; width: auto; display: block; }
+        .logo-img {
+            height: 50px;
+            width: auto;
+            display: block;
+        }
         
         .nav-menu {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1;
+            flex: 1; /* Prend l'espace central disponible */
             min-width: 0; 
         }     
 
@@ -54,24 +64,66 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            gap: 15px;
+            gap: 15px; /* Espacement RÉDUIT entre les liens pour gagner de la place */
             align-items: center;
+            flex-wrap: nowrap;
+        }
+            
+        .nav-list li {
+            overflow: visible !important;
         }
         
-        .nav-link, .nav-link-cta {
+        /* Style UNIFIÉ pour TOUS les liens */
+        .nav-link, 
+        .nav-link-cta {
             color: var(--bleu-nuit) !important;
             text-decoration: none !important;
             font-weight: 500 !important;
-            font-size: 0.9rem !important;
+            font-size: 0.9rem !important; /* Légèrement réduit pour gagner de la place */
             transition: color 0.3s ease !important;
             position: relative !important;
             display: inline-block !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            white-space: nowrap; /* Empêche le texte de se couper */
         }
         
-        .nav-link:hover, .nav-link-cta:hover, .nav-link.active {
+        .nav-link:hover, 
+        .nav-link-cta:hover,
+        .nav-link.active {
             color: var(--matte-brass) !important;
         }
         
+        /* Soulignement dynamique */
+        .nav-link::after, 
+        .nav-link-cta::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--matte-brass);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after, 
+        .nav-link-cta:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* ============================================
+           ÉLÉMENTS DE DROITE (Protection anti-compression)
+           ============================================ */
+        .auth-button, .user-menu-container {
+            flex-shrink: 0; /* EMPÊCHE le bouton de se compresser */
+            white-space: nowrap;
+            z-index: 10;
+        }
+
         .auth-button {
             background: var(--matte-brass);
             color: var(--bleu-nuit);
@@ -81,6 +133,8 @@
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -89,11 +143,20 @@
         .auth-button:hover {
             background: var(--bleu-nuit);
             color: var(--white);
+            transform: translateY(-1px);
         }
         
+        .auth-button i {
+            font-size: 0.75rem;
+        }
+        
+        /* ============================================
+           MENU UTILISATEUR INTÉGRÉ (Seamless)
+           ============================================ */
         .user-menu-container {
             position: relative;
-            display: none;
+            display: none; /* Caché par défaut */
+            margin-left: 0;
         }
         
         .user-dropdown-btn {
@@ -109,8 +172,15 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: var(--bleu-nuit);
+            transition: all 0.3s ease;
         }
         
+        .user-dropdown-btn:hover {
+            background: var(--off-white);
+            color: var(--matte-brass);
+        }
+        
+        /* Avatar plus petit et discret pour s'aligner avec le texte */
         .user-avatar {
             width: 28px;
             height: 28px;
@@ -122,8 +192,28 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.8rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
         
+        .user-dropdown-btn:hover .user-avatar {
+            background: var(--bleu-nuit);
+            color: var(--matte-brass);
+        }
+        
+        /* Flèche du dropdown */
+        .user-dropdown-btn .fa-chevron-down {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-left: 4px;
+            transition: transform 0.3s ease;
+        }
+        
+        .user-dropdown-btn.active .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* Dropdown content */
         .dropdown-content {
             position: absolute;
             top: calc(100% + 10px);
@@ -135,6 +225,13 @@
             overflow: hidden;
             z-index: 1000;
             display: none;
+            animation: slideDown 0.25s ease;
+            border: 1px solid var(--border-light);
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .dropdown-content a {
@@ -144,11 +241,31 @@
             padding: 12px 18px;
             color: var(--bleu-nuit);
             text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
             border-bottom: 1px solid var(--border-light);
+        }
+        
+        .dropdown-content a:last-child {
+            border-bottom: none;
         }
         
         .dropdown-content a:hover {
             background: var(--off-white);
+            color: var(--matte-brass);
+            padding-left: 22px;
+        }
+        
+        .dropdown-content a i {
+            width: 18px;
+            text-align: center;
+            color: var(--matte-brass);
+            font-size: 0.85rem;
+        }
+        
+        .dropdown-content a:hover i {
+            color: var(--bleu-nuit);
         }
         
         .dropdown-divider {
@@ -156,157 +273,84 @@
             background: var(--border-light);
             margin: 4px 0;
         }
-
-        /* Cacher le hamburger sur desktop */
-        .hamburger {
-            display: none;
-        }
         
         /* ============================================
-           FEATURED PROPERTIES
+           FEATURED PROPERTIES SECTION
            ============================================ */
         .featured-properties { background: var(--off-white); }
         .featured-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
-        .view-all-btn { background: var(--matte-brass); color: var(--bleu-nuit); padding: 12px 30px; border: 2px solid var(--matte-brass); font-weight: 600; text-decoration: none; border-radius: 4px; }
+        .featured-header .section-header { text-align: left; margin-bottom: 0; }
+        .view-all-btn { background: var(--matte-brass); color: var(--bleu-nuit); padding: 12px 30px; border: 2px solid var(--matte-brass); font-weight: 600; letter-spacing: 1px; transition: var(--transition-fast); white-space: nowrap; text-decoration: none; border-radius: 4px; }
+        .view-all-btn:hover { background: transparent; color: var(--matte-brass); }
         .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
-        .featured-card { background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); text-decoration: none; color: inherit; display: block; }
+        .featured-card { background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(184, 153, 112, 0.1); transition: var(--transition-fast); text-decoration: none; color: inherit; display: block; }
         .featured-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
         .featured-image { position: relative; height: 250px; overflow: hidden; }
-        .featured-image img { width: 100%; height: 100%; object-fit: cover; }
-        .featured-badges { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; }
-        .featured-badge { background: var(--matte-brass); color: var(--bleu-nuit); padding: 5px 12px; font-size: 0.7rem; font-weight: 700; border-radius: 3px; }
-        .featured-price { position: absolute; bottom: 15px; left: 15px; background: var(--bleu-nuit); color: var(--white); padding: 8px 16px; font-weight: 600; border-radius: 4px; }
+        .featured-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
+        .featured-card:hover .featured-image img { transform: scale(1.08); }
+        .featured-badges { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; z-index: 2; }
+        .featured-badge { background: var(--matte-brass); color: var(--bleu-nuit); padding: 5px 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 3px; }
+        .featured-badge.luxury { background: var(--bleu-nuit); color: var(--matte-brass); }
+        .featured-badge.new { background: var(--success); color: var(--white); }
+        .featured-price { position: absolute; bottom: 15px; left: 15px; background: var(--bleu-nuit); color: var(--white); padding: 8px 16px; font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; z-index: 2; border-radius: 4px; }
         .featured-content { padding: 25px; }
         .featured-location { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px; }
-        .featured-title { font-size: 1.2rem; margin-bottom: 15px; color: var(--bleu-nuit); }
-        .featured-features { display: flex; gap: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); }
-        .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; }
+        .featured-location i { color: var(--matte-brass); }
+        .featured-title { font-size: 1.2rem; margin-bottom: 15px; color: var(--bleu-nuit); line-height: 1.3; font-family: var(--font-serif); }
+        .featured-features { display: flex; gap: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); flex-wrap: wrap; }
+        .featured-feature { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: var(--text-muted); }
+        .featured-feature i { color: var(--matte-brass); }
+        .featured-link { display: block; margin-top: 20px; color: var(--matte-brass); font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: var(--transition-fast); }
+        .featured-link:hover { color: var(--bleu-nuit); }
+        .featured-link i { margin-left: 5px; transition: var(--transition-fast); }
+        .featured-link:hover i { transform: translateX(5px); }
+        .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; grid-column: 1 / -1; }
+        .featured-loading i, .featured-empty i { font-size: 3rem; color: var(--matte-brass); margin-bottom: 20px; }
+        .featured-empty i { color: var(--border-light); font-size: 4rem; }
+        .featured-empty h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--bleu-nuit); }
+        .featured-empty p { color: var(--text-muted); margin-bottom: 20px; }
         
-        /* ============================================
-           MENU MOBILE - CORRECTION TOTALE
-           ============================================ */
+        @media (max-width: 992px) {
+            .nav-menu { display: none; }
+            .auth-button, .user-menu-container { display: none !important; }
+        }
         @media (max-width: 768px) {
-            /* Cacher le menu desktop */
-            .nav-menu.desktop-menu {
-                display: none !important;
-            }
-            
-            /* Cacher bouton auth desktop */
-            .auth-button.desktop-auth {
-                display: none !important;
-            }
-            
-            /* Afficher le hamburger */
-            .hamburger {
-                display: flex !important;
-                flex-direction: column;
-                justify-content: space-between;
-                width: 30px;
-                height: 21px;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                z-index: 1001;
-            }
-            
-            .hamburger span {
-                display: block;
-                width: 100%;
-                height: 3px;
-                background: var(--bleu-nuit);
-                border-radius: 3px;
-                transition: all 0.3s ease;
-            }
-            
-            /* Overlay */
-            .nav-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 998;
-            }
-            
-            .nav-overlay.active {
-                display: block;
-            }
-            
-            /* Menu latéral mobile */
-            .mobile-nav-menu {
-                position: fixed;
-                top: 0;
-                right: -300px;
-                width: 280px;
-                height: 100vh;
-                background: var(--white);
-                padding: 80px 30px 30px;
-                box-shadow: -5px 0 20px rgba(0,0,0,0.1);
-                transition: right 0.3s ease;
-                z-index: 999;
-                overflow-y: auto;
-            }
-            
-            .mobile-nav-menu.active {
-                right: 0;
-            }
-            
-            /* Bouton fermer */
-            .nav-close {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                background: transparent;
-                border: none;
-                font-size: 1.8rem;
-                color: var(--bleu-nuit);
-                cursor: pointer;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-            }
-            
-            .mobile-nav-list {
-                list-style: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .mobile-nav-list li {
-                margin-bottom: 0;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-            }
-            
-            .mobile-nav-list a {
-                display: block;
-                padding: 15px 0;
-                font-size: 1.1rem;
-                color: var(--bleu-nuit);
-                text-decoration: none;
-                font-weight: 500;
-            }
-            
-            .mobile-nav-list a:hover {
-                color: var(--matte-brass);
-            }
-            
-            .mobile-nav-cta {
-                background: var(--matte-brass);
-                color: var(--bleu-nuit) !important;
-                padding: 15px 20px !important;
-                text-align: center;
-                border-radius: 4px;
-                margin-top: 30px;
-                font-weight: 600 !important;
-            }
-            
-            /* Featured mobile */
-            .featured-header { flex-direction: column; gap: 20px; }
+            .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
+            .featured-header .section-header { text-align: center; width: 100%; }
             .view-all-btn { width: 100%; text-align: center; }
             .featured-grid { grid-template-columns: 1fr; }
+        }
+                /* ============================================
+           MEDIA QUERY POUR ÉCRANS 13 POUCES (1200px et moins)
+           ============================================ */
+        @media (max-width: 1200px) {
+            .nav-menu {
+                display: none !important; /* Cache le menu complet */
+            }
+            
+            .hamburger {
+                display: block !important; /* Affiche le menu hamburger */
+            }
+            
+            .nav-list {
+                gap: 10px; /* Réduit l'espacement si on garde le menu */
+            }
+            
+            .nav-link, .nav-link-cta {
+                font-size: 0.85rem !important; /* Réduit la taille du texte */
+            }
+            
+            .auth-button span {
+                display: none; /* Cache le texte "Se connecter", garde juste l'icône */
+            }
+            
+            .auth-button {
+                padding: 8px 12px;
+            }
+            
+            .logo-img {
+                height: 45px; /* Réduit légèrement la taille du logo */
+            }
         }
     </style>
 </head>
@@ -315,12 +359,13 @@
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-wrapper">
+                <!-- Logo décalé à gauche -->
                 <a href="/index.html" class="logo">
                     <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
                 </a>
                 
-                <!-- Menu Desktop -->
-                <div class="nav-menu desktop-menu" id="desktopNavMenu">
+                <!-- Navigation Menu Principal -->
+                <div class="nav-menu" id="navMenu">
                     <ul class="nav-list">
                         <li><a href="/index.html" class="nav-link active">Home</a></li>
                         <li><a href="/properties.html" class="nav-link">Properties</a></li>
@@ -331,13 +376,13 @@
                     </ul>
                 </div>
                 
-                <!-- Auth Desktop -->
-                <a href="/login.html" class="auth-button desktop-auth" id="authButton">
+                <!-- Bouton Se connecter (NON connecté) -->
+                <a href="/login.html" class="auth-button" id="authButton">
                     <i class="fas fa-user"></i>
                     <span>Se connecter</span>
                 </a>
 
-                <!-- Menu utilisateur -->
+                <!-- Menu utilisateur (CONNECTÉ) -->
                 <div class="user-menu-container" id="userMenuContainer">
                     <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
                         <div class="user-avatar" id="userAvatar">U</div>
@@ -345,14 +390,20 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-content" id="userDropdown">
-                        <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
-                        <a href="/dashboard.html" id="adminDropdownLink" style="display: none;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                        <a href="/my-properties.html">
+                            <i class="fas fa-home"></i> Mes Biens
+                        </a>
+                        <a href="/dashboard.html" id="adminDropdownLink" style="display: none;">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard Admin
+                        </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a href="#" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Déconnexion
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Hamburger -->
+                <!-- Hamburger Menu (Mobile) -->
                 <button class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -361,20 +412,6 @@
             </div>
         </div>
     </nav>
-
-    <!-- Menu Mobile (séparé) -->
-    <div class="nav-overlay" id="navOverlay"></div>
-    <div class="mobile-nav-menu" id="mobileNavMenu">
-        <button class="nav-close" id="navClose">&times;</button>
-        <ul class="mobile-nav-list">
-            <li><a href="/index.html" class="active">Home</a></li>
-            <li><a href="/properties.html">Properties</a></li>
-            <li><a href="/services.html">Services</a></li>
-            <li><a href="/about.html">About</a></li>
-            <li><a href="/blog.html">Blog</a></li>
-            <li><a href="/contact.html" class="mobile-nav-cta">Contact Us</a></li>
-        </ul>
-    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -395,6 +432,7 @@
                 <h1 class="hero-title">Find Your Perfect Property in Morocco</h1>
                 <p class="hero-slogan">Clarity in every key.</p>
                 
+                <!-- Search Bar -->
                 <div class="search-bar">
                     <form class="search-form" id="searchForm">
                         <div class="search-field">
@@ -571,25 +609,44 @@
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
     
+    <!-- Scripts spécifiques à l'index -->
     <script>
-        // Auth
+        // ============================================
+        // 1. GESTION DE LA NAVIGATION (Auth / User)
+        // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || 'null');
+        
             const authButton = document.getElementById('authButton');
             const userMenuContainer = document.getElementById('userMenuContainer');
             const userNameDisplay = document.getElementById('userNameDisplay');
             const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
         
+            console.log('🔍 Debug Auth:', { token: token ? 'EXISTS' : 'NULL', user });
+        
             if (token && user) {
+                // ✅ Utilisateur CONNECTÉ
+                console.log('✅ Utilisateur connecté:', user.full_name || user.email);
+                
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
+                
+                // Afficher le nom de l'utilisateur
                 const displayName = user.full_name || user.email.split('@')[0];
                 userNameDisplay.textContent = displayName;
+                
+                // Avatar avec la première lettre
                 userAvatar.textContent = displayName.charAt(0).toUpperCase();
-                if (user.role === 'admin') adminDropdownLink.style.display = 'flex';
+        
+                // Si c'est un admin, afficher le lien Dashboard
+                if (user.role === 'admin') {
+                    adminDropdownLink.style.display = 'flex';
+                }
             } else {
+                // ❌ Utilisateur NON CONNECTÉ
+                console.log('❌ Utilisateur non connecté');
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
             }
@@ -597,7 +654,15 @@
 
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            const btn = document.querySelector('.user-dropdown-btn');
+            
+            if (dropdown.style.display === 'none' || !dropdown.style.display) {
+                dropdown.style.display = 'block';
+                if (btn) btn.classList.add('active');
+            } else {
+                dropdown.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            }
         }
 
         function logout() {
@@ -606,89 +671,87 @@
             window.location.href = '/';
         }
 
-        // Featured Properties
+        // Fermer le dropdown si on clique en dehors
+        document.addEventListener('click', (e) => {
+            const userMenu = document.getElementById('userMenuContainer');
+            const dropdown = document.getElementById('userDropdown');
+            const btn = document.querySelector('.user-dropdown-btn');
+            
+            if (userMenu && !userMenu.contains(e.target)) {
+                if (dropdown) dropdown.style.display = 'none';
+                if (btn) btn.classList.remove('active');
+            }
+        });
+
+        // ============================================
+        // 2. CHARGEMENT DES PROPRIÉTÉS FEATURED
+        // ============================================
         async function loadFeaturedProperties() {
             const grid = document.getElementById('featuredGrid');
             const API_URL = window.location.origin + '/api';
             
             try {
                 const response = await fetch(`${API_URL}/properties`);
+                if (!response.ok) throw new Error('Erreur lors du chargement');
+                
                 const properties = await response.json();
                 const featuredProps = properties.slice(0, 6);
                 
                 if (featuredProps.length === 0) {
-                    grid.innerHTML = '<div class="featured-empty"><h3>No Properties Available</h3></div>';
+                    grid.innerHTML = `
+                        <div class="featured-empty">
+                            <i class="fas fa-home"></i>
+                            <h3>No Properties Available</h3>
+                            <p>Check back soon for new listings!</p>
+                            <a href="/properties.html" class="btn btn-primary" style="margin-top:20px; display:inline-block; text-decoration:none;">Browse All Properties</a>
+                        </div>`;
                     return;
                 }
                 
-                grid.innerHTML = featuredProps.map(property => `
-                    <a href="/property-detail.html?id=${property.id}" class="featured-card">
-                        <div class="featured-image">
-                            <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" alt="${property.title}">
-                            <div class="featured-badges">
-                                <span class="featured-badge">${property.transaction === 'sale' ? 'FOR SALE' : 'FOR RENT'}</span>
+                grid.innerHTML = featuredProps.map(property => {
+                    let badgesHTML = '';
+                    if (property.transaction === 'sale') badgesHTML += '<span class="featured-badge">FOR SALE</span>';
+                    else badgesHTML += '<span class="featured-badge">FOR RENT</span>';
+                    if (property.is_luxury) badgesHTML += '<span class="featured-badge luxury">LUXURY</span>';
+                    if (property.is_new) badgesHTML += '<span class="featured-badge new">NEW</span>';
+                    
+                    const cityFormatted = property.city ? property.city.charAt(0).toUpperCase() + property.city.slice(1) : 'Unknown';
+                    
+                    return `
+                        <a href="/property-detail.html?id=${property.id}" class="featured-card">
+                            <div class="featured-image">
+                                <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" alt="${property.title}" loading="lazy">
+                                <div class="featured-badges">${badgesHTML}</div>
+                                <div class="featured-price">${property.price_label}</div>
                             </div>
-                            <div class="featured-price">${property.price_label}</div>
-                        </div>
-                        <div class="featured-content">
-                            <div class="featured-location"><i class="fas fa-location-dot"></i> ${property.neighborhood}, ${property.city}</div>
-                            <h3 class="featured-title">${property.title}</h3>
-                            <div class="featured-features">
-                                <div><i class="fas fa-bed"></i> ${property.bedrooms} Beds</div>
-                                <div><i class="fas fa-bath"></i> ${property.bathrooms} Baths</div>
-                                <div><i class="fas fa-ruler-combined"></i> ${property.surface} m²</div>
+                            <div class="featured-content">
+                                <div class="featured-location">
+                                    <i class="fas fa-location-dot"></i> ${property.neighborhood}, ${cityFormatted}
+                                </div>
+                                <h3 class="featured-title">${property.title}</h3>
+                                <div class="featured-features">
+                                    <div class="featured-feature"><i class="fas fa-bed"></i> ${property.bedrooms} Beds</div>
+                                    <div class="featured-feature"><i class="fas fa-bath"></i> ${property.bathrooms} Baths</div>
+                                    <div class="featured-feature"><i class="fas fa-ruler-combined"></i> ${property.surface} m²</div>
+                                </div>
+                                <span class="featured-link">View Details <i class="fas fa-arrow-right"></i></span>
                             </div>
-                        </div>
-                    </a>`
-                ).join('');
+                        </a>`;
+                }).join('');
+                
             } catch (error) {
-                grid.innerHTML = '<div class="featured-empty"><h3>Error Loading Properties</h3></div>';
+                console.error('Erreur chargement propriétés:', error);
+                grid.innerHTML = `
+                    <div class="featured-empty">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Error Loading Properties</h3>
+                        <p>Please try again later.</p>
+                        <button onclick="loadFeaturedProperties()" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-redo"></i> Retry</button>
+                    </div>`;
             }
         }
         
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
-
-        // ============================================
-        // MENU MOBILE - CODE SIMPLIFIÉ ET FONCTIONNEL
-        // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            const hamburger = document.getElementById('hamburger');
-            const mobileNavMenu = document.getElementById('mobileNavMenu');
-            const navOverlay = document.getElementById('navOverlay');
-            const navClose = document.getElementById('navClose');
-            
-            if (hamburger && mobileNavMenu && navOverlay && navClose) {
-                // Ouvrir le menu
-                hamburger.addEventListener('click', () => {
-                    mobileNavMenu.classList.add('active');
-                    navOverlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                });
-
-                // Fermer avec le bouton X
-                navClose.addEventListener('click', () => {
-                    mobileNavMenu.classList.remove('active');
-                    navOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-
-                // Fermer avec l'overlay
-                navOverlay.addEventListener('click', () => {
-                    mobileNavMenu.classList.remove('active');
-                    navOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-
-                // Fermer en cliquant sur un lien
-                mobileNavMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileNavMenu.classList.remove('active');
-                        navOverlay.classList.remove('active');
-                        document.body.style.overflow = '';
-                    });
-                });
-            }
-        });
     </script>
 </body>
 </html>

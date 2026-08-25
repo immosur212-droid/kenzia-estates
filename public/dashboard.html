@@ -27,7 +27,7 @@
         .sidebar-menu a {
             display: flex; align-items: center; gap: 12px; padding: 12px 15px;
             color: rgba(255, 255, 255, 0.7); text-decoration: none; border-radius: 5px;
-            transition: var(--transition-fast); font-size: 0.95rem;
+            transition: 0.3s ease; font-size: 0.95rem;
         }
         .sidebar-menu a:hover, .sidebar-menu a.active { background: rgba(184, 153, 112, 0.2); color: var(--matte-brass); }
         .sidebar-menu a i { width: 20px; text-align: center; }
@@ -41,7 +41,7 @@
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-light);
         }
-        .dashboard-header h1 { font-size: 1.8rem; color: var(--bleu-nuit); }
+        .dashboard-header h1 { font-size: 1.8rem; color: var(--bleu-nuit); margin: 0; }
         .user-info { display: flex; align-items: center; gap: 15px; }
         .user-avatar {
             width: 40px; height: 40px; border-radius: 50%; background: var(--matte-brass);
@@ -49,7 +49,7 @@
         }
         .btn-logout {
             background: var(--error); color: var(--white); padding: 8px 20px; border: none;
-            border-radius: 5px; cursor: pointer; font-family: var(--font-sans); font-weight: 600;
+            border-radius: 5px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600;
         }
 
         /* Stats & Properties */
@@ -62,7 +62,7 @@
             box-shadow: var(--shadow-sm); border-left: 4px solid var(--matte-brass);
         }
         .stat-card h3 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 500; }
-        .stat-card .stat-value { font-size: 2rem; font-weight: 700; color: var(--bleu-nuit); font-family: var(--font-serif); }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 700; color: var(--bleu-nuit); font-family: 'Playfair Display', serif; }
         .stat-card .stat-icon { float: right; font-size: 2rem; color: var(--matte-brass); opacity: 0.3; }
 
         .properties-section, .messages-section, .users-section {
@@ -74,7 +74,7 @@
         .section-header h2 { font-size: 1.5rem; color: var(--bleu-nuit); }
         .btn-add {
             background: var(--matte-brass); color: var(--bleu-nuit); padding: 10px 20px; border: none;
-            border-radius: 5px; cursor: pointer; font-family: var(--font-sans); font-weight: 600;
+            border-radius: 5px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 600;
             display: flex; align-items: center; gap: 8px;
         }
         .btn-add:hover { background: var(--bleu-nuit); color: var(--white); }
@@ -99,7 +99,7 @@
         .messages-list { display: flex; flex-direction: column; gap: 20px; margin-top: 0; }
         .message-card {
             background: var(--off-white); padding: 25px; border-radius: 5px;
-            border-left: 4px solid var(--matte-brass); transition: var(--transition-fast);
+            border-left: 4px solid var(--matte-brass); transition: 0.3s ease;
         }
         .message-card.unread { background: rgba(184, 153, 112, 0.05); border-left-color: var(--success); }
         .message-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; flex-wrap: wrap; gap: 15px; }
@@ -140,7 +140,7 @@
         .form-group { display: flex; flex-direction: column; }
         .form-group.full-width { grid-column: 1 / -1; }
         .form-group label { font-weight: 600; margin-bottom: 8px; color: var(--bleu-nuit); font-size: 0.9rem; }
-        .form-control { padding: 12px 15px; border: 2px solid var(--border-light); border-radius: 5px; font-family: var(--font-sans); font-size: 0.95rem; background: var(--white); }
+        .form-control { padding: 12px 15px; border: 2px solid var(--border-light); border-radius: 5px; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; background: var(--white); }
         .form-control:focus { outline: none; border-color: var(--matte-brass); }
         .form-hint { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
         textarea.form-control { resize: vertical; min-height: 100px; }
@@ -148,7 +148,7 @@
         .checkbox-label { display: flex; align-items: center; cursor: pointer; font-size: 0.95rem; color: var(--bleu-nuit); user-select: none; }
         .checkbox-label input[type="checkbox"] { margin-right: 10px; width: 18px; height: 18px; cursor: pointer; }
         .modal-footer { display: flex; justify-content: flex-end; gap: 15px; padding-top: 25px; border-top: 1px solid var(--border-light); margin-top: 20px; }
-        .btn-modal { padding: 12px 25px; border: none; border-radius: 5px; font-family: var(--font-sans); font-weight: 600; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-modal { padding: 12px 25px; border: none; border-radius: 5px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-modal-primary { background: var(--matte-brass); color: var(--bleu-nuit); }
         .btn-modal-primary:hover { background: var(--bleu-nuit); color: var(--white); }
         .btn-modal-secondary { background: var(--off-white); color: var(--bleu-nuit); border: 2px solid var(--border-light); }
@@ -181,20 +181,95 @@
             border-radius: 3px; font-size: 0.7rem; font-weight: 700;
         }
 
-        @media (max-width: 992px) {
-            .sidebar { transform: translateX(-100%); transition: var(--transition-smooth); }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; width: 100%; }
+        /* ============================================
+           MOBILE SIDEBAR & RESPONSIVE
+           ============================================ */
+        .mobile-sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--bleu-nuit);
+            cursor: pointer;
+            margin-right: 15px;
+            padding: 5px;
         }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (max-width: 992px) {
+            .mobile-sidebar-toggle {
+                display: block;
+            }
+            
+            .sidebar { 
+                transform: translateX(-100%); 
+                transition: transform 0.3s ease; 
+                z-index: 100;
+            }
+            
+            .sidebar.open { 
+                transform: translateX(0); 
+            }
+            
+            .main-content { 
+                margin-left: 0; 
+                width: 100%; 
+                padding: 20px 15px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .form-row, .location-inputs { grid-template-columns: 1fr; }
             .modal-content { width: 95%; max-height: 95vh; }
             .modal-header, .property-form { padding: 20px; }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
+        <!-- Overlay pour mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-logo">
@@ -204,9 +279,7 @@
                 <li><a href="#" id="navDashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
                 <li><a href="#" id="navProperties"><i class="fas fa-building"></i> Properties</a></li>
                 <li><a href="#" id="navUsers"><i class="fas fa-users"></i> Users</a></li>
-                <a href="/blog-manager.html" class="sidebar-menu-item">
-                <i class="fas fa-newspaper"></i> Gestion du Blog
-                </a>
+                <li><a href="/blog-manager.html"><i class="fas fa-newspaper"></i> Gestion du Blog</a></li>
                 <li><a href="#" id="navMessages">
                     <i class="fas fa-envelope"></i> Messages 
                     <span id="messagesBadge" style="display: none; background: var(--error); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; margin-left: 5px;">0</span>
@@ -218,7 +291,13 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="dashboard-header">
-                <h1>Dashboard</h1>
+                <div style="display: flex; align-items: center;">
+                    <!-- Bouton Hamburger Mobile -->
+                    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Dashboard</h1>
+                </div>
                 <div class="user-info">
                     <div class="user-avatar" id="userAvatar">A</div>
                     <span id="userName">Admin</span>
@@ -277,7 +356,7 @@
                     <button class="btn-add" onclick="loadMessages()"><i class="fas fa-sync"></i> Refresh</button>
                 </div>
                 <div class="messages-list" id="messagesList">
-                    <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading messages...</p></div>
+                    <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Chargement...</p></div>
                 </div>
             </div>
 
@@ -425,8 +504,8 @@
         let selectedFiles = [];
         
         function isUserAdmin() {
-        const user = JSON.parse(localStorage.getItem('user') || 'null');
-        return user && user.role === 'admin';
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            return user && user.role === 'admin';
         }
         
         // Gestion des vues (Navigation propre sans décalage)
@@ -442,28 +521,28 @@
             if(viewName === 'users') document.getElementById('navUsers').classList.add('active');
         }
 
-       document.addEventListener('DOMContentLoaded', async () => {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
 
-    if (!token || !user) {
-        window.location.href = '/login.html';
-        return;
-    }
+            if (!token || !user) {
+                window.location.href = '/login.html';
+                return;
+            }
 
-    document.getElementById('userName').textContent = user.full_name || 'Utilisateur';
-    document.getElementById('userAvatar').textContent = (user.full_name || 'U').charAt(0).toUpperCase();
+            document.getElementById('userName').textContent = user.full_name || 'Utilisateur';
+            document.getElementById('userAvatar').textContent = (user.full_name || 'U').charAt(0).toUpperCase();
 
-    // Cacher les sections admin pour les users réguliers
-    if (user.role !== 'admin') {
-        document.getElementById('navUsers').style.display = 'none';
-        document.getElementById('navMessages').style.display = 'none';
-        document.querySelector('.stat-card:nth-child(4)').style.display = 'none'; // Total Users
-    }
+            // Cacher les sections admin pour les users réguliers
+            if (user.role !== 'admin') {
+                document.getElementById('navUsers').style.display = 'none';
+                document.getElementById('navMessages').style.display = 'none';
+                document.querySelector('.stat-card:nth-child(4)').style.display = 'none'; // Total Users
+            }
 
-    // Chargement initial
-    await Promise.all([loadStats(), loadProperties(), refreshMessagesBadge()]);
-            
+            // Chargement initial
+            await Promise.all([loadStats(), loadProperties(), refreshMessagesBadge()]);
+                    
             // Écouteurs de navigation
             document.getElementById('navDashboard').addEventListener('click', (e) => { e.preventDefault(); switchView('dashboard'); });
             document.getElementById('navMessages').addEventListener('click', async (e) => { 
@@ -485,6 +564,38 @@
 
             setupPropertyModal();
             setupImageUpload();
+
+            // ============================================
+            // GESTION DU MENU MOBILE (SIDEBAR)
+            // ============================================
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+                // Ouvrir le menu
+                mobileSidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.add('open');
+                    sidebarOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+
+                // Fermer avec l'overlay
+                sidebarOverlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                // Fermer en cliquant sur un lien du menu
+                document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        sidebar.classList.remove('open');
+                        sidebarOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
         });
 
         // --- MESSAGES ---
@@ -519,7 +630,7 @@
                 }
 
                 const subjectLabels = { 'buy': 'Purchase', 'sell': 'Sale', 'rent': 'Rent', 'estimation': 'Estimation', 'other': 'Other' };
-                                messagesList.innerHTML = messages.map(msg => {
+                messagesList.innerHTML = messages.map(msg => {
                     const date = new Date(msg.created_at).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit' });
                     return `
                         <div class="message-card ${!msg.is_read ? 'unread' : ''}">
@@ -615,8 +726,8 @@
                     const user = JSON.parse(localStorage.getItem('user') || 'null');
                     const baseEndpoint = user.role === 'admin' ? '/admin/properties' : '/properties';
                     const url = editingPropertyId 
-                        ? `${CONFIG.API_URL}/properties/${editingPropertyId}`  // PUT toujours sur /properties/:id
-                        : `${CONFIG.API_URL}${baseEndpoint}`;  // POST selon le rôle
+                        ? `${CONFIG.API_URL}/properties/${editingPropertyId}`
+                        : `${CONFIG.API_URL}${baseEndpoint}`;
                     const method = editingPropertyId ? 'PUT' : 'POST';
                     const response = await fetch(url, { method, headers: { 'Authorization': `Bearer ${token}` }, body: formData });
                     const data = await response.json();
@@ -682,70 +793,63 @@
             updateImagePreview();
         }
 
-       async function editProperty(id) {
-    try {
-        if (!id) {
-            console.error('❌ Property ID is missing');
-            alert('ID du bien manquant');
-            return;
-        }
-
-        // Fallback de sécurité au cas où CONFIG ne serait pas chargé
-        const apiUrl = typeof CONFIG !== 'undefined' ? CONFIG.API_URL : window.location.origin + '/api';
-        console.log('🔍 Tentative de chargement du bien ID:', id, 'via:', `${apiUrl}/properties/${id}`);
-
-        const res = await fetch(`${apiUrl}/properties/${id}`);
-        console.log('📡 Réponse du serveur:', res.status, res.statusText);
-
-        if (!res.ok) {
-            const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData.error || `Erreur HTTP: ${res.status}`);
-        }
-
-        const property = await res.json();
-        console.log('✅ Bien chargé avec succès:', property);
-
-        editingPropertyId = id;
-        
-        // Gestion sécurisée des images (évite le crash de JSON.parse)
-        existingImages = [];
-        if (property.images) {
+        async function editProperty(id) {
             try {
-                existingImages = JSON.parse(property.images);
-            } catch (e) {
-                existingImages = property.image_url ? [property.image_url] : [];
+                if (!id) {
+                    console.error('❌ Property ID is missing');
+                    alert('ID du bien manquant');
+                    return;
+                }
+
+                const apiUrl = typeof CONFIG !== 'undefined' ? CONFIG.API_URL : window.location.origin + '/api';
+                const res = await fetch(`${apiUrl}/properties/${id}`);
+
+                if (!res.ok) {
+                    const errorData = await res.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Erreur HTTP: ${res.status}`);
+                }
+
+                const property = await res.json();
+                editingPropertyId = id;
+                
+                existingImages = [];
+                if (property.images) {
+                    try {
+                        existingImages = JSON.parse(property.images);
+                    } catch (e) {
+                        existingImages = property.image_url ? [property.image_url] : [];
+                    }
+                } else if (property.image_url) {
+                    existingImages = [property.image_url];
+                }
+                
+                selectedFiles = [];
+                
+                document.getElementById('modalTitle').textContent = 'Edit Property';
+                document.getElementById('propTitle').value = property.title || '';
+                document.getElementById('propCity').value = property.city || '';
+                document.getElementById('propNeighborhood').value = property.neighborhood || '';
+                document.getElementById('propType').value = property.type || '';
+                document.getElementById('propTransaction').value = property.transaction || '';
+                document.getElementById('propPrice').value = property.price || '';
+                document.getElementById('propSurface').value = property.surface || '';
+                document.getElementById('propBedrooms').value = property.bedrooms || '';
+                document.getElementById('propBathrooms').value = property.bathrooms || '';
+                document.getElementById('propDescription').value = property.description || '';
+                document.getElementById('propIsNew').checked = property.is_new || false;
+                document.getElementById('propIsLuxury').checked = property.is_luxury || false;
+                document.getElementById('propLat').value = property.lat || '';
+                document.getElementById('propLng').value = property.lng || '';
+                
+                updateImagePreview();
+                document.getElementById('propertyModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+            } catch (error) {
+                console.error('❌ Erreur détaillée dans editProperty:', error);
+                alert('Error loading property details: ' + error.message);
             }
-        } else if (property.image_url) {
-            existingImages = [property.image_url];
         }
-        
-        selectedFiles = [];
-        
-        document.getElementById('modalTitle').textContent = 'Edit Property';
-        document.getElementById('propTitle').value = property.title || '';
-        document.getElementById('propCity').value = property.city || '';
-        document.getElementById('propNeighborhood').value = property.neighborhood || '';
-        document.getElementById('propType').value = property.type || '';
-        document.getElementById('propTransaction').value = property.transaction || '';
-        document.getElementById('propPrice').value = property.price || '';
-        document.getElementById('propSurface').value = property.surface || '';
-        document.getElementById('propBedrooms').value = property.bedrooms || '';
-        document.getElementById('propBathrooms').value = property.bathrooms || '';
-        document.getElementById('propDescription').value = property.description || '';
-        document.getElementById('propIsNew').checked = property.is_new || false;
-        document.getElementById('propIsLuxury').checked = property.is_luxury || false;
-        document.getElementById('propLat').value = property.lat || '';
-        document.getElementById('propLng').value = property.lng || '';
-        
-        updateImagePreview();
-        document.getElementById('propertyModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-    } catch (error) {
-        console.error('❌ Erreur détaillée dans editProperty:', error);
-        alert('Error loading property details: ' + error.message);
-    }
-}
 
         async function deleteProperty(id) {
             if (!confirm('Delete this property?')) return;
@@ -766,61 +870,61 @@
                 document.getElementById('totalProperties').textContent = properties.length;
                 document.getElementById('forSaleCount').textContent = forSale;
                 document.getElementById('forRentCount').textContent = forRent;
-                document.getElementById('totalUsers').textContent = '-'; // Peut être mis à jour via une route dédiée
+                document.getElementById('totalUsers').textContent = '-';
             } catch (err) { console.error('Erreur stats:', err); }
         }
 
-       async function loadProperties() {
-    const loading = document.getElementById('loadingProperties');
-    const table = document.getElementById('propertiesTable');
-    const tbody = document.getElementById('propertiesTableBody');
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || 'null');
-    
-    try {
-        // Les admins utilisent /api/admin/properties, les users utilisent /api/properties
-        const endpoint = user.role === 'admin' ? '/admin/properties' : '/properties';
-        const headers = { 'Authorization': `Bearer ${token}` };
-        
-        const res = await fetch(`${CONFIG.API_URL}${endpoint}`, { headers });
-        const properties = await res.json();
-        
-        loading.style.display = 'none';
-        table.style.display = 'table';
-        tbody.innerHTML = '';
-        
-        if (properties.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px;">
-                No properties found. 
-                <a href="#" onclick="document.getElementById('addPropertyBtn').click(); return false;" 
-                   style="color:var(--matte-brass); font-weight:600;">Add your first property</a>
-            </td></tr>`;
-            return;
+        async function loadProperties() {
+            const loading = document.getElementById('loadingProperties');
+            const table = document.getElementById('propertiesTable');
+            const tbody = document.getElementById('propertiesTableBody');
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            
+            try {
+                const endpoint = user.role === 'admin' ? '/admin/properties' : '/properties';
+                const headers = { 'Authorization': `Bearer ${token}` };
+                
+                const res = await fetch(`${CONFIG.API_URL}${endpoint}`, { headers });
+                const properties = await res.json();
+                
+                loading.style.display = 'none';
+                table.style.display = 'table';
+                tbody.innerHTML = '';
+                
+                if (properties.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:40px;">
+                        No properties found. 
+                        <a href="#" onclick="document.getElementById('addPropertyBtn').click(); return false;" 
+                           style="color:var(--matte-brass); font-weight:600;">Add your first property</a>
+                    </td></tr>`;
+                    return;
+                }
+                
+                properties.forEach(prop => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><img src="${prop.image_url || 'images/placeholder.jpg'}" class="property-thumb" onerror="this.src='images/placeholder.jpg'"></td>
+                        <td>${prop.title}</td>
+                        <td>${prop.neighborhood}, ${prop.city}</td>
+                        <td>${prop.type}</td>
+                        <td>${prop.price_label}</td>
+                        <td><span class="badge badge-${prop.transaction}">${prop.transaction.toUpperCase()}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-edit" onclick="editProperty('${prop.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn-delete" onclick="deleteProperty('${prop.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>`;
+                    tbody.appendChild(tr);
+                });
+                
+            } catch (err) {
+                console.error('Erreur:', err);
+                loading.innerHTML = '<p style="color:var(--error);">Error loading properties.</p>';
+            }
         }
-        
-        properties.forEach(prop => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><img src="${prop.image_url || 'images/placeholder.jpg'}" class="property-thumb" onerror="this.src='images/placeholder.jpg'"></td>
-                <td>${prop.title}</td>
-                <td>${prop.neighborhood}, ${prop.city}</td>
-                <td>${prop.type}</td>
-                <td>${prop.price_label}</td>
-                <td><span class="badge badge-${prop.transaction}">${prop.transaction.toUpperCase()}</span></td>
-                <td>
-                    <div class="action-btns">
-                        <button class="btn-edit" onclick="editProperty('${prop.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn-delete" onclick="deleteProperty('${prop.id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </td>`;
-            tbody.appendChild(tr);
-        });
-        
-    } catch (err) {
-        console.error('Erreur:', err);
-        loading.innerHTML = '<p style="color:var(--error);">Error loading properties.</p>';
-    }
-}
+
         // --- UTILISATEURS ---
         async function loadUsers() {
             const token = localStorage.getItem('token');

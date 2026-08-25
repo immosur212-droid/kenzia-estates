@@ -6,21 +6,15 @@
     <meta name="description" content="Kenzia Estates - Premium Real Estate Agency in Morocco. Clarity in every key.">
     <title>Kenzia Estates | Premium Real Estate Morocco - Clarity in every key</title>
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
     
-    <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR & LIENS (Style unifié Desktop)
+           NAVBAR DESKTOP
            ============================================ */
         .navbar {
             background: var(--white);
@@ -45,11 +39,7 @@
             z-index: 10;
         }
         
-        .logo-img {
-            height: 50px;
-            width: auto;
-            display: block;
-        }
+        .logo-img { height: 50px; width: auto; display: block; }
         
         .nav-menu {
             display: flex;
@@ -66,11 +56,6 @@
             padding: 0;
             gap: 15px;
             align-items: center;
-            flex-wrap: nowrap;
-        }
-            
-        .nav-list li {
-            overflow: visible !important;
         }
         
         .nav-link, .nav-link-cta {
@@ -81,38 +66,12 @@
             transition: color 0.3s ease !important;
             position: relative !important;
             display: inline-block !important;
-            background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-            border-radius: 0 !important;
-            white-space: nowrap;
         }
         
         .nav-link:hover, .nav-link-cta:hover, .nav-link.active {
             color: var(--matte-brass) !important;
         }
         
-        .nav-link::after, .nav-link-cta::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--matte-brass);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after, .nav-link-cta:hover::after, .nav-link.active::after {
-            width: 100%;
-        }
-
-        .auth-button, .user-menu-container {
-            flex-shrink: 0;
-            white-space: nowrap;
-            z-index: 10;
-        }
-
         .auth-button {
             background: var(--matte-brass);
             color: var(--bleu-nuit);
@@ -122,8 +81,6 @@
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -132,13 +89,11 @@
         .auth-button:hover {
             background: var(--bleu-nuit);
             color: var(--white);
-            transform: translateY(-1px);
         }
         
         .user-menu-container {
             position: relative;
             display: none;
-            margin-left: 0;
         }
         
         .user-dropdown-btn {
@@ -154,12 +109,6 @@
             font-size: 0.95rem;
             font-weight: 500;
             color: var(--bleu-nuit);
-            transition: all 0.3s ease;
-        }
-        
-        .user-dropdown-btn:hover {
-            background: var(--off-white);
-            color: var(--matte-brass);
         }
         
         .user-avatar {
@@ -173,24 +122,6 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.8rem;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .user-dropdown-btn:hover .user-avatar {
-            background: var(--bleu-nuit);
-            color: var(--matte-brass);
-        }
-        
-        .user-dropdown-btn .fa-chevron-down {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-left: 4px;
-            transition: transform 0.3s ease;
-        }
-        
-        .user-dropdown-btn.active .fa-chevron-down {
-            transform: rotate(180deg);
         }
         
         .dropdown-content {
@@ -204,13 +135,6 @@
             overflow: hidden;
             z-index: 1000;
             display: none;
-            animation: slideDown 0.25s ease;
-            border: 1px solid var(--border-light);
-        }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .dropdown-content a {
@@ -220,27 +144,11 @@
             padding: 12px 18px;
             color: var(--bleu-nuit);
             text-decoration: none;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
             border-bottom: 1px solid var(--border-light);
-        }
-        
-        .dropdown-content a:last-child {
-            border-bottom: none;
         }
         
         .dropdown-content a:hover {
             background: var(--off-white);
-            color: var(--matte-brass);
-            padding-left: 22px;
-        }
-        
-        .dropdown-content a i {
-            width: 18px;
-            text-align: center;
-            color: var(--matte-brass);
-            font-size: 0.85rem;
         }
         
         .dropdown-divider {
@@ -248,159 +156,47 @@
             background: var(--border-light);
             margin: 4px 0;
         }
+
+        /* Cacher le hamburger sur desktop */
+        .hamburger {
+            display: none;
+        }
         
         /* ============================================
-           FEATURED PROPERTIES SECTION
+           FEATURED PROPERTIES
            ============================================ */
         .featured-properties { background: var(--off-white); }
         .featured-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
-        .featured-header .section-header { text-align: left; margin-bottom: 0; }
-        .view-all-btn { background: var(--matte-brass); color: var(--bleu-nuit); padding: 12px 30px; border: 2px solid var(--matte-brass); font-weight: 600; letter-spacing: 1px; transition: var(--transition-fast); white-space: nowrap; text-decoration: none; border-radius: 4px; }
-        .view-all-btn:hover { background: transparent; color: var(--matte-brass); }
+        .view-all-btn { background: var(--matte-brass); color: var(--bleu-nuit); padding: 12px 30px; border: 2px solid var(--matte-brass); font-weight: 600; text-decoration: none; border-radius: 4px; }
         .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-bottom: 50px; }
-        .featured-card { background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid rgba(184, 153, 112, 0.1); transition: var(--transition-fast); text-decoration: none; color: inherit; display: block; }
+        .featured-card { background: var(--white); overflow: hidden; box-shadow: var(--shadow-sm); text-decoration: none; color: inherit; display: block; }
         .featured-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
         .featured-image { position: relative; height: 250px; overflow: hidden; }
-        .featured-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-smooth); }
-        .featured-card:hover .featured-image img { transform: scale(1.08); }
-        .featured-badges { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; z-index: 2; }
-        .featured-badge { background: var(--matte-brass); color: var(--bleu-nuit); padding: 5px 12px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; border-radius: 3px; }
-        .featured-badge.luxury { background: var(--bleu-nuit); color: var(--matte-brass); }
-        .featured-badge.new { background: var(--success); color: var(--white); }
-        .featured-price { position: absolute; bottom: 15px; left: 15px; background: var(--bleu-nuit); color: var(--white); padding: 8px 16px; font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; z-index: 2; border-radius: 4px; }
+        .featured-image img { width: 100%; height: 100%; object-fit: cover; }
+        .featured-badges { position: absolute; top: 15px; left: 15px; display: flex; gap: 8px; }
+        .featured-badge { background: var(--matte-brass); color: var(--bleu-nuit); padding: 5px 12px; font-size: 0.7rem; font-weight: 700; border-radius: 3px; }
+        .featured-price { position: absolute; bottom: 15px; left: 15px; background: var(--bleu-nuit); color: var(--white); padding: 8px 16px; font-weight: 600; border-radius: 4px; }
         .featured-content { padding: 25px; }
         .featured-location { display: flex; align-items: center; gap: 6px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px; }
-        .featured-location i { color: var(--matte-brass); }
-        .featured-title { font-size: 1.2rem; margin-bottom: 15px; color: var(--bleu-nuit); line-height: 1.3; font-family: var(--font-serif); }
-        .featured-features { display: flex; gap: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); flex-wrap: wrap; }
-        .featured-feature { display: flex; align-items: center; gap: 5px; font-size: 0.85rem; color: var(--text-muted); }
-        .featured-feature i { color: var(--matte-brass); }
-        .featured-link { display: block; margin-top: 20px; color: var(--matte-brass); font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; transition: var(--transition-fast); }
-        .featured-link:hover { color: var(--bleu-nuit); }
-        .featured-link i { margin-left: 5px; transition: var(--transition-fast); }
-        .featured-link:hover i { transform: translateX(5px); }
-        .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; grid-column: 1 / -1; }
-        .featured-loading i, .featured-empty i { font-size: 3rem; color: var(--matte-brass); margin-bottom: 20px; }
-        .featured-empty i { color: var(--border-light); font-size: 4rem; }
-        .featured-empty h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--bleu-nuit); }
-        .featured-empty p { color: var(--text-muted); margin-bottom: 20px; }
+        .featured-title { font-size: 1.2rem; margin-bottom: 15px; color: var(--bleu-nuit); }
+        .featured-features { display: flex; gap: 15px; padding-top: 15px; border-top: 1px solid var(--border-light); }
+        .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; }
         
-        @media (max-width: 768px) {
-            .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
-            .featured-header .section-header { text-align: center; width: 100%; }
-            .view-all-btn { width: 100%; text-align: center; }
-            .featured-grid { grid-template-columns: 1fr; }
-        }
-
         /* ============================================
-           MENU MOBILE LATÉRAL (Corrigé et Unique)
+           MENU MOBILE - CORRECTION TOTALE
            ============================================ */
-        @media (max-width: 1200px) {
-            /* Overlay sombre */
-            .nav-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 998;
-                opacity: 0;
-                transition: opacity 0.3s ease;
+        @media (max-width: 768px) {
+            /* Cacher le menu desktop */
+            .nav-menu.desktop-menu {
+                display: none !important;
             }
-            .nav-overlay.active {
-                display: block;
-                opacity: 1;
+            
+            /* Cacher bouton auth desktop */
+            .auth-button.desktop-auth {
+                display: none !important;
             }
-
-            /* Panneau latéral */
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -320px; /* Caché hors de l'écran à droite */
-                width: 300px;
-                height: 100vh;
-                background: var(--white, #ffffff);
-                padding: 80px 30px 30px;
-                box-shadow: -5px 0 20px rgba(0,0,0,0.1);
-                transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-                z-index: 999;
-                display: flex !important;
-                flex-direction: column;
-                overflow-y: auto;
-            }
-
-            /* Quand le menu est actif, il entre dans l'écran */
-            .nav-menu.active {
-                right: 0;
-            }
-
-            /* Bouton fermer (X) */
-            .nav-close {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                background: transparent;
-                border: none;
-                font-size: 1.8rem;
-                color: var(--bleu-nuit, #1a2b4c);
-                cursor: pointer;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                transition: all 0.3s ease;
-            }
-            .nav-close:hover {
-                background: rgba(184, 153, 112, 0.1);
-                color: var(--matte-brass, #b89970);
-            }
-
-            /* Liste des liens */
-            .nav-list {
-                flex-direction: column;
-                width: 100%;
-                gap: 0;
-                margin-top: 20px;
-            }
-            .nav-list li {
-                width: 100%;
-            }
-            .nav-link {
-                display: block;
-                padding: 15px 0;
-                font-size: 1.1rem !important;
-                color: var(--bleu-nuit, #1a2b4c) !important;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-                transition: all 0.3s ease;
-            }
-            .nav-link:hover, .nav-link.active {
-                color: var(--matte-brass, #b89970) !important;
-                padding-left: 10px;
-            }
-
-            /* Bouton Contact spécial */
-            .nav-link-cta {
-                display: block;
-                background: var(--matte-brass, #b89970);
-                color: var(--bleu-nuit, #1a2b4c) !important;
-                padding: 15px 20px !important;
-                text-align: center;
-                border-radius: 4px;
-                margin-top: 30px;
-                font-weight: 600 !important;
-                border: none !important;
-            }
-            .nav-link-cta:hover {
-                background: var(--bleu-nuit, #1a2b4c);
-                color: var(--white, #ffffff) !important;
-                padding-left: 20px !important;
-            }
-
-            /* Bouton Hamburger */
+            
+            /* Afficher le hamburger */
             .hamburger {
                 display: flex !important;
                 flex-direction: column;
@@ -411,25 +207,106 @@
                 border: none;
                 cursor: pointer;
                 padding: 0;
-                z-index: 1000;
-                margin-left: auto;
+                z-index: 1001;
             }
+            
             .hamburger span {
                 display: block;
                 width: 100%;
                 height: 3px;
-                background: var(--bleu-nuit, #1a2b4c);
+                background: var(--bleu-nuit);
                 border-radius: 3px;
                 transition: all 0.3s ease;
             }
-            .hamburger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-            .hamburger.active span:nth-child(2) { opacity: 0; }
-            .hamburger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-            /* Cacher les éléments desktop sur mobile */
-            .auth-button, .user-menu-container {
-                display: none !important;
+            
+            /* Overlay */
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
             }
+            
+            .nav-overlay.active {
+                display: block;
+            }
+            
+            /* Menu latéral mobile */
+            .mobile-nav-menu {
+                position: fixed;
+                top: 0;
+                right: -300px;
+                width: 280px;
+                height: 100vh;
+                background: var(--white);
+                padding: 80px 30px 30px;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+                transition: right 0.3s ease;
+                z-index: 999;
+                overflow-y: auto;
+            }
+            
+            .mobile-nav-menu.active {
+                right: 0;
+            }
+            
+            /* Bouton fermer */
+            .nav-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: transparent;
+                border: none;
+                font-size: 1.8rem;
+                color: var(--bleu-nuit);
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+            
+            .mobile-nav-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .mobile-nav-list li {
+                margin-bottom: 0;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+            
+            .mobile-nav-list a {
+                display: block;
+                padding: 15px 0;
+                font-size: 1.1rem;
+                color: var(--bleu-nuit);
+                text-decoration: none;
+                font-weight: 500;
+            }
+            
+            .mobile-nav-list a:hover {
+                color: var(--matte-brass);
+            }
+            
+            .mobile-nav-cta {
+                background: var(--matte-brass);
+                color: var(--bleu-nuit) !important;
+                padding: 15px 20px !important;
+                text-align: center;
+                border-radius: 4px;
+                margin-top: 30px;
+                font-weight: 600 !important;
+            }
+            
+            /* Featured mobile */
+            .featured-header { flex-direction: column; gap: 20px; }
+            .view-all-btn { width: 100%; text-align: center; }
+            .featured-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -442,7 +319,8 @@
                     <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
                 </a>
                 
-                <div class="nav-menu" id="navMenu">
+                <!-- Menu Desktop -->
+                <div class="nav-menu desktop-menu" id="desktopNavMenu">
                     <ul class="nav-list">
                         <li><a href="/index.html" class="nav-link active">Home</a></li>
                         <li><a href="/properties.html" class="nav-link">Properties</a></li>
@@ -453,11 +331,13 @@
                     </ul>
                 </div>
                 
-                <a href="/login.html" class="auth-button" id="authButton">
+                <!-- Auth Desktop -->
+                <a href="/login.html" class="auth-button desktop-auth" id="authButton">
                     <i class="fas fa-user"></i>
                     <span>Se connecter</span>
                 </a>
 
+                <!-- Menu utilisateur -->
                 <div class="user-menu-container" id="userMenuContainer">
                     <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
                         <div class="user-avatar" id="userAvatar">U</div>
@@ -465,19 +345,14 @@
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-content" id="userDropdown">
-                        <a href="/my-properties.html">
-                            <i class="fas fa-home"></i> Mes Biens
-                        </a>
-                        <a href="/dashboard.html" id="adminDropdownLink" style="display: none;">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard Admin
-                        </a>
+                        <a href="/my-properties.html"><i class="fas fa-home"></i> Mes Biens</a>
+                        <a href="/dashboard.html" id="adminDropdownLink" style="display: none;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i> Déconnexion
-                        </a>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     </div>
                 </div>
                 
+                <!-- Hamburger -->
                 <button class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -486,6 +361,20 @@
             </div>
         </div>
     </nav>
+
+    <!-- Menu Mobile (séparé) -->
+    <div class="nav-overlay" id="navOverlay"></div>
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <button class="nav-close" id="navClose">&times;</button>
+        <ul class="mobile-nav-list">
+            <li><a href="/index.html" class="active">Home</a></li>
+            <li><a href="/properties.html">Properties</a></li>
+            <li><a href="/services.html">Services</a></li>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/blog.html">Blog</a></li>
+            <li><a href="/contact.html" class="mobile-nav-cta">Contact Us</a></li>
+        </ul>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -682,15 +571,11 @@
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
     
-    <!-- Scripts spécifiques à l'index -->
     <script>
-        // ============================================
-        // 1. GESTION DE LA NAVIGATION (Auth / User)
-        // ============================================
+        // Auth
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || 'null');
-        
             const authButton = document.getElementById('authButton');
             const userMenuContainer = document.getElementById('userMenuContainer');
             const userNameDisplay = document.getElementById('userNameDisplay');
@@ -700,14 +585,10 @@
             if (token && user) {
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
-                
                 const displayName = user.full_name || user.email.split('@')[0];
                 userNameDisplay.textContent = displayName;
                 userAvatar.textContent = displayName.charAt(0).toUpperCase();
-        
-                if (user.role === 'admin') {
-                    adminDropdownLink.style.display = 'flex';
-                }
+                if (user.role === 'admin') adminDropdownLink.style.display = 'flex';
             } else {
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
@@ -716,15 +597,7 @@
 
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdown');
-            const btn = document.querySelector('.user-dropdown-btn');
-            
-            if (dropdown.style.display === 'none' || !dropdown.style.display) {
-                dropdown.style.display = 'block';
-                if (btn) btn.classList.add('active');
-            } else {
-                dropdown.style.display = 'none';
-                if (btn) btn.classList.remove('active');
-            }
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
         function logout() {
@@ -733,139 +606,86 @@
             window.location.href = '/';
         }
 
-        document.addEventListener('click', (e) => {
-            const userMenu = document.getElementById('userMenuContainer');
-            const dropdown = document.getElementById('userDropdown');
-            const btn = document.querySelector('.user-dropdown-btn');
-            
-            if (userMenu && !userMenu.contains(e.target)) {
-                if (dropdown) dropdown.style.display = 'none';
-                if (btn) btn.classList.remove('active');
-            }
-        });
-
-        // ============================================
-        // 2. CHARGEMENT DES PROPRIÉTÉS FEATURED
-        // ============================================
+        // Featured Properties
         async function loadFeaturedProperties() {
             const grid = document.getElementById('featuredGrid');
             const API_URL = window.location.origin + '/api';
             
             try {
                 const response = await fetch(`${API_URL}/properties`);
-                if (!response.ok) throw new Error('Erreur lors du chargement');
-                
                 const properties = await response.json();
                 const featuredProps = properties.slice(0, 6);
                 
                 if (featuredProps.length === 0) {
-                    grid.innerHTML = `
-                        <div class="featured-empty">
-                            <i class="fas fa-home"></i>
-                            <h3>No Properties Available</h3>
-                            <p>Check back soon for new listings!</p>
-                            <a href="/properties.html" class="btn btn-primary" style="margin-top:20px; display:inline-block; text-decoration:none;">Browse All Properties</a>
-                        </div>`;
+                    grid.innerHTML = '<div class="featured-empty"><h3>No Properties Available</h3></div>';
                     return;
                 }
                 
-                grid.innerHTML = featuredProps.map(property => {
-                    let badgesHTML = '';
-                    if (property.transaction === 'sale') badgesHTML += '<span class="featured-badge">FOR SALE</span>';
-                    else badgesHTML += '<span class="featured-badge">FOR RENT</span>';
-                    if (property.is_luxury) badgesHTML += '<span class="featured-badge luxury">LUXURY</span>';
-                    if (property.is_new) badgesHTML += '<span class="featured-badge new">NEW</span>';
-                    
-                    const cityFormatted = property.city ? property.city.charAt(0).toUpperCase() + property.city.slice(1) : 'Unknown';
-                    
-                    return `
-                        <a href="/property-detail.html?id=${property.id}" class="featured-card">
-                            <div class="featured-image">
-                                <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" alt="${property.title}" loading="lazy">
-                                <div class="featured-badges">${badgesHTML}</div>
-                                <div class="featured-price">${property.price_label}</div>
+                grid.innerHTML = featuredProps.map(property => `
+                    <a href="/property-detail.html?id=${property.id}" class="featured-card">
+                        <div class="featured-image">
+                            <img src="${property.image_url || 'https://via.placeholder.com/600x400'}" alt="${property.title}">
+                            <div class="featured-badges">
+                                <span class="featured-badge">${property.transaction === 'sale' ? 'FOR SALE' : 'FOR RENT'}</span>
                             </div>
-                            <div class="featured-content">
-                                <div class="featured-location">
-                                    <i class="fas fa-location-dot"></i> ${property.neighborhood}, ${cityFormatted}
-                                </div>
-                                <h3 class="featured-title">${property.title}</h3>
-                                <div class="featured-features">
-                                    <div class="featured-feature"><i class="fas fa-bed"></i> ${property.bedrooms} Beds</div>
-                                    <div class="featured-feature"><i class="fas fa-bath"></i> ${property.bathrooms} Baths</div>
-                                    <div class="featured-feature"><i class="fas fa-ruler-combined"></i> ${property.surface} m²</div>
-                                </div>
-                                <span class="featured-link">View Details <i class="fas fa-arrow-right"></i></span>
+                            <div class="featured-price">${property.price_label}</div>
+                        </div>
+                        <div class="featured-content">
+                            <div class="featured-location"><i class="fas fa-location-dot"></i> ${property.neighborhood}, ${property.city}</div>
+                            <h3 class="featured-title">${property.title}</h3>
+                            <div class="featured-features">
+                                <div><i class="fas fa-bed"></i> ${property.bedrooms} Beds</div>
+                                <div><i class="fas fa-bath"></i> ${property.bathrooms} Baths</div>
+                                <div><i class="fas fa-ruler-combined"></i> ${property.surface} m²</div>
                             </div>
-                        </a>`;
-                }).join('');
-                
+                        </div>
+                    </a>`
+                ).join('');
             } catch (error) {
-                console.error('Erreur chargement propriétés:', error);
-                grid.innerHTML = `
-                    <div class="featured-empty">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Error Loading Properties</h3>
-                        <p>Please try again later.</p>
-                        <button onclick="loadFeaturedProperties()" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-redo"></i> Retry</button>
-                    </div>`;
+                grid.innerHTML = '<div class="featured-empty"><h3>Error Loading Properties</h3></div>';
             }
         }
         
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
 
         // ============================================
-        // 3. GESTION DU MENU LATÉRAL MOBILE (CORRIGÉ)
+        // MENU MOBILE - CODE SIMPLIFIÉ ET FONCTIONNEL
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             const hamburger = document.getElementById('hamburger');
-            const navMenu = document.getElementById('navMenu');
+            const mobileNavMenu = document.getElementById('mobileNavMenu');
+            const navOverlay = document.getElementById('navOverlay');
+            const navClose = document.getElementById('navClose');
             
-            if (hamburger && navMenu) {
-                // Créer l'overlay dynamiquement
-                const overlay = document.createElement('div');
-                overlay.className = 'nav-overlay';
-                document.body.appendChild(overlay);
-
-                // Ajouter le bouton fermer (X) dans le menu
-                const closeBtn = document.createElement('button');
-                closeBtn.className = 'nav-close';
-                closeBtn.innerHTML = '&times;';
-                closeBtn.setAttribute('aria-label', 'Fermer le menu');
-                navMenu.insertBefore(closeBtn, navMenu.firstChild);
-
-                // Fonction pour fermer le menu
-                const closeMenu = () => {
-                    hamburger.classList.remove('active');
-                    navMenu.classList.remove('active');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                };
-
+            if (hamburger && mobileNavMenu && navOverlay && navClose) {
                 // Ouvrir le menu
                 hamburger.addEventListener('click', () => {
-                    hamburger.classList.toggle('active');
-                    navMenu.classList.toggle('active');
-                    overlay.classList.toggle('active');
-                    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+                    mobileNavMenu.classList.add('active');
+                    navOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 });
 
                 // Fermer avec le bouton X
-                closeBtn.addEventListener('click', closeMenu);
-
-                // Fermer en cliquant sur l'overlay
-                overlay.addEventListener('click', closeMenu);
-
-                // Fermer en cliquant sur un lien
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', closeMenu);
+                navClose.addEventListener('click', () => {
+                    mobileNavMenu.classList.remove('active');
+                    navOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
                 });
 
-                // Fermer avec la touche Echap
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                        closeMenu();
-                    }
+                // Fermer avec l'overlay
+                navOverlay.addEventListener('click', () => {
+                    mobileNavMenu.classList.remove('active');
+                    navOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+
+                // Fermer en cliquant sur un lien
+                mobileNavMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileNavMenu.classList.remove('active');
+                        navOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
                 });
             }
         });

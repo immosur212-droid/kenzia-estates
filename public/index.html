@@ -20,9 +20,9 @@
     <!-- Styles pour la Navbar dynamique et Featured Properties -->
     <style>
         /* ============================================
-           NAVBAR & LIENS (Style unifié)
+           NAVBAR & LIENS (Style unifié Desktop)
            ============================================ */
-       .navbar {
+        .navbar {
             background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
@@ -34,12 +34,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 15px 20px; /* Padding latéral pour éviter le collage aux bords */
-            gap: 20px; /* Espace MINIMUM garanti entre le Logo, le Menu et le Bouton */
+            padding: 15px 20px;
+            gap: 20px;
         }
         
         .logo {
-            flex-shrink: 0; /* EMPÊCHE le logo de se compresser */
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             z-index: 10;
@@ -55,7 +55,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1; /* Prend l'espace central disponible */
+            flex: 1;
             min-width: 0; 
         }     
 
@@ -64,7 +64,7 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            gap: 15px; /* Espacement RÉDUIT entre les liens pour gagner de la place */
+            gap: 15px;
             align-items: center;
             flex-wrap: nowrap;
         }
@@ -73,13 +73,11 @@
             overflow: visible !important;
         }
         
-        /* Style UNIFIÉ pour TOUS les liens */
-        .nav-link, 
-        .nav-link-cta {
+        .nav-link, .nav-link-cta {
             color: var(--bleu-nuit) !important;
             text-decoration: none !important;
             font-weight: 500 !important;
-            font-size: 0.9rem !important; /* Légèrement réduit pour gagner de la place */
+            font-size: 0.9rem !important;
             transition: color 0.3s ease !important;
             position: relative !important;
             display: inline-block !important;
@@ -87,18 +85,14 @@
             border: none !important;
             padding: 0 !important;
             border-radius: 0 !important;
-            white-space: nowrap; /* Empêche le texte de se couper */
+            white-space: nowrap;
         }
         
-        .nav-link:hover, 
-        .nav-link-cta:hover,
-        .nav-link.active {
+        .nav-link:hover, .nav-link-cta:hover, .nav-link.active {
             color: var(--matte-brass) !important;
         }
         
-        /* Soulignement dynamique */
-        .nav-link::after, 
-        .nav-link-cta::after {
+        .nav-link::after, .nav-link-cta::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -109,17 +103,12 @@
             transition: width 0.3s ease;
         }
         
-        .nav-link:hover::after, 
-        .nav-link-cta:hover::after,
-        .nav-link.active::after {
+        .nav-link:hover::after, .nav-link-cta:hover::after, .nav-link.active::after {
             width: 100%;
         }
 
-        /* ============================================
-           ÉLÉMENTS DE DROITE (Protection anti-compression)
-           ============================================ */
         .auth-button, .user-menu-container {
-            flex-shrink: 0; /* EMPÊCHE le bouton de se compresser */
+            flex-shrink: 0;
             white-space: nowrap;
             z-index: 10;
         }
@@ -146,16 +135,9 @@
             transform: translateY(-1px);
         }
         
-        .auth-button i {
-            font-size: 0.75rem;
-        }
-        
-        /* ============================================
-           MENU UTILISATEUR INTÉGRÉ (Seamless)
-           ============================================ */
         .user-menu-container {
             position: relative;
-            display: none; /* Caché par défaut */
+            display: none;
             margin-left: 0;
         }
         
@@ -180,7 +162,6 @@
             color: var(--matte-brass);
         }
         
-        /* Avatar plus petit et discret pour s'aligner avec le texte */
         .user-avatar {
             width: 28px;
             height: 28px;
@@ -201,7 +182,6 @@
             color: var(--matte-brass);
         }
         
-        /* Flèche du dropdown */
         .user-dropdown-btn .fa-chevron-down {
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -213,7 +193,6 @@
             transform: rotate(180deg);
         }
         
-        /* Dropdown content */
         .dropdown-content {
             position: absolute;
             top: calc(100% + 10px);
@@ -264,10 +243,6 @@
             font-size: 0.85rem;
         }
         
-        .dropdown-content a:hover i {
-            color: var(--bleu-nuit);
-        }
-        
         .dropdown-divider {
             height: 1px;
             background: var(--border-light);
@@ -310,46 +285,150 @@
         .featured-empty h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--bleu-nuit); }
         .featured-empty p { color: var(--text-muted); margin-bottom: 20px; }
         
-        @media (max-width: 992px) {
-            .nav-menu { display: none; }
-            .auth-button, .user-menu-container { display: none !important; }
-        }
         @media (max-width: 768px) {
             .featured-header { flex-direction: column; gap: 20px; align-items: flex-start; }
             .featured-header .section-header { text-align: center; width: 100%; }
             .view-all-btn { width: 100%; text-align: center; }
             .featured-grid { grid-template-columns: 1fr; }
         }
-                /* ============================================
-           MEDIA QUERY POUR ÉCRANS 13 POUCES (1200px et moins)
+
+        /* ============================================
+           MENU MOBILE LATÉRAL (Corrigé et Unique)
            ============================================ */
         @media (max-width: 1200px) {
+            /* Overlay sombre */
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .nav-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+
+            /* Panneau latéral */
             .nav-menu {
-                display: none !important; /* Cache le menu complet */
+                position: fixed;
+                top: 0;
+                right: -320px; /* Caché hors de l'écran à droite */
+                width: 300px;
+                height: 100vh;
+                background: var(--white, #ffffff);
+                padding: 80px 30px 30px;
+                box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+                transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+                z-index: 999;
+                display: flex !important;
+                flex-direction: column;
+                overflow-y: auto;
             }
-            
-            .hamburger {
-                display: block !important; /* Affiche le menu hamburger */
+
+            /* Quand le menu est actif, il entre dans l'écran */
+            .nav-menu.active {
+                right: 0;
             }
-            
+
+            /* Bouton fermer (X) */
+            .nav-close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: transparent;
+                border: none;
+                font-size: 1.8rem;
+                color: var(--bleu-nuit, #1a2b4c);
+                cursor: pointer;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: all 0.3s ease;
+            }
+            .nav-close:hover {
+                background: rgba(184, 153, 112, 0.1);
+                color: var(--matte-brass, #b89970);
+            }
+
+            /* Liste des liens */
             .nav-list {
-                gap: 10px; /* Réduit l'espacement si on garde le menu */
+                flex-direction: column;
+                width: 100%;
+                gap: 0;
+                margin-top: 20px;
             }
-            
-            .nav-link, .nav-link-cta {
-                font-size: 0.85rem !important; /* Réduit la taille du texte */
+            .nav-list li {
+                width: 100%;
             }
-            
-            .auth-button span {
-                display: none; /* Cache le texte "Se connecter", garde juste l'icône */
+            .nav-link {
+                display: block;
+                padding: 15px 0;
+                font-size: 1.1rem !important;
+                color: var(--bleu-nuit, #1a2b4c) !important;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
             }
-            
-            .auth-button {
-                padding: 8px 12px;
+            .nav-link:hover, .nav-link.active {
+                color: var(--matte-brass, #b89970) !important;
+                padding-left: 10px;
             }
-            
-            .logo-img {
-                height: 45px; /* Réduit légèrement la taille du logo */
+
+            /* Bouton Contact spécial */
+            .nav-link-cta {
+                display: block;
+                background: var(--matte-brass, #b89970);
+                color: var(--bleu-nuit, #1a2b4c) !important;
+                padding: 15px 20px !important;
+                text-align: center;
+                border-radius: 4px;
+                margin-top: 30px;
+                font-weight: 600 !important;
+                border: none !important;
+            }
+            .nav-link-cta:hover {
+                background: var(--bleu-nuit, #1a2b4c);
+                color: var(--white, #ffffff) !important;
+                padding-left: 20px !important;
+            }
+
+            /* Bouton Hamburger */
+            .hamburger {
+                display: flex !important;
+                flex-direction: column;
+                justify-content: space-between;
+                width: 30px;
+                height: 21px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                z-index: 1000;
+                margin-left: auto;
+            }
+            .hamburger span {
+                display: block;
+                width: 100%;
+                height: 3px;
+                background: var(--bleu-nuit, #1a2b4c);
+                border-radius: 3px;
+                transition: all 0.3s ease;
+            }
+            .hamburger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+            /* Cacher les éléments desktop sur mobile */
+            .auth-button, .user-menu-container {
+                display: none !important;
             }
         }
     </style>
@@ -359,12 +438,10 @@
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-wrapper">
-                <!-- Logo décalé à gauche -->
                 <a href="/index.html" class="logo">
                     <img src="images/logo.png" alt="Kenzia Estates" class="logo-img">
                 </a>
                 
-                <!-- Navigation Menu Principal -->
                 <div class="nav-menu" id="navMenu">
                     <ul class="nav-list">
                         <li><a href="/index.html" class="nav-link active">Home</a></li>
@@ -376,13 +453,11 @@
                     </ul>
                 </div>
                 
-                <!-- Bouton Se connecter (NON connecté) -->
                 <a href="/login.html" class="auth-button" id="authButton">
                     <i class="fas fa-user"></i>
                     <span>Se connecter</span>
                 </a>
 
-                <!-- Menu utilisateur (CONNECTÉ) -->
                 <div class="user-menu-container" id="userMenuContainer">
                     <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
                         <div class="user-avatar" id="userAvatar">U</div>
@@ -403,7 +478,6 @@
                     </div>
                 </div>
                 
-                <!-- Hamburger Menu (Mobile) -->
                 <button class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -432,7 +506,6 @@
                 <h1 class="hero-title">Find Your Perfect Property in Morocco</h1>
                 <p class="hero-slogan">Clarity in every key.</p>
                 
-                <!-- Search Bar -->
                 <div class="search-bar">
                     <form class="search-form" id="searchForm">
                         <div class="search-field">
@@ -624,29 +697,18 @@
             const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
         
-            console.log('🔍 Debug Auth:', { token: token ? 'EXISTS' : 'NULL', user });
-        
             if (token && user) {
-                // ✅ Utilisateur CONNECTÉ
-                console.log('✅ Utilisateur connecté:', user.full_name || user.email);
-                
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
                 
-                // Afficher le nom de l'utilisateur
                 const displayName = user.full_name || user.email.split('@')[0];
                 userNameDisplay.textContent = displayName;
-                
-                // Avatar avec la première lettre
                 userAvatar.textContent = displayName.charAt(0).toUpperCase();
         
-                // Si c'est un admin, afficher le lien Dashboard
                 if (user.role === 'admin') {
                     adminDropdownLink.style.display = 'flex';
                 }
             } else {
-                // ❌ Utilisateur NON CONNECTÉ
-                console.log('❌ Utilisateur non connecté');
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
             }
@@ -671,7 +733,6 @@
             window.location.href = '/';
         }
 
-        // Fermer le dropdown si on clique en dehors
         document.addEventListener('click', (e) => {
             const userMenu = document.getElementById('userMenuContainer');
             const dropdown = document.getElementById('userDropdown');
@@ -752,6 +813,62 @@
         }
         
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
+
+        // ============================================
+        // 3. GESTION DU MENU LATÉRAL MOBILE (CORRIGÉ)
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (hamburger && navMenu) {
+                // Créer l'overlay dynamiquement
+                const overlay = document.createElement('div');
+                overlay.className = 'nav-overlay';
+                document.body.appendChild(overlay);
+
+                // Ajouter le bouton fermer (X) dans le menu
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'nav-close';
+                closeBtn.innerHTML = '&times;';
+                closeBtn.setAttribute('aria-label', 'Fermer le menu');
+                navMenu.insertBefore(closeBtn, navMenu.firstChild);
+
+                // Fonction pour fermer le menu
+                const closeMenu = () => {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                };
+
+                // Ouvrir le menu
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                    document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+                });
+
+                // Fermer avec le bouton X
+                closeBtn.addEventListener('click', closeMenu);
+
+                // Fermer en cliquant sur l'overlay
+                overlay.addEventListener('click', closeMenu);
+
+                // Fermer en cliquant sur un lien
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', closeMenu);
+                });
+
+                // Fermer avec la touche Echap
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                        closeMenu();
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

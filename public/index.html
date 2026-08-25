@@ -193,13 +193,13 @@
                 padding: 5px 0;
             }
             .nav-wrapper {
-                padding: 10px 15px; /* Plus compact */
+                padding: 10px 15px;
             }
             .logo-img {
-                height: 40px; /* Logo légèrement réduit pour gagner de la place */
+                height: 40px;
             }
 
-            /* 2. Cacher strictement les éléments desktop (y compris le menu user connecté) */
+            /* 2. Cacher strictement les éléments desktop */
             .desktop-menu, .desktop-auth, .user-menu-container {
                 display: none !important;
             }
@@ -216,7 +216,7 @@
                 cursor: pointer;
                 padding: 0;
                 z-index: 1001;
-                margin-left: auto; /* Pousse le hamburger tout à droite */
+                margin-left: auto;
             }
             
             .hamburger span {
@@ -246,7 +246,7 @@
             
             /* 5. Menu latéral mobile */
             .mobile-nav-menu {
-                display: block !important; /* Écrase le display:none du desktop */
+                display: block !important;
                 position: fixed;
                 top: 0;
                 right: -300px;
@@ -276,6 +276,7 @@
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
+                z-index: 10;
             }
             
             .mobile-nav-list {
@@ -296,6 +297,7 @@
                 color: var(--bleu-nuit);
                 text-decoration: none;
                 font-weight: 500;
+                cursor: pointer;
             }
             
             .mobile-nav-list a:hover {
@@ -310,6 +312,17 @@
                 border-radius: 4px;
                 margin-top: 30px;
                 font-weight: 600 !important;
+                display: inline-block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* Lien login mobile */
+            .mobile-login-link {
+                display: block;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 2px solid rgba(0,0,0,0.1);
             }
             
             /* Featured mobile */
@@ -381,7 +394,11 @@
             <li><a href="/services.html">Services</a></li>
             <li><a href="/about.html">About</a></li>
             <li><a href="/blog.html">Blog</a></li>
-            <li><a href="/contact.html" class="mobile-nav-cta">Contact Us</a></li>
+            <li><a href="/contact.html">Contact Us</a></li>
+            <!-- Lien Se connecter (affiché dynamiquement si non connecté) -->
+            <li id="mobileLoginContainer" class="mobile-login-link">
+                <a href="/login.html" class="mobile-nav-cta">Se connecter</a>
+            </li>
         </ul>
     </div>
 
@@ -592,17 +609,23 @@
             const userNameDisplay = document.getElementById('userNameDisplay');
             const userAvatar = document.getElementById('userAvatar');
             const adminDropdownLink = document.getElementById('adminDropdownLink');
+            const mobileLoginContainer = document.getElementById('mobileLoginContainer');
         
             if (token && user) {
+                // Utilisateur connecté
                 authButton.style.display = 'none';
                 userMenuContainer.style.display = 'block';
+                if (mobileLoginContainer) mobileLoginContainer.style.display = 'none'; // Cacher login mobile
+                
                 const displayName = user.full_name || user.email.split('@')[0];
                 userNameDisplay.textContent = displayName;
                 userAvatar.textContent = displayName.charAt(0).toUpperCase();
                 if (user.role === 'admin') adminDropdownLink.style.display = 'flex';
             } else {
+                // Utilisateur non connecté
                 authButton.style.display = 'flex';
                 userMenuContainer.style.display = 'none';
+                if (mobileLoginContainer) mobileLoginContainer.style.display = 'block'; // Afficher login mobile
             }
         });
 
@@ -662,7 +685,7 @@
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
 
         // ============================================
-        // 3. GESTION DU MENU MOBILE
+        // 3. GESTION DU MENU MOBILE (CORRIGÉ)
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             const hamburger = document.getElementById('hamburger');
@@ -670,35 +693,63 @@
             const navOverlay = document.getElementById('navOverlay');
             const navClose = document.getElementById('navClose');
             
-            if (hamburger && mobileNavMenu && navOverlay && navClose) {
-                // Ouvrir le menu
-                hamburger.addEventListener('click', () => {
-                    mobileNavMenu.classList.add('active');
-                    navOverlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+            // Fonction pour fermer le menu
+            function closeMobileMenu() {
+                if (mobileNavMenu) mobileNavMenu.classList.remove('active');
+                if (navOverlay) navOverlay.classList.remove('active');
+                if (hamburger) hamburger.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // Fonction pour ouvrir le menu
+            function openMobileMenu() {
+                if (mobileNavMenu) mobileNavMenu.classList.add('active');
+                if (navOverlay) navOverlay.classList.add('active');
+                if (hamburger) hamburger.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Ouvrir le menu au clic sur hamburger
+            if (hamburger) {
+                hamburger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (mobileNavMenu && mobileNavMenu.classList.contains('active')) {
+                        closeMobileMenu();
+                    } else {
+                        openMobileMenu();
+                    }
                 });
-
-                // Fermer avec le bouton X
-                navClose.addEventListener('click', () => {
-                    mobileNavMenu.classList.remove('active');
-                    navOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
+            }
+            
+            // Fermer avec le bouton X
+            if (navClose) {
+                navClose.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeMobileMenu();
                 });
-
-                // Fermer avec l'overlay
+            }
+            
+            // Fermer avec l'overlay
+            if (navOverlay) {
                 navOverlay.addEventListener('click', () => {
-                    mobileNavMenu.classList.remove('active');
-                    navOverlay.classList.remove('active');
-                    document.body.style.overflow = '';
+                    closeMobileMenu();
                 });
-
-                // Fermer en cliquant sur un lien
-                mobileNavMenu.querySelectorAll('a').forEach(link => {
+            }
+            
+            // Fermer en cliquant sur un lien du menu
+            if (mobileNavMenu) {
+                const links = mobileNavMenu.querySelectorAll('a');
+                links.forEach(link => {
                     link.addEventListener('click', () => {
-                        mobileNavMenu.classList.remove('active');
-                        navOverlay.classList.remove('active');
-                        document.body.style.overflow = '';
+                        closeMobileMenu();
                     });
+                });
+            }
+            
+            // Empêcher la propagation du clic dans le menu
+            if (mobileNavMenu) {
+                mobileNavMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
                 });
             }
         });

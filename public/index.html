@@ -14,7 +14,7 @@
     
     <style>
         /* ============================================
-           NAVBAR DESKTOP
+           NAVBAR DESKTOP (Base)
            ============================================ */
         .navbar {
             background: var(--white);
@@ -157,9 +157,11 @@
             margin: 4px 0;
         }
 
-        /* Cacher le hamburger sur desktop */
-        .hamburger {
-            display: none;
+        /* ============================================
+           SÉCURITÉ : Cacher strictement les éléments mobiles sur Desktop
+           ============================================ */
+        .hamburger, .mobile-nav-menu, .nav-overlay {
+            display: none !important;
         }
         
         /* ============================================
@@ -183,20 +185,26 @@
         .featured-loading, .featured-empty { text-align: center; padding: 80px 20px; }
         
         /* ============================================
-           MENU MOBILE - CORRECTION TOTALE
+           MENU MOBILE & CORRECTION HAUTEUR NAVBAR
            ============================================ */
         @media (max-width: 768px) {
-            /* Cacher le menu desktop */
-            .nav-menu.desktop-menu {
+            /* 1. Correction de la hauteur de la navbar sur mobile */
+            .navbar {
+                padding: 5px 0;
+            }
+            .nav-wrapper {
+                padding: 10px 15px; /* Plus compact */
+            }
+            .logo-img {
+                height: 40px; /* Logo légèrement réduit pour gagner de la place */
+            }
+
+            /* 2. Cacher strictement les éléments desktop (y compris le menu user connecté) */
+            .desktop-menu, .desktop-auth, .user-menu-container {
                 display: none !important;
             }
             
-            /* Cacher bouton auth desktop */
-            .auth-button.desktop-auth {
-                display: none !important;
-            }
-            
-            /* Afficher le hamburger */
+            /* 3. Afficher le hamburger */
             .hamburger {
                 display: flex !important;
                 flex-direction: column;
@@ -208,6 +216,7 @@
                 cursor: pointer;
                 padding: 0;
                 z-index: 1001;
+                margin-left: auto; /* Pousse le hamburger tout à droite */
             }
             
             .hamburger span {
@@ -219,7 +228,7 @@
                 transition: all 0.3s ease;
             }
             
-            /* Overlay */
+            /* 4. Overlay */
             .nav-overlay {
                 display: none;
                 position: fixed;
@@ -235,8 +244,9 @@
                 display: block;
             }
             
-            /* Menu latéral mobile */
+            /* 5. Menu latéral mobile */
             .mobile-nav-menu {
+                display: block !important; /* Écrase le display:none du desktop */
                 position: fixed;
                 top: 0;
                 right: -300px;
@@ -254,7 +264,6 @@
                 right: 0;
             }
             
-            /* Bouton fermer */
             .nav-close {
                 position: absolute;
                 top: 20px;
@@ -337,7 +346,7 @@
                     <span>Se connecter</span>
                 </a>
 
-                <!-- Menu utilisateur -->
+                <!-- Menu utilisateur (Desktop uniquement) -->
                 <div class="user-menu-container" id="userMenuContainer">
                     <button class="user-dropdown-btn" onclick="toggleUserDropdown()">
                         <div class="user-avatar" id="userAvatar">U</div>
@@ -352,7 +361,7 @@
                     </div>
                 </div>
                 
-                <!-- Hamburger -->
+                <!-- Hamburger (Mobile uniquement) -->
                 <button class="hamburger" id="hamburger">
                     <span></span>
                     <span></span>
@@ -362,7 +371,7 @@
         </div>
     </nav>
 
-    <!-- Menu Mobile (séparé) -->
+    <!-- Menu Mobile (Séparé du flux normal) -->
     <div class="nav-overlay" id="navOverlay"></div>
     <div class="mobile-nav-menu" id="mobileNavMenu">
         <button class="nav-close" id="navClose">&times;</button>
@@ -572,7 +581,9 @@
     <script src="js/main.js"></script>
     
     <script>
-        // Auth
+        // ============================================
+        // 1. GESTION AUTHENTIFICATION
+        // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -606,7 +617,9 @@
             window.location.href = '/';
         }
 
-        // Featured Properties
+        // ============================================
+        // 2. CHARGEMENT DES PROPRIÉTÉS
+        // ============================================
         async function loadFeaturedProperties() {
             const grid = document.getElementById('featuredGrid');
             const API_URL = window.location.origin + '/api';
@@ -649,7 +662,7 @@
         document.addEventListener('DOMContentLoaded', loadFeaturedProperties);
 
         // ============================================
-        // MENU MOBILE - CODE SIMPLIFIÉ ET FONCTIONNEL
+        // 3. GESTION DU MENU MOBILE
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             const hamburger = document.getElementById('hamburger');

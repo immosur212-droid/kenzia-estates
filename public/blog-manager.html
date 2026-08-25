@@ -571,276 +571,266 @@
         let quill = null;
         let currentFilter = 'all';
 
-        // Initialisation de Quill Editor
-        document.addEventListener('DOMContentLoaded', () => {
-            // Dans l'événement submit du formulaire
-            const content = document.getElementById('articleContent').value.trim();
-            
-            if (!content) {
-                alert('Veuillez rédiger le contenu de l\'article');
-                return;
-            }
+        // Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+    loadArticles();
+    setupFilters();
+    setupSlugGeneration();
+});
 
+// Génération automatique du slug
+function setupSlugGeneration() {
+    const titleInput = document.getElementById('articleTitle');
+    const slugInput = document.getElementById('articleSlug');
+    
+    titleInput.addEventListener('input', (e) => {
+        if (!editingArticleId) {
+            const slug = e.target.value
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+            slugInput.value = slug;
+        }
+    });
+}
+
+// Filtres
+function setupFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
             loadArticles();
-            setupFilters();
-            setupSlugGeneration();
+        });
+    });
+}
+
+// Chargement des articles
+async function loadArticles() {
+    const token = localStorage.getItem('token');
+    const loading = document.getElementById('loadingState');
+    const empty = document.getElementById('emptyState');
+    const table = document.getElementById('articlesTable');
+    const tbody = document.getElementById('articlesTableBody');
+
+    try {
+        const res = await fetch(`${API_URL}/admin/blog`, {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
 
-        // Génération automatique du slug
-        function setupSlugGeneration() {
-            const titleInput = document.getElementById('articleTitle');
-            const slugInput = document.getElementById('articleSlug');
-            
-            titleInput.addEventListener('input', (e) => {
-                if (!editingArticleId) { // Ne pas modifier si on édite
-                    const slug = e.target.value
-                        .toLowerCase()
-                        .normalize('NFD')
-                        .replace(/[\u0300-\u036f]/g, '') // Enlève les accents
-                        .replace(/[^a-z0-9]+/g, '-')
-                        .replace(/(^-|-$)/g, '');
-                    slugInput.value = slug;
-                }
+        if (!res.ok) throw new Error('Erreur de chargement');
+
+        const articles = await res.json();
+        loading.style.display = 'none';
+
+        const filtered = currentFilter === 'all' 
+            ? articles 
+            : articles.filter(a => a.status === currentFilter);
+
+        if (filtered.length === 0) {
+            table.style.display = 'none';
+            empty.style.display = 'block';
+            return;
+        }
+
+        table.style.display = 'table';
+        empty.style.display = 'none';
+        tbody.innerHTML = '';
+
+        filtered.forEach(article => {
+            const date = new Date(article.created_at).toLocaleDateString('fr-FR', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
             });
-        }
 
-        // Filtres
-        function setupFilters() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.dataset.filter;
-                    loadArticles();
-                });
-            });
-        }
-
-        // Chargement des articles
-        async function loadArticles() {
-            const token = localStorage.getItem('token');
-            const loading = document.getElementById('loadingState');
-            const empty = document.getElementById('emptyState');
-            const table = document.getElementById('articlesTable');
-            const tbody = document.getElementById('articlesTableBody');
-
-            try {
-                const res = await fetch(`${API_URL}/admin/blog`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-
-                if (!res.ok) throw new Error('Erreur de chargement');
-
-                const articles = await res.json();
-                loading.style.display = 'none';
-
-                // Filtrage
-                const filtered = currentFilter === 'all' 
-                    ? articles 
-                    : articles.filter(a => a.status === currentFilter);
-
-                if (filtered.length === 0) {
-                    table.style.display = 'none';
-                    empty.style.display = 'block';
-                    return;
-                }
-
-                table.style.display = 'table';
-                empty.style.display = 'none';
-                tbody.innerHTML = '';
-
-                filtered.forEach(article => {
-                    const date = new Date(article.created_at).toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric'
-                    });
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <div class="article-title-cell">
-                                <img src="${article.image_url || 'https://via.placeholder.com/60'}" 
-                                     class="article-thumb"
-                                     onerror="this.src='https://via.placeholder.com/60'">
-                                <div class="article-info">
-                                    <h4>${article.title}</h4>
-                                    <span class="slug">/${article.slug}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td>${article.author_name || 'Admin'}</td>
-                        <td>
-                            <span class="badge badge-${article.status}">
-                                ${article.status === 'published' ? 'Publié' : 'Brouillon'}
-                            </span>
-                        </td>
-                        <td>${article.views || 0}</td>
-                        <td>${date}</td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-icon btn-view" onclick="viewArticle('${article.slug}')" title="Voir">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn-icon btn-edit" onclick="editArticle(${article.id})" title="Modifier">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn-icon btn-delete" onclick="deleteArticle(${article.id})" title="Supprimer">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-
-            } catch (err) {
-                console.error('Erreur:', err);
-                loading.innerHTML = '<p style="color: var(--error);">Erreur de chargement. <button onclick="loadArticles()" class="btn btn-primary btn-sm" style="margin-top: 15px;">Réessayer</button></p>';
-            }
-        }
-
-        // Ouvrir le modal
-        function openModal() {
-            document.getElementById('articleModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-            document.getElementById('modalTitle').textContent = 'Nouvel Article';
-            document.getElementById('articleForm').reset();
-            quill.setContents([]);
-            editingArticleId = null;
-        }
-
-        // Fermer le modal
-        function closeModal() {
-            document.getElementById('articleModal').classList.remove('active');
-            document.body.style.overflow = '';
-            editingArticleId = null;
-        }
-
-        // Modifier un article
-        async function editArticle(id) {
-            const token = localStorage.getItem('token');
-            
-            try {
-                const res = await fetch(`${API_URL}/admin/blog`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if (!res.ok) throw new Error('Erreur');
-                
-                const articles = await res.json();
-                const article = articles.find(a => a.id === id);
-                
-                if (!article) throw new Error('Article non trouvé');
-                
-                editingArticleId = id;
-                document.getElementById('modalTitle').textContent = 'Modifier l\'article';
-                document.getElementById('articleTitle').value = article.title;
-                document.getElementById('articleSlug').value = article.slug;
-                document.getElementById('articleExcerpt').value = article.excerpt;
-                document.getElementById('articleImage').value = article.image_url || '';
-                document.getElementById('articleStatus').value = article.status;
-                
-                // Charger le contenu dans Quill
-                quill.root.innerHTML = article.content;
-                
-                document.getElementById('articleModal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-                
-            } catch (err) {
-                console.error('Erreur:', err);
-                alert('Erreur lors du chargement de l\'article');
-            }
-        }
-
-        // Supprimer un article
-        async function deleteArticle(id) {
-            if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
-            
-            const token = localStorage.getItem('token');
-            
-            try {
-                const res = await fetch(`${API_URL}/admin/blog/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                
-                if (res.ok) {
-                    alert('Article supprimé');
-                    await loadArticles();
-                } else {
-                    const data = await res.json();
-                    alert('Erreur: ' + data.error);
-                }
-            } catch (err) {
-                console.error('Erreur:', err);
-                alert('Erreur de connexion');
-            }
-        }
-
-        // Voir un article
-        function viewArticle(slug) {
-            window.open(`/blog-post.html?slug=${slug}`, '_blank');
-        }
-
-        // Soumission du formulaire
-        document.getElementById('articleForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const token = localStorage.getItem('token');
-            const content = quill.root.innerHTML;
-            
-            if (!content || content === '<p><br></p>') {
-                alert('Veuillez rédiger le contenu de l\'article');
-                return;
-            }
-            
-            const data = {
-                title: document.getElementById('articleTitle').value.trim(),
-                slug: document.getElementById('articleSlug').value.trim(),
-                excerpt: document.getElementById('articleExcerpt').value.trim(),
-                content: content,
-                image_url: document.getElementById('articleImage').value.trim(),
-                status: document.getElementById('articleStatus').value
-            };
-            
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
-            
-            try {
-                const url = editingArticleId 
-                    ? `${API_URL}/admin/blog/${editingArticleId}`
-                    : `${API_URL}/admin/blog`;
-                
-                const method = editingArticleId ? 'PUT' : 'POST';
-                
-                const res = await fetch(url, {
-                    method,
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                if (res.ok) {
-                    alert(editingArticleId ? 'Article modifié !' : 'Article créé !');
-                    closeModal();
-                    await loadArticles();
-                } else {
-                    const errorData = await res.json();
-                    alert('Erreur: ' + (errorData.error || 'Échec de l\'enregistrement'));
-                }
-            } catch (err) {
-                console.error('Erreur:', err);
-                alert('Erreur de connexion au serveur');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
-            }
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>
+                    <div class="article-title-cell">
+                        <img src="${article.image_url || 'https://via.placeholder.com/60'}" 
+                             class="article-thumb"
+                             onerror="this.src='https://via.placeholder.com/60'">
+                        <div class="article-info">
+                            <h4>${article.title}</h4>
+                            <span class="slug">/${article.slug}</span>
+                        </div>
+                    </div>
+                </td>
+                <td>${article.author_name || 'Admin'}</td>
+                <td>
+                    <span class="badge badge-${article.status}">
+                        ${article.status === 'published' ? 'Publié' : 'Brouillon'}
+                    </span>
+                </td>
+                <td>${article.views || 0}</td>
+                <td>${date}</td>
+                <td>
+                    <div class="action-btns">
+                        <button class="btn-icon btn-view" onclick="viewArticle('${article.slug}')" title="Voir">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn-icon btn-edit" onclick="editArticle(${article.id})" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon btn-delete" onclick="deleteArticle(${article.id})" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
         });
+
+    } catch (err) {
+        console.error('Erreur:', err);
+        loading.innerHTML = '<p style="color: var(--error);">Erreur de chargement. <button onclick="loadArticles()" class="btn btn-primary btn-sm" style="margin-top: 15px;">Réessayer</button></p>';
+    }
+}
+
+// Ouvrir le modal
+function openModal() {
+    document.getElementById('articleModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modalTitle').textContent = 'Nouvel Article';
+    document.getElementById('articleForm').reset();
+    document.getElementById('articleContent').value = '';
+    editingArticleId = null;
+}
+
+// Fermer le modal
+function closeModal() {
+    document.getElementById('articleModal').classList.remove('active');
+    document.body.style.overflow = '';
+    editingArticleId = null;
+}
+
+// Modifier un article
+async function editArticle(id) {
+    const token = localStorage.getItem('token');
+    
+    try {
+        const res = await fetch(`${API_URL}/admin/blog`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (!res.ok) throw new Error('Erreur');
+        
+        const articles = await res.json();
+        const article = articles.find(a => a.id === id);
+        
+        if (!article) throw new Error('Article non trouvé');
+        
+        editingArticleId = id;
+        document.getElementById('modalTitle').textContent = 'Modifier l\'article';
+        document.getElementById('articleTitle').value = article.title;
+        document.getElementById('articleSlug').value = article.slug;
+        document.getElementById('articleExcerpt').value = article.excerpt;
+        document.getElementById('articleImage').value = article.image_url || '';
+        document.getElementById('articleStatus').value = article.status;
+        document.getElementById('articleContent').value = article.content;
+        
+        document.getElementById('articleModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('Erreur lors du chargement de l\'article');
+    }
+}
+
+// Supprimer un article
+async function deleteArticle(id) {
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) return;
+    
+    const token = localStorage.getItem('token');
+    
+    try {
+        const res = await fetch(`${API_URL}/admin/blog/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (res.ok) {
+            alert('Article supprimé');
+            await loadArticles();
+        } else {
+            const data = await res.json();
+            alert('Erreur: ' + data.error);
+        }
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('Erreur de connexion');
+    }
+}
+
+// Voir un article
+function viewArticle(slug) {
+    window.open(`/blog-post.html?slug=${slug}`, '_blank');
+}
+
+// Soumission du formulaire
+document.getElementById('articleForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const token = localStorage.getItem('token');
+    const content = document.getElementById('articleContent').value.trim();
+    
+    if (!content) {
+        alert('Veuillez rédiger le contenu de l\'article');
+        return;
+    }
+    
+    const data = {
+        title: document.getElementById('articleTitle').value.trim(),
+        slug: document.getElementById('articleSlug').value.trim(),
+        excerpt: document.getElementById('articleExcerpt').value.trim(),
+        content: content,
+        image_url: document.getElementById('articleImage').value.trim(),
+        status: document.getElementById('articleStatus').value
+    };
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+    
+    try {
+        const url = editingArticleId 
+            ? `${API_URL}/admin/blog/${editingArticleId}`
+            : `${API_URL}/admin/blog`;
+        
+        const method = editingArticleId ? 'PUT' : 'POST';
+        
+        const res = await fetch(url, {
+            method,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (res.ok) {
+            alert(editingArticleId ? 'Article modifié !' : 'Article créé !');
+            closeModal();
+            await loadArticles();
+        } else {
+            const errorData = await res.json();
+            alert('Erreur: ' + (errorData.error || 'Échec de l\'enregistrement'));
+        }
+    } catch (err) {
+        console.error('Erreur:', err);
+        alert('Erreur de connexion au serveur');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    }
+});
     </script>
 </body>
 </html>

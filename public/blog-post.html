@@ -72,7 +72,7 @@
    TYPOGRAPHIE OPTIMISÉE POUR LA LECTURE
    ============================================ */
 .blog-post-content {
-    max-width: 740px; /* Largeur optimale de lecture */
+    max-width: 900px; /* Largeur optimale de lecture */
     margin: 0 auto;
     padding: 60px 30px;
     font-size: 1.125rem; /* 18px - plus confortable */
@@ -179,6 +179,45 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+        /* Images alignées à gauche/droite sur grand écran */
+@media (min-width: 1024px) {
+    .blog-post-content img.align-left {
+        float: left;
+        width: 40%;
+        margin: 1rem 2rem 1rem 0;
+    }
+    
+    .blog-post-content img.align-right {
+        float: right;
+        width: 40%;
+        margin: 1rem 0 1rem 2rem;
+    }
+}
+
+/* Galerie d'images */
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.image-gallery img {
+    margin: 0;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .blog-post-content {
+        padding: 40px 20px;
+        max-width: 100%;
+    }
+    
+    .image-gallery {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ============================================
    TABLEAUX ET DONNÉES
    ============================================ */
@@ -190,6 +229,7 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    display: block;
 }
 
 .blog-post-content th {
@@ -575,6 +615,12 @@
                         <div class="blog-post-hero-overlay"></div>
                         <div class="blog-post-hero-content">
                             <h1>${article.title}</h1>
+                            <div class="share-buttons" style="text-align: center; margin: 2rem 0;">
+                            <p style="color: var(--text-muted); margin-bottom: 1rem;">Partager cet article :</p>
+                            <a href="https://www.linkedin.com/shareArticle?mini=true&url=${window.location.href}" target="_blank" style="margin: 0 10px; color: #0077b5; font-size: 1.5rem;"><i class="fab fa-linkedin"></i></a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${window.location.href}" target="_blank" style="margin: 0 10px; color: #1877f2; font-size: 1.5rem;"><i class="fab fa-facebook"></i></a>
+                            <a href="https://twitter.com/intent/tweet?url=${window.location.href}&text=${document.title}" target="_blank" style="margin: 0 10px; color: #1da1f2; font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        </div>
                             <div class="blog-post-meta">
                                 <span><i class="fas fa-user"></i> ${article.author_name || 'Admin'}</span>
                                 <span><i class="fas fa-calendar"></i> ${date}</span>

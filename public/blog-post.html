@@ -432,6 +432,7 @@
     </style>
 </head>
 <body>
+    <div class="reading-progress"></div>
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container">
@@ -605,6 +606,38 @@
                 `;
             }
         });
+            // Barre de progression de lecture
+            window.onscroll = function() {
+                let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                let scrolled = (winScroll / height) * 100;
+                document.querySelector('.reading-progress').style.width = scrolled + '%';
+        };
+        document.addEventListener('DOMContentLoaded', () => {
+    // Générer la table des matières
+    const toc = document.querySelector('.toc ul');
+    if (toc) {
+        const headings = document.querySelectorAll('.blog-post-content h2');
+        headings.forEach((heading, index) => {
+            const id = `section-${index}`;
+            heading.id = id;
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="#${id}">${heading.textContent}</a>`;
+            toc.appendChild(li);
+        });
+    }
+    
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+});
     </script>
 </body>
 </html>
